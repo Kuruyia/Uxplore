@@ -21,7 +21,7 @@ make
 - The [wut](https://github.com/devkitPro/wut) development team for providing the toolkit
 - [SDL2](https://github.com/yawut/SDL) maintainers, and the Wii U version maintainers
 - [libiosuhax](https://github.com/Arc13/libiosuhax) maintainers
-- [libfat](https://github.com/Arc13/libiosuhax) maintainers
+- [libfat](https://github.com/Arc13/libfat) maintainers
 - [universal-tween-engine](https://github.com/Arc13/universal-tween-engine-cpp) maintainers
 - libpng
 - mpg123
