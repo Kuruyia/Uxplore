@@ -6,10 +6,13 @@ _TODO: Write this_
 
 ## Build instructions
 At this time, only Linux and macOS are supported. To build in Windows, you must use WSL.
-This project depends on the [wut](https://github.com/devkitPro/wut) toolkit, which must be installed before being able to build.
 
-_TODO: List dependencies_
+This project depends on the [wut](https://github.com/devkitPro/wut) toolkit, which must be installed before being able to build. You might want to [read this](https://github.com/yawut/ProgrammingOnTheU/blob/master/tutorial/Chapter%201.md#setting-up-the-build-environment) for a clear explanation.
 
+#### Dependencies
+
+
+#### Building
 ```
 mkdir build
 cd build
@@ -20,9 +23,10 @@ make
 ## Acknowlegments
 - The [wut](https://github.com/devkitPro/wut) development team for providing the toolkit
 - [SDL2](https://github.com/yawut/SDL) maintainers, and the Wii U version maintainers
-- [libiosuhax](https://github.com/Arc13/libiosuhax) maintainers
-- [libfat](https://github.com/Arc13/libfat) maintainers
-- [universal-tween-engine](https://github.com/Arc13/universal-tween-engine-cpp) maintainers
+- [libiosuhax](https://github.com/Arc13/libiosuhax)
+- [libfat](https://github.com/Arc13/libfat)
+- [universal-tween-engine](https://github.com/Arc13/universal-tween-engine-cpp)
+- [libromfs](https://github.com/yawut/libromfs-wiiu)
 - libpng
 - mpg123
 - libvorbisidec
