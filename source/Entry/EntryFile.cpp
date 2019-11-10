@@ -1,6 +1,6 @@
 #include "EntryFile.hpp"
 
-EntryFile::EntryFile(File* file)
+EntryFile::EntryFile(std::shared_ptr<File>& file)
 : m_file(file)
 {}
 

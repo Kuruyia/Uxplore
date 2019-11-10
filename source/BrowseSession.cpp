@@ -1,9 +1,6 @@
-#include <TweenEngine/Tween.h>
 #include "BrowseSession.hpp"
 
-#include <whb/log.h>
 #include <Entry/EntryPhyDevice.hpp>
-#include <Entry/EntryFile.hpp>
 
 BrowseSession::BrowseSession(PhysicalDeviceManager *physicalDeviceManager)
 : m_physicalDeviceManager(physicalDeviceManager)
