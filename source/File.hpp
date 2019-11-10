@@ -5,7 +5,7 @@
 
 class File {
 public:
-	File(std::string name);
+	File(const std::string& name);
 
 	std::string getName();
 
