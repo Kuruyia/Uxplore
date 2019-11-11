@@ -20,6 +20,11 @@ public:
         uint32_t totalSectors;
     } MBR_partition;
 
+    typedef struct {
+        MBR_partition partition;
+        uint32_t extendedPartitionStartSector;
+    } EBR_partition;
+
     explicit PartitionTableReader(const DiscInterface* discInterface);
 
     bool hasGPT();
@@ -27,7 +32,9 @@ public:
 private:
     static void discoverEBRPartitions(const DiscInterface *discInterface,
                                const std::vector<MBR_partition> &mbrPartitions,
-                               std::vector<MBR_partition> *ebrPartitions);
+                               std::vector<EBR_partition> *ebrPartitions);
+
+    static MBR_partition getMBRPartitionFromData(uint8_t *data);
 
     int m_returnCode;
     bool m_gpt;

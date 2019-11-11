@@ -49,7 +49,7 @@ add_executable(uxplore_cpp
         source/Overlay/Browser.cpp
         source/Overlay/Dialog.cpp
         source/Device/PhysicalDevice/PartitionTableReader.cpp
-        )
+        source/Utils.cpp)
 
 romfs_add(uxplore_cpp "romfs")
 

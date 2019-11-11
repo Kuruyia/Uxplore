@@ -1,6 +1,6 @@
 #include "PhyDeviceManager.hpp"
 #include "PhyDeviceUtils.hpp"
-#include "PartitionTableReader.h"
+#include "PartitionTableReader.hpp"
 
 #include <SDL2/SDL.h>
 #include <whb/log.h>
