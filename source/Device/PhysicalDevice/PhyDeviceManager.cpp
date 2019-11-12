@@ -107,7 +107,8 @@ bool PhysicalDeviceManager::update() {
 	return false;
 }
 
-bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice, sec_t startSector,
+bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice,
+                                              sec_t startSector,
                                               FSMountCandidates mountCandidates) {
     const std::string& devId = physicalDevice->getDeviceId();
 

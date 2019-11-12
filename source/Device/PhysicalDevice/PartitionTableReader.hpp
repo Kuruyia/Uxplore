@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <DiscInterface/DiscInterface.hpp>
+#include <memory>
 
 class PartitionTableReader {
 public:
@@ -33,7 +34,13 @@ public:
 
     explicit PartitionTableReader(const DiscInterface *discInterface);
 
+    const MASTER_BOOT_RECORD &getMbr() const;
+    const std::vector<MBR_PARTITION> &getMbrPartitions() const;
+    const std::vector<EBR_PARTITION> &getEbrPartitions() const;
+
     bool hasGPT();
+
+    bool isReady() const;
 
 private:
     static void discoverExtendedPartition(const DiscInterface *discInterface,
@@ -46,8 +53,9 @@ private:
     std::vector<MBR_PARTITION> m_mbrPartitions;
     std::vector<EBR_PARTITION> m_ebrPartitions;
 
-    int m_returnCode;
-    bool m_gpt;
+    bool m_gptPresent;
+
+    bool m_ready;
 };
 
 
