@@ -67,3 +67,7 @@ const std::unique_ptr<PartitionTableReader> &PhysicalDevice::getPartitionTableRe
 bool PhysicalDevice::isPartitionTableAvailable() const {
     return m_partitionTableAvailable && m_partitionTableReader->isReady();
 }
+
+const std::vector<MountedPartition> &PhysicalDevice::getMountedPartitions() const {
+    return m_mountedPartitions;
+}

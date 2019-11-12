@@ -1,9 +1,11 @@
 #ifndef PHYSICALDEVICE_H
 #define PHYSICALDEVICE_H
 
-#include <Device/PhysicalDevice/PartitionTableReader.hpp>
-#include <memory>
+#include "PhysicalDevice/MountedPartition.hpp"
+#include "PhysicalDevice/PartitionTableReader.hpp"
 #include "../DiscInterface/DiscInterface.hpp"
+
+#include <memory>
 
 class PhysicalDevice {
 public:
@@ -40,8 +42,8 @@ public:
 	std::string getDevicePath();
 
     const std::unique_ptr<PartitionTableReader> &getPartitionTableReader() const;
-
     bool isPartitionTableAvailable() const;
+    const std::vector<MountedPartition> &getMountedPartitions() const;
 
 private:
 	DiscInterface m_discInterface;
@@ -53,6 +55,7 @@ private:
 
 	std::unique_ptr<PartitionTableReader> m_partitionTableReader;
 	bool m_partitionTableAvailable;
+	std::vector<MountedPartition> m_mountedPartitions;
 };
 
 #endif // PHYSICALDEVICE_H
