@@ -16,14 +16,14 @@ public:
         uint8_t endingHead;
         uint8_t endingSector;
         uint8_t endingCylinder;
-        uint32_t firstSector;
-        uint32_t totalSectors;
-    } MBR_partition;
+        uint32_t startingLBA;
+        uint32_t totalBlocks;
+    } MBR_PARTITION;
 
     typedef struct {
-        MBR_partition partition;
-        uint32_t extendedPartitionStartSector;
-    } EBR_partition;
+        MBR_PARTITION partition;
+        uint32_t firstRecordLBA;
+    } EBR_PARTITION;
 
     explicit PartitionTableReader(const DiscInterface* discInterface);
 
@@ -31,15 +31,15 @@ public:
 
 private:
     static void discoverEBRPartitions(const DiscInterface *discInterface,
-                               const std::vector<MBR_partition> &mbrPartitions,
-                               std::vector<EBR_partition> *ebrPartitions);
+                               const std::vector<MBR_PARTITION> &mbrPartitions,
+                               std::vector<EBR_PARTITION> *ebrPartitions);
 
-    static MBR_partition getMBRPartitionFromData(uint8_t *data);
+    static MBR_PARTITION getMBRPartitionFromData(uint8_t *data);
 
     int m_returnCode;
     bool m_gpt;
 
-    std::vector<MBR_partition> m_mbrPartitions;
+    std::vector<MBR_PARTITION> m_mbrPartitions;
 };
 
 

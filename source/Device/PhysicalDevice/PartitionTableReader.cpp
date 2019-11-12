@@ -22,7 +22,7 @@ PartitionTableReader::PartitionTableReader(const DiscInterface* discInterface)
 
         // Extract partitions from MBR
         for (unsigned i = 0; i < 4; ++i) {
-            m_mbrPartitions.push_back(getMBRPartitionFromData(&mbrData[0x1BE + (sizeof(MBR_partition) * i)]));
+            m_mbrPartitions.push_back(getMBRPartitionFromData(&mbrData[0x1BE + (sizeof(MBR_PARTITION) * i)]));
         }
 
         // Check if it's a protective MBR
@@ -32,7 +32,7 @@ PartitionTableReader::PartitionTableReader(const DiscInterface* discInterface)
             m_gpt = true;
         } else {
             // Not a protective MBR, discover EBRs instead
-            std::vector<EBR_partition> discoveredEBRs;
+            std::vector<EBR_PARTITION> discoveredEBRs;
             discoverEBRPartitions(discInterface, m_mbrPartitions, &discoveredEBRs);
 
             WHBLogPrintf("Discovered %u EBRs", discoveredEBRs.size());
@@ -43,17 +43,17 @@ PartitionTableReader::PartitionTableReader(const DiscInterface* discInterface)
 }
 
 void PartitionTableReader::discoverEBRPartitions(const DiscInterface *discInterface,
-                                                 const std::vector<MBR_partition> &mbrPartitions,
-                                                 std::vector<EBR_partition> *ebrPartitions) {
-    for (const MBR_partition & partition : mbrPartitions) {
+                                                 const std::vector<MBR_PARTITION> &mbrPartitions,
+                                                 std::vector<EBR_PARTITION> *ebrPartitions) {
+    for (const MBR_PARTITION & partition : mbrPartitions) {
         if (partition.partitionType == 0x05 || partition.partitionType == 0x0F || partition.partitionType == 0x85) {
             // Partition is an EBR
-            EBR_partition currentEBR, nextEBR;
+            EBR_PARTITION currentEBR, nextEBR;
             uint8_t ebrData[512];
-            uint32_t sectorToCheck = partition.firstSector;
+            uint32_t sectorToCheck = partition.startingLBA;
 
             // Only fill this information in currentEBR because nextEBR won't be kept
-            currentEBR.extendedPartitionStartSector = partition.firstSector;
+            currentEBR.firstRecordLBA = partition.startingLBA;
 
             do {
                 if (!discInterface->readSectors(sectorToCheck, 1, &ebrData))
@@ -67,18 +67,18 @@ void PartitionTableReader::discoverEBRPartitions(const DiscInterface *discInterf
                 ebrPartitions->push_back(currentEBR);
 
                 nextEBR.partition = getMBRPartitionFromData(&ebrData[0x1CE]);
-                sectorToCheck = nextEBR.partition.firstSector + partition.firstSector;
-            } while (nextEBR.partition.firstSector != 0);
+                sectorToCheck = nextEBR.partition.startingLBA + partition.startingLBA;
+            } while (nextEBR.partition.startingLBA != 0);
         }
     }
 }
 
-PartitionTableReader::MBR_partition PartitionTableReader::getMBRPartitionFromData(uint8_t *data) {
-    MBR_partition partition;
-    memcpy(&partition, data, sizeof(MBR_partition));
+PartitionTableReader::MBR_PARTITION PartitionTableReader::getMBRPartitionFromData(uint8_t *data) {
+    MBR_PARTITION partition;
+    memcpy(&partition, data, sizeof(MBR_PARTITION));
 
-    partition.firstSector = Utils::swapEndian32(partition.firstSector);
-    partition.totalSectors = Utils::swapEndian32(partition.totalSectors);
+    partition.startingLBA = Utils::swapEndian32(partition.startingLBA);
+    partition.totalBlocks = Utils::swapEndian32(partition.totalBlocks);
 
     return partition;
 }
