@@ -18,14 +18,20 @@ public:
         uint8_t endingCylinder;
         uint32_t startingLBA;
         uint32_t totalBlocks;
-    } MBR_PARTITION;
+    } __attribute__((packed)) MBR_PARTITION;
 
     typedef struct {
         MBR_PARTITION partition;
         uint32_t firstRecordLBA;
     } EBR_PARTITION;
 
-    explicit PartitionTableReader(const DiscInterface* discInterface);
+    typedef struct {
+        uint8_t bootstrap[0x1BE];
+        MBR_PARTITION partitions[0x4];
+        uint16_t signature;
+    } __attribute__((packed)) MASTER_BOOT_RECORD;
+
+    explicit PartitionTableReader(const DiscInterface *discInterface);
 
     bool hasGPT();
 
@@ -34,7 +40,9 @@ private:
                                const std::vector<MBR_PARTITION> &mbrPartitions,
                                std::vector<EBR_PARTITION> *ebrPartitions);
 
-    static MBR_PARTITION getMBRPartitionFromData(uint8_t *data);
+    static void correctMBRPartitionEndianness(MBR_PARTITION *partition);
+
+    MASTER_BOOT_RECORD m_mbr;
 
     int m_returnCode;
     bool m_gpt;
