@@ -36,9 +36,9 @@ public:
     bool hasGPT();
 
 private:
-    static void discoverEBRPartitions(const DiscInterface *discInterface,
-                               const std::vector<MBR_PARTITION> &mbrPartitions,
-                               std::vector<EBR_PARTITION> *ebrPartitions);
+    static void discoverExtendedPartition(const DiscInterface *discInterface,
+                                          const MBR_PARTITION &extendedPartitionEntry,
+                                          std::vector<EBR_PARTITION> *logicalPartitions);
 
     static void correctMBRPartitionEndianness(MBR_PARTITION *partition);
 

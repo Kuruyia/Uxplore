@@ -31,9 +31,11 @@ PartitionTableReader::PartitionTableReader(const DiscInterface *discInterface)
             WHBLogPrintf("Protective MBR found!");
             m_gpt = true;
         } else {
-            // Not a protective MBR, discover EBRs instead
+            // This is not a protective MBR, so we attempt to discover any extended partition
             std::vector<EBR_PARTITION> discoveredEBRs;
-            discoverEBRPartitions(discInterface, m_mbrPartitions, &discoveredEBRs);
+            for (const MBR_PARTITION& partition : m_mbrPartitions) {
+                discoverExtendedPartition(discInterface, partition, &discoveredEBRs);
+            }
 
             WHBLogPrintf("Discovered %u EBRs", discoveredEBRs.size());
         }
@@ -42,36 +44,38 @@ PartitionTableReader::PartitionTableReader(const DiscInterface *discInterface)
     }
 }
 
-void PartitionTableReader::discoverEBRPartitions(const DiscInterface *discInterface,
-                                                 const std::vector<MBR_PARTITION> &mbrPartitions,
-                                                 std::vector<EBR_PARTITION> *ebrPartitions) {
-    for (const MBR_PARTITION & partition : mbrPartitions) {
-        if (partition.partitionType == 0x05 || partition.partitionType == 0x0F || partition.partitionType == 0x85) {
-            // Partition is an EBR
-            EBR_PARTITION currentEBR, nextEBR;
-            MASTER_BOOT_RECORD ebr;
-            uint32_t sectorToCheck = partition.startingLBA;
+void PartitionTableReader::discoverExtendedPartition(const DiscInterface *discInterface,
+                                                     const MBR_PARTITION &extendedPartitionEntry,
+                                                     std::vector<EBR_PARTITION> *logicalPartitions) {
+    // Check that the entry partition type is extended partition
+    if (extendedPartitionEntry.partitionType != 0x05 && extendedPartitionEntry.partitionType != 0x0F && extendedPartitionEntry.partitionType != 0x85)
+        return;
 
-            // Only fill this information in currentEBR because nextEBR won't be kept
-            currentEBR.firstRecordLBA = partition.startingLBA;
+    EBR_PARTITION currentLogicalPartition;
+    MBR_PARTITION nextEBR;
+    MASTER_BOOT_RECORD ebr;
+    uint32_t sectorToCheck = extendedPartitionEntry.startingLBA;
 
-            do {
-                if (!discInterface->readSectors(sectorToCheck, 1, &ebr))
-                    break;
+    // We need to keep track of this because an EBR entry starting LBA is relative to the first EBR LBA
+    currentLogicalPartition.firstRecordLBA = extendedPartitionEntry.startingLBA;
 
-                if (ebr.signature != 0x55AA && ebr.signature != 0x55AB)
-                    break;
+    do {
+        // Sanity checks
+        if (!discInterface->readSectors(sectorToCheck, 1, &ebr))
+            break;
 
-                correctMBRPartitionEndianness(&ebr.partitions[0]);
-                currentEBR.partition = ebr.partitions[0];
-                ebrPartitions->push_back(currentEBR);
+        if (ebr.signature != 0x55AA && ebr.signature != 0x55AB)
+            break;
 
-                correctMBRPartitionEndianness(&ebr.partitions[1]);
-                nextEBR.partition = ebr.partitions[1];
-                sectorToCheck = nextEBR.partition.startingLBA + partition.startingLBA;
-            } while (nextEBR.partition.startingLBA != 0);
-        }
-    }
+        // Store first two entries
+        correctMBRPartitionEndianness(&ebr.partitions[0]);
+        currentLogicalPartition.partition = ebr.partitions[0];
+        logicalPartitions->push_back(currentLogicalPartition);
+
+        correctMBRPartitionEndianness(&ebr.partitions[1]);
+        nextEBR = ebr.partitions[1];
+        sectorToCheck = nextEBR.startingLBA + extendedPartitionEntry.startingLBA;
+    } while (nextEBR.startingLBA != 0);
 }
 
 bool PartitionTableReader::hasGPT() {
