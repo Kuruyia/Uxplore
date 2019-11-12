@@ -43,11 +43,11 @@ private:
     static void correctMBRPartitionEndianness(MBR_PARTITION *partition);
 
     MASTER_BOOT_RECORD m_mbr;
+    std::vector<MBR_PARTITION> m_mbrPartitions;
+    std::vector<EBR_PARTITION> m_ebrPartitions;
 
     int m_returnCode;
     bool m_gpt;
-
-    std::vector<MBR_PARTITION> m_mbrPartitions;
 };
 
 

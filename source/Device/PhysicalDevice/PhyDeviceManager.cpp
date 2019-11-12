@@ -34,15 +34,12 @@ bool PhysicalDeviceManager::update() {
 		for (auto & addedDevice : addedDevices) {
 			WHBLogPrintf("Device added - %s", addedDevice.c_str());
 			bool isMounted;
+			bool isNative = PhysicalDeviceUtils::isNative(addedDevice);
 
-            std::shared_ptr<PhysicalDevice> deviceToMount(new PhysicalDevice(addedDevice));
+            std::shared_ptr<PhysicalDevice> deviceToMount(new PhysicalDevice(addedDevice, isNative));
 
-            if (!PhysicalDeviceUtils::isNative(addedDevice)) {
+            if (!isNative) {
                 // Added device is NOT native-exclusive
-
-                // TODO: Finish partition support
-                PartitionTableReader partitionTableReader(deviceToMount->getDiscInterface());
-
                 isMounted = tryMountPartition(deviceToMount.get(), 0, FSMountCandidates::All);
             } else {
                 // Added device is native-exclusive

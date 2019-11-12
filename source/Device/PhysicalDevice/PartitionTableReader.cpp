@@ -32,12 +32,11 @@ PartitionTableReader::PartitionTableReader(const DiscInterface *discInterface)
             m_gpt = true;
         } else {
             // This is not a protective MBR, so we attempt to discover any extended partition
-            std::vector<EBR_PARTITION> discoveredEBRs;
             for (const MBR_PARTITION& partition : m_mbrPartitions) {
-                discoverExtendedPartition(discInterface, partition, &discoveredEBRs);
+                discoverExtendedPartition(discInterface, partition, &m_ebrPartitions);
             }
 
-            WHBLogPrintf("Discovered %u EBRs", discoveredEBRs.size());
+            WHBLogPrintf("Discovered %u EBRs", m_ebrPartitions.size());
         }
     } else {
         WHBLogPrintf("PartitionTableReader: Error while reading first sector");

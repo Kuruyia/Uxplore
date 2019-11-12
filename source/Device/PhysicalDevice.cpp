@@ -1,41 +1,23 @@
 #include "PhysicalDevice.hpp"
 
-PhysicalDevice::PhysicalDevice(const std::string &deviceId)
+#include <memory>
+
+PhysicalDevice::PhysicalDevice(const std::string &deviceId, const bool &skipPartitionTableRead)
 : m_discInterface("/dev/" + deviceId)
 , m_id(deviceId)
 , m_name("<name not set>")
 , m_filesystem(Filesystem::Unknown)
 , m_deviceType(DeviceType::Generic)
+, m_partitionTableAvailable(!skipPartitionTableRead)
 {
     m_discInterface.startup();
+
+    if (!skipPartitionTableRead)
+        m_partitionTableReader = std::make_unique<PartitionTableReader>(getDiscInterface());
 }
 
 PhysicalDevice::~PhysicalDevice() {
     m_discInterface.shutdown();
-}
-
-std::shared_ptr<File> PhysicalDevice::getFile(std::string path) {
-
-}
-
-std::vector<std::shared_ptr<File>> PhysicalDevice::listFolder(std::string path) {
-
-}
-
-void PhysicalDevice::writeFile(std::string path) {
-
-}
-
-void PhysicalDevice::readFile(std::string path) {
-
-}
-
-void PhysicalDevice::deleteEntry(std::string path) {
-
-}
-
-void PhysicalDevice::createFolder(std::string path) {
-
 }
 
 DiscInterface* PhysicalDevice::getDiscInterface() {
@@ -76,4 +58,12 @@ PhysicalDevice::DeviceType PhysicalDevice::getDeviceType() const {
 
 void PhysicalDevice::setDeviceType(PhysicalDevice::DeviceType deviceType) {
     m_deviceType = deviceType;
+}
+
+const std::unique_ptr<PartitionTableReader> &PhysicalDevice::getPartitionTableReader() const {
+    return m_partitionTableReader;
+}
+
+bool PhysicalDevice::isPartitionTableAvailable() const {
+    return m_partitionTableAvailable;
 }

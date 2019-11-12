@@ -1,10 +1,11 @@
 #ifndef PHYSICALDEVICE_H
 #define PHYSICALDEVICE_H
 
+#include <Device/PhysicalDevice/PartitionTableReader.hpp>
+#include <memory>
 #include "../DiscInterface/DiscInterface.hpp"
-#include "FilesystemProvider.hpp"
 
-class PhysicalDevice: public FilesystemProvider {
+class PhysicalDevice {
 public:
     enum Filesystem {
         Unknown,
@@ -20,18 +21,8 @@ public:
         SD
     };
 
-	PhysicalDevice(const std::string &deviceId);
+	PhysicalDevice(const std::string &deviceId, const bool &skipPartitionTableRead);
 	~PhysicalDevice();
-
-	std::shared_ptr<File> getFile(std::string path) override;
-	std::vector<std::shared_ptr<File>> listFolder(std::string path) override;
-
-	void writeFile(std::string path) override;
-	void readFile(std::string path) override;
-
-	void deleteEntry(std::string path) override;
-
-	void createFolder(std::string path) override;
 
 	DiscInterface* getDiscInterface();
 
@@ -48,6 +39,10 @@ public:
 	std::string getDeviceId();
 	std::string getDevicePath();
 
+    const std::unique_ptr<PartitionTableReader> &getPartitionTableReader() const;
+
+    bool isPartitionTableAvailable() const;
+
 private:
 	DiscInterface m_discInterface;
 
@@ -55,6 +50,9 @@ private:
 	std::string m_id;
 	Filesystem m_filesystem;
 	DeviceType m_deviceType;
+
+	std::unique_ptr<PartitionTableReader> m_partitionTableReader;
+	bool m_partitionTableAvailable;
 };
 
 #endif // PHYSICALDEVICE_H
