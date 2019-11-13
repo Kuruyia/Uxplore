@@ -9,13 +9,6 @@
 
 class PhysicalDevice {
 public:
-    enum Filesystem {
-        Unknown,
-
-        FAT,
-        Native
-    };
-
     enum DeviceType {
         Generic,
         Disc,
@@ -27,12 +20,6 @@ public:
 	~PhysicalDevice();
 
 	DiscInterface* getDiscInterface();
-
-    const std::string &getDeviceName() const;
-    void setDeviceName(const std::string &deviceName);
-
-    Filesystem getFilesystem() const;
-    void setFilesystem(Filesystem filesystem);
 
     DeviceType getDeviceType() const;
     void setDeviceType(DeviceType deviceType);
@@ -50,9 +37,7 @@ public:
 private:
 	DiscInterface m_discInterface;
 
-	std::string m_name;
 	std::string m_id;
-	Filesystem m_filesystem;
 	DeviceType m_deviceType;
 
 	std::unique_ptr<PartitionTableReader> m_partitionTableReader;

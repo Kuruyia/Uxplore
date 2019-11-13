@@ -32,22 +32,6 @@ std::string PhysicalDevice::getDevicePath() const {
 	return "/dev/" + m_id;
 }
 
-const std::string &PhysicalDevice::getDeviceName() const {
-    return m_name;
-}
-
-void PhysicalDevice::setDeviceName(const std::string &deviceName) {
-    m_name = deviceName;
-}
-
-PhysicalDevice::Filesystem PhysicalDevice::getFilesystem() const {
-    return m_filesystem;
-}
-
-void PhysicalDevice::setFilesystem(PhysicalDevice::Filesystem filesystem) {
-    m_filesystem = filesystem;
-}
-
 PhysicalDevice::DeviceType PhysicalDevice::getDeviceType() const {
     return m_deviceType;
 }

@@ -25,8 +25,9 @@ private:
         All    = Native | FAT
     };
 
-    bool tryMountPartition(PhysicalDevice *physicalDevice, const std::string &partitionName, sec_t startSector,
-                           FSMountCandidates mountCandidates);
+    bool tryMountPartition(PhysicalDevice *physicalDevice, const std::string &partitionName,
+                           sec_t startSector, FSMountCandidates mountCandidates,
+                           MountedPartition::Filesystem *mountedFilesystem);
 	bool tryMountNative(const std::string& deviceName);
 
 	void unmountAll();

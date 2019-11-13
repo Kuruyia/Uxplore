@@ -49,9 +49,12 @@ bool PhysicalDeviceManager::update() {
                 // Partition table available, we can read from it
             } else {
                 // Partition table not available, we have to rely on the system
-                bool success = tryMountPartition(newDevice.get(), newDevice->getDeviceId(), 0, FSMountCandidates::Native);
+                MountedPartition::Filesystem mountedFilesystem;
+                bool success = tryMountPartition(newDevice.get(), newDevice->getDeviceId(), 0,
+                                                 FSMountCandidates::Native, &mountedFilesystem);
+
                 if (success) {
-                    newDevice->addMountedPartition(std::make_shared<MountedPartition>(MountedPartition(newDevice->getDeviceId())));
+                    newDevice->addMountedPartition(std::make_shared<MountedPartition>(MountedPartition(newDevice->getDeviceId(), mountedFilesystem)));
                 }
             }
 
@@ -116,8 +119,8 @@ bool PhysicalDeviceManager::update() {
 }
 
 bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice, const std::string &partitionName,
-                                              sec_t startSector,
-                                              FSMountCandidates mountCandidates) {
+                                              sec_t startSector, FSMountCandidates mountCandidates,
+                                              MountedPartition::Filesystem *mountedFilesystem) {
     if (mountCandidates & FSMountCandidates::FAT &&
             fatMount(partitionName.c_str(), physicalDevice->getDiscInterface()->getInterface(), startSector, DEFAULT_CACHE_PAGES, DEFAULT_SECTORS_PAGE)) {
         // TODO: Remove this
@@ -148,20 +151,21 @@ bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice, co
 	    WHBLogPrint("END LISTING");
 	    WHBLogPrint("");*/
 
-        char deviceName[11];
+		// TODO: Reimplement this for partition support
+        /*char deviceName[11];
         fatGetVolumeLabel(partitionName.c_str(), deviceName);
         PhysicalDeviceUtils::shrinkFATLabel(deviceName);
-		physicalDevice->setDeviceName(deviceName);
+		physicalDevice->setDeviceName(deviceName);*/
 
-		physicalDevice->setFilesystem(PhysicalDevice::Filesystem::FAT);
+		*mountedFilesystem = MountedPartition::Filesystem ::FAT;
 
 		return true;
 	}
 
     if (mountCandidates & FSMountCandidates::Native && tryMountNative(partitionName)) {
-        // TODO: Show devId more cleanly
-        physicalDevice->setDeviceName(PhysicalDeviceUtils::getNativeDeviceName(partitionName) + " (" + partitionName + ")");
-        physicalDevice->setFilesystem(PhysicalDevice::Filesystem::Native);
+        // TODO: Show devId more cleanly && Reimplement this for partition support
+        //physicalDevice->setDeviceName(PhysicalDeviceUtils::getNativeDeviceName(partitionName) + " (" + partitionName + ")");
+        *mountedFilesystem = MountedPartition::Filesystem::Native;
 
         return true;
     }

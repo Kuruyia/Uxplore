@@ -1,8 +1,9 @@
 #include "MountedPartition.hpp"
 
-MountedPartition::MountedPartition(const std::string &partitionId)
-: m_partitionId(partitionId)
-{
+MountedPartition::MountedPartition(const std::string &id, Filesystem filesystem)
+: m_id(id)
+, m_name("<MISSINGNO>")
+, m_filesystem(filesystem) {
 
 }
 
@@ -28,4 +29,12 @@ void MountedPartition::deleteEntry(std::string path) {
 
 void MountedPartition::createFolder(std::string path) {
 
+}
+
+const std::string &MountedPartition::getName() const {
+    return m_name;
+}
+
+void MountedPartition::setName(const std::string &name) {
+    m_name = name;
 }

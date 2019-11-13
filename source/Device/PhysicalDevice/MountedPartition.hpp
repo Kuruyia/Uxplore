@@ -1,12 +1,21 @@
 #ifndef UXPLORE_CPP_MOUNTEDPARTITION_HPP
 #define UXPLORE_CPP_MOUNTEDPARTITION_HPP
 
-
 #include <FilesystemProvider.hpp>
 
 class MountedPartition: public FilesystemProvider {
 public:
-    MountedPartition(const std::string &partitionId);
+    enum Filesystem {
+        Unknown,
+
+        FAT,
+        Native
+    };
+
+    MountedPartition(const std::string &id, Filesystem filesystem);
+
+    const std::string &getName() const;
+    void setName(const std::string &name);
 
     std::shared_ptr<File> getFile(std::string path) override;
     std::vector<std::shared_ptr<File>> listFolder(std::string path) override;
@@ -16,7 +25,9 @@ public:
     void createFolder(std::string path) override;
 
 private:
-    const std::string m_partitionId;
+    const std::string m_id;
+    const Filesystem m_filesystem;
+    std::string m_name;
 };
 
 
