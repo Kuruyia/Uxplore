@@ -5,7 +5,7 @@ EntryPhyDevice::EntryPhyDevice(PhysicalDevice *device)
 {}
 
 std::string EntryPhyDevice::getText() {
-	return m_device->getDeviceName();
+	return "<device>";
 }
 
 Entry::EntryType EntryPhyDevice::getType() {

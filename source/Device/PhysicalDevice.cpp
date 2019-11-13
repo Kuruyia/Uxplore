@@ -5,8 +5,6 @@
 PhysicalDevice::PhysicalDevice(const std::string &deviceId, const bool &skipPartitionTableRead)
 : m_discInterface("/dev/" + deviceId)
 , m_id(deviceId)
-, m_name("<name not set>")
-, m_filesystem(Filesystem::Unknown)
 , m_deviceType(DeviceType::Generic)
 , m_partitionTableAvailable(!skipPartitionTableRead)
 {
