@@ -24,16 +24,12 @@ DiscInterface* PhysicalDevice::getDiscInterface() {
 	return &m_discInterface;
 }
 
-std::string PhysicalDevice::getDeviceId() {
+const std::string &PhysicalDevice::getDeviceId() const {
 	return m_id;
 }
 
-std::string PhysicalDevice::getDevicePath() {
+std::string PhysicalDevice::getDevicePath() const {
 	return "/dev/" + m_id;
-}
-
-std::string PhysicalDevice::getDeviceName() {
-    return m_name;
 }
 
 const std::string &PhysicalDevice::getDeviceName() const {
@@ -76,6 +72,6 @@ void PhysicalDevice::addMountedPartition(const std::shared_ptr<MountedPartition>
     m_mountedPartitions.push_back(newPartition);
 }
 
-void PhysicalDevice::removeMountedPartition(const unsigned pos) {
+void PhysicalDevice::removeMountedPartition(unsigned pos) {
     m_mountedPartitions.erase(m_mountedPartitions.begin() + pos);
 }

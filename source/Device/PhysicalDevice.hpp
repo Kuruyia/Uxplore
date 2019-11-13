@@ -37,16 +37,15 @@ public:
     DeviceType getDeviceType() const;
     void setDeviceType(DeviceType deviceType);
 
-    std::string getDeviceName();
-	std::string getDeviceId();
-	std::string getDevicePath();
+	const std::string &getDeviceId() const;
+	std::string getDevicePath() const;
 
     const std::unique_ptr<PartitionTableReader> &getPartitionTableReader() const;
     bool isPartitionTableAvailable() const;
 
     const std::vector<std::shared_ptr<MountedPartition>> &getMountedPartitions() const;
     void addMountedPartition(const std::shared_ptr<MountedPartition>& newPartition);
-    void removeMountedPartition(const unsigned pos);
+    void removeMountedPartition(unsigned pos);
 
 private:
 	DiscInterface m_discInterface;
