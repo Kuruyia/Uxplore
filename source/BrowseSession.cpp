@@ -67,7 +67,7 @@ void BrowseSession::reloadList() {
     m_browserList.reset();
 
 	if (m_navigationHistory.getHistoryPosition() == 0) {
-        for (const auto & mountedDevice : m_physicalDeviceManager->getMoutedDevices()) {
+        for (const auto & mountedDevice : m_physicalDeviceManager->getInsertedDevices()) {
             m_browserList.addItem(new EntryPhyDevice(mountedDevice.get()));
         }
 	} else {

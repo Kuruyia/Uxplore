@@ -43,7 +43,10 @@ public:
 
     const std::unique_ptr<PartitionTableReader> &getPartitionTableReader() const;
     bool isPartitionTableAvailable() const;
-    const std::vector<MountedPartition> &getMountedPartitions() const;
+
+    const std::vector<std::shared_ptr<MountedPartition>> &getMountedPartitions() const;
+    void addMountedPartition(const std::shared_ptr<MountedPartition>& newPartition);
+    void removeMountedPartition(const unsigned pos);
 
 private:
 	DiscInterface m_discInterface;
@@ -55,7 +58,7 @@ private:
 
 	std::unique_ptr<PartitionTableReader> m_partitionTableReader;
 	bool m_partitionTableAvailable;
-	std::vector<MountedPartition> m_mountedPartitions;
+	std::vector<std::shared_ptr<MountedPartition>> m_mountedPartitions;
 };
 
 #endif // PHYSICALDEVICE_H

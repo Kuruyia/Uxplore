@@ -14,8 +14,8 @@ public:
 
 	bool update();
 
-    std::vector<std::string> getMountedDevicesId();
-    std::vector<std::shared_ptr<PhysicalDevice>> getMoutedDevices();
+    std::vector<std::string> getInsertedDevicesId();
+    std::vector<std::shared_ptr<PhysicalDevice>> getInsertedDevices();
 
 private:
     enum FSMountCandidates {
@@ -33,8 +33,7 @@ private:
 	unsigned int m_lastUpdate;
 	int m_fsaFd;
 
-	std::vector<std::pair<std::string, std::shared_ptr<PhysicalDevice>>> m_mountedDevices;
-	std::vector<std::string> m_blacklist;
+	std::vector<std::pair<std::string, std::shared_ptr<PhysicalDevice>>> m_insertedDevices;
 };
 
 #endif // PHYDEVICEMANAGER_H

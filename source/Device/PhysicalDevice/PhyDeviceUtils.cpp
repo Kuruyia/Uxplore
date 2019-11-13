@@ -36,8 +36,9 @@ int PhysicalDeviceUtils::getMountableDevices(std::vector<std::string>* devices) 
 	return 0;
 }
 
-int PhysicalDeviceUtils::getDeviceDelta(std::vector<std::string> mountedDevices, std::vector<std::string> blacklisted, std::vector<std::string>* addedDevices, std::vector<std::string>* removedDevices, std::vector<std::string>* removedBlacklistedDevices) {
-	std::vector<std::string> allMountableDevices, mountableDevices;
+int PhysicalDeviceUtils::getDeviceDelta(std::vector<std::string> mountedDevices, std::vector<std::string> *addedDevices,
+                                        std::vector<std::string> *removedDevices) {
+	std::vector<std::string> allMountableDevices;
 	int ret;
 
 	if ((ret = getMountableDevices(&allMountableDevices)) < 0)
@@ -46,17 +47,10 @@ int PhysicalDeviceUtils::getDeviceDelta(std::vector<std::string> mountedDevices,
 	// Need to sort vectors for set_difference to work properly
 	std::sort(mountedDevices.begin(), mountedDevices.end());
 	std::sort(allMountableDevices.begin(), allMountableDevices.end());
-	std::sort(blacklisted.begin(), blacklisted.end());
-
-	// Remove blacklisted devices from mountable devices
-	std::set_difference(allMountableDevices.begin(), allMountableDevices.end(), blacklisted.begin(), blacklisted.end(), std::inserter(mountableDevices, mountableDevices.begin()));
 
 	// Check differences between mounted and available devices
-	std::set_difference(mountableDevices.begin(), mountableDevices.end(), mountedDevices.begin(), mountedDevices.end(), std::inserter(*addedDevices, addedDevices->begin()));
-	std::set_difference(mountedDevices.begin(), mountedDevices.end(), mountableDevices.begin(), mountableDevices.end(), std::inserter(*removedDevices, removedDevices->begin()));
-
-	// Check if any blacklisted device has been removed
-    std::set_difference(blacklisted.begin(), blacklisted.end(), allMountableDevices.begin(), allMountableDevices.end(), std::inserter(*removedBlacklistedDevices, removedBlacklistedDevices->begin()));
+	std::set_difference(allMountableDevices.begin(), allMountableDevices.end(), mountedDevices.begin(), mountedDevices.end(), std::inserter(*addedDevices, addedDevices->begin()));
+	std::set_difference(mountedDevices.begin(), mountedDevices.end(), allMountableDevices.begin(), allMountableDevices.end(), std::inserter(*removedDevices, removedDevices->begin()));
 
 	return 0;
 }

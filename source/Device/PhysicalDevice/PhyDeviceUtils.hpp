@@ -7,7 +7,8 @@
 class PhysicalDeviceUtils {
 public:
 	static int getMountableDevices(std::vector<std::string>* devices);
-	static int getDeviceDelta(std::vector<std::string> mountedDevices, std::vector<std::string> blacklisted, std::vector<std::string>* addedDevices, std::vector<std::string>* removedDevices, std::vector<std::string>* removedBlacklistedDevices);
+	static int getDeviceDelta(std::vector<std::string> mountedDevices, std::vector<std::string> *addedDevices,
+                              std::vector<std::string> *removedDevices);
 
     static bool isNative(const std::string &id);
     static std::string getNativeDeviceName(const std::string& id);

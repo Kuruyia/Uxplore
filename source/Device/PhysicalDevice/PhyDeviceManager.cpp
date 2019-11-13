@@ -28,22 +28,28 @@ bool PhysicalDeviceManager::update() {
 		m_lastUpdate = SDL_GetTicks();
 		bool hasChanged = false;
 
-		std::vector<std::string> addedDevices, removedDevices, removedBlacklistedDevices;
-		PhysicalDeviceUtils::getDeviceDelta(getMountedDevicesId(), m_blacklist, &addedDevices, &removedDevices, &removedBlacklistedDevices);
+		std::vector<std::string> addedDevices, removedDevices;
+		int ret = PhysicalDeviceUtils::getDeviceDelta(getInsertedDevicesId(), &addedDevices, &removedDevices);
+        if (ret < 0) {
+            WHBLogPrintf("getDeviceDelta has failed with %i", ret);
+            return false;
+        }
 
 		for (auto & addedDevice : addedDevices) {
-			WHBLogPrintf("Device added - %s", addedDevice.c_str());
-			bool isMounted;
+			WHBLogPrintf("Device inserted - %s", addedDevice.c_str());
 			bool isNative = PhysicalDeviceUtils::isNative(addedDevice);
 
-            std::shared_ptr<PhysicalDevice> deviceToMount(new PhysicalDevice(addedDevice, isNative));
+            std::shared_ptr<PhysicalDevice> newDevice(new PhysicalDevice(addedDevice, isNative));
+            m_insertedDevices.emplace_back(newDevice->getDeviceId(), newDevice);
 
-            if (!isNative) {
+            hasChanged = true;
+
+            /*if (!isNative) {
                 // Added device is NOT native-exclusive
-                isMounted = tryMountPartition(deviceToMount.get(), 0, FSMountCandidates::All);
+                isMounted = tryMountPartition(newDevice.get(), 0, FSMountCandidates::All);
             } else {
                 // Added device is native-exclusive
-                isMounted = tryMountPartition(deviceToMount.get(), 0, FSMountCandidates::Native);
+                isMounted = tryMountPartition(newDevice.get(), 0, FSMountCandidates::Native);
             }
 
             if (isMounted) {
@@ -51,46 +57,31 @@ bool PhysicalDeviceManager::update() {
 
                 // Guess and set device type
                 if (addedDevice.compare(0, 3, "odd") == 0)
-                    deviceToMount->setDeviceType(PhysicalDevice::DeviceType::Disc);
+                    newDevice->setDeviceType(PhysicalDevice::DeviceType::Disc);
                 else if (addedDevice.compare(0, 3, "usb") == 0)
-                    deviceToMount->setDeviceType(PhysicalDevice::DeviceType::USB);
+                    newDevice->setDeviceType(PhysicalDevice::DeviceType::USB);
                 else if (addedDevice.compare(0, 6, "sdcard") == 0)
-                    deviceToMount->setDeviceType(PhysicalDevice::DeviceType::SD);
+                    newDevice->setDeviceType(PhysicalDevice::DeviceType::SD);
 
-                m_mountedDevices.emplace_back(deviceToMount->getDeviceId(), deviceToMount);
+                m_insertedDevices.emplace_back(newDevice->getDeviceId(), newDevice);
                 hasChanged = true;
             } else {
                 WHBLogPrintf("Device failed to mount - %s", addedDevice.c_str());
 
                 m_blacklist.push_back(addedDevice);
-            }
+            }*/
 		}
 
 		for (auto & removedDevice : removedDevices) {
 			WHBLogPrintf("Device removed - %s", removedDevice.c_str());
 
-			for (auto it = m_mountedDevices.begin(); it != m_mountedDevices.end(); it++) {
+			for (auto it = m_insertedDevices.begin(); it != m_insertedDevices.end(); it++) {
 				if (it->first == removedDevice) {
 					WHBLogPrintf("Confirmed device removed - %s", it->first.c_str());
 
-					// TODO: Use fatUnmount()
-					unmount_fs(it->second->getDeviceId().c_str());
+					// TODO: Unmount every partition on device
 
-					m_mountedDevices.erase(it);
-
-					hasChanged = true;
-					break;
-				}
-			}
-		}
-
-		for (auto & removedBlacklistedDevice : removedBlacklistedDevices) {
-			WHBLogPrintf("Blacklisted device removed - %s", removedBlacklistedDevice.c_str());
-
-			for (auto it = m_blacklist.begin(); it != m_blacklist.end(); it++) {
-				if (*it == removedBlacklistedDevice) {
-					WHBLogPrintf("Confirmed blacklisted device removed - %s", it->c_str());
-					m_blacklist.erase(it);
+					m_insertedDevices.erase(it);
 
 					hasChanged = true;
 					break;
@@ -98,8 +89,12 @@ bool PhysicalDeviceManager::update() {
 			}
 		}
 
-		if (hasChanged)
-			WHBLogPrint("===== DEVICES CHANGED =====");
+		if (hasChanged) {
+			WHBLogPrint("===== Device list changed =====");
+			for (const std::pair<std::basic_string<char>, std::shared_ptr<PhysicalDevice>> &device : m_insertedDevices) {
+                WHBLogPrintf("Inserted device: %s", device.first.c_str());
+			}
+		}
 
 		return hasChanged;
 	}
@@ -174,21 +169,20 @@ bool PhysicalDeviceManager::tryMountNative(const std::string& deviceName) {
     return ret >= 0;
 }
 
-std::vector<std::string> PhysicalDeviceManager::getMountedDevicesId() {
+std::vector<std::string> PhysicalDeviceManager::getInsertedDevicesId() {
 	std::vector<std::string> deviceIds;
 
-	for (auto & m_mountedDevice : m_mountedDevices) {
-		WHBLogPrintf("MOUNTED ID - %s", m_mountedDevice.first.c_str());
+	for (auto & m_mountedDevice : m_insertedDevices) {
 		deviceIds.push_back(m_mountedDevice.first);
 	}
 
 	return deviceIds;
 }
 
-std::vector<std::shared_ptr<PhysicalDevice>> PhysicalDeviceManager::getMoutedDevices() {
+std::vector<std::shared_ptr<PhysicalDevice>> PhysicalDeviceManager::getInsertedDevices() {
     std::vector<std::shared_ptr<PhysicalDevice>> devices;
 
-    for (auto &m_mountedDevice : m_mountedDevices) {
+    for (auto &m_mountedDevice : m_insertedDevices) {
         devices.push_back(m_mountedDevice.second);
     }
 
@@ -197,8 +191,5 @@ std::vector<std::shared_ptr<PhysicalDevice>> PhysicalDeviceManager::getMoutedDev
 
 void PhysicalDeviceManager::unmountAll() {
     WHBLogPrint("Unmounting everything");
-    // TODO: Unmount FAT devices with fatUnmount()
-    for (auto & m_mountedDevice : m_mountedDevices) {
-        unmount_fs(m_mountedDevice.second->getDeviceId().c_str());
-    }
+    // TODO: Unmount all partitions of all devices
 }
