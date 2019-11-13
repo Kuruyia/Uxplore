@@ -69,7 +69,7 @@ const std::vector<std::shared_ptr<MountedPartition>> &PhysicalDevice::getMounted
 }
 
 void PhysicalDevice::addMountedPartition(const std::shared_ptr<MountedPartition>& newPartition) {
-    m_mountedPartitions.push_back(newPartition);
+    m_mountedPartitions.emplace_back(newPartition);
 }
 
 void PhysicalDevice::removeMountedPartition(unsigned pos) {

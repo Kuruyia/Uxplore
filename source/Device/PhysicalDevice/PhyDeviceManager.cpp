@@ -10,6 +10,9 @@
 
 #include <dirent.h>
 
+#define DEFAULT_CACHE_PAGES 4
+#define DEFAULT_SECTORS_PAGE 64
+
 PhysicalDeviceManager::PhysicalDeviceManager()
 : m_lastUpdate(0)
 {
@@ -41,6 +44,16 @@ bool PhysicalDeviceManager::update() {
 
             std::shared_ptr<PhysicalDevice> newDevice(new PhysicalDevice(addedDevice, isNative));
             m_insertedDevices.emplace_back(newDevice->getDeviceId(), newDevice);
+
+            if (newDevice->isPartitionTableAvailable()) {
+                // Partition table available, we can read from it
+            } else {
+                // Partition table not available, we have to rely on the system
+                bool success = tryMountPartition(newDevice.get(), newDevice->getDeviceId(), 0, FSMountCandidates::Native);
+                if (success) {
+                    newDevice->addMountedPartition(std::make_shared<MountedPartition>(MountedPartition(newDevice->getDeviceId())));
+                }
+            }
 
             hasChanged = true;
 
@@ -102,12 +115,11 @@ bool PhysicalDeviceManager::update() {
 	return false;
 }
 
-bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice,
+bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice, const std::string &partitionName,
                                               sec_t startSector,
                                               FSMountCandidates mountCandidates) {
-    const std::string& devId = physicalDevice->getDeviceId();
-
-    if (mountCandidates & FSMountCandidates::FAT && fatMountSimple(devId.c_str(), physicalDevice->getDiscInterface()->getInterface())) {
+    if (mountCandidates & FSMountCandidates::FAT &&
+            fatMount(partitionName.c_str(), physicalDevice->getDiscInterface()->getInterface(), startSector, DEFAULT_CACHE_PAGES, DEFAULT_SECTORS_PAGE)) {
         // TODO: Remove this
 		/*WHBLogPrint("");
 		WHBLogPrintf("LISTING DEVICE %s", physicalDevice->getDeviceId().c_str());
@@ -137,7 +149,7 @@ bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice,
 	    WHBLogPrint("");*/
 
         char deviceName[11];
-        fatGetVolumeLabel(devId.c_str(), deviceName);
+        fatGetVolumeLabel(partitionName.c_str(), deviceName);
         PhysicalDeviceUtils::shrinkFATLabel(deviceName);
 		physicalDevice->setDeviceName(deviceName);
 
@@ -146,9 +158,9 @@ bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice,
 		return true;
 	}
 
-    if (mountCandidates & FSMountCandidates::Native && tryMountNative(devId)) {
+    if (mountCandidates & FSMountCandidates::Native && tryMountNative(partitionName)) {
         // TODO: Show devId more cleanly
-        physicalDevice->setDeviceName(PhysicalDeviceUtils::getNativeDeviceName(devId) + " (" + devId + ")");
+        physicalDevice->setDeviceName(PhysicalDeviceUtils::getNativeDeviceName(partitionName) + " (" + partitionName + ")");
         physicalDevice->setFilesystem(PhysicalDevice::Filesystem::Native);
 
         return true;
