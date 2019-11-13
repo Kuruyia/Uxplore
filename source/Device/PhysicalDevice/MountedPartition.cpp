@@ -38,3 +38,11 @@ const std::string &MountedPartition::getName() const {
 void MountedPartition::setName(const std::string &name) {
     m_name = name;
 }
+
+const std::string &MountedPartition::getId() const {
+    return m_id;
+}
+
+const MountedPartition::Filesystem MountedPartition::getFilesystem() const {
+    return m_filesystem;
+}

@@ -14,6 +14,9 @@ public:
 
     MountedPartition(const std::string &id, Filesystem filesystem);
 
+    const std::string &getId() const;
+    const Filesystem getFilesystem() const;
+
     const std::string &getName() const;
     void setName(const std::string &name);
 

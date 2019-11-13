@@ -32,6 +32,8 @@ private:
 
 	void unmountAll();
 
+	static void updateMountedPartitionName(const std::shared_ptr<MountedPartition>& partition);
+
 	unsigned int m_lastUpdate;
 	int m_fsaFd;
 

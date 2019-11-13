@@ -54,7 +54,10 @@ bool PhysicalDeviceManager::update() {
                                                  FSMountCandidates::Native, &mountedFilesystem);
 
                 if (success) {
-                    newDevice->addMountedPartition(std::make_shared<MountedPartition>(MountedPartition(newDevice->getDeviceId(), mountedFilesystem)));
+                    std::shared_ptr<MountedPartition> newPartition(new MountedPartition(newDevice->getDeviceId(), mountedFilesystem));
+
+                    newDevice->addMountedPartition(newPartition);
+                    updateMountedPartitionName(newPartition);
                 }
             }
 
@@ -151,20 +154,12 @@ bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice, co
 	    WHBLogPrint("END LISTING");
 	    WHBLogPrint("");*/
 
-		// TODO: Reimplement this for partition support
-        /*char deviceName[11];
-        fatGetVolumeLabel(partitionName.c_str(), deviceName);
-        PhysicalDeviceUtils::shrinkFATLabel(deviceName);
-		physicalDevice->setDeviceName(deviceName);*/
-
-		*mountedFilesystem = MountedPartition::Filesystem ::FAT;
+		*mountedFilesystem = MountedPartition::Filesystem::FAT;
 
 		return true;
 	}
 
     if (mountCandidates & FSMountCandidates::Native && tryMountNative(partitionName)) {
-        // TODO: Show devId more cleanly && Reimplement this for partition support
-        //physicalDevice->setDeviceName(PhysicalDeviceUtils::getNativeDeviceName(partitionName) + " (" + partitionName + ")");
         *mountedFilesystem = MountedPartition::Filesystem::Native;
 
         return true;
@@ -208,4 +203,23 @@ std::vector<std::shared_ptr<PhysicalDevice>> PhysicalDeviceManager::getInsertedD
 void PhysicalDeviceManager::unmountAll() {
     WHBLogPrint("Unmounting everything");
     // TODO: Unmount all partitions of all devices
+}
+
+void PhysicalDeviceManager::updateMountedPartitionName(const std::shared_ptr<MountedPartition>& partition) {
+    switch (partition->getFilesystem()) {
+        case MountedPartition::Filesystem::FAT:
+            char deviceName[11];
+            fatGetVolumeLabel(partition->getId().c_str(), deviceName);
+            PhysicalDeviceUtils::shrinkFATLabel(deviceName);
+            partition->setName(deviceName);
+
+            break;
+        case MountedPartition::Filesystem::Native:
+            // TODO: Show devId more cleanly
+            partition->setName(PhysicalDeviceUtils::getNativeDeviceName(partition->getId()) + " (" + partition->getId() + ")");
+
+            break;
+        default:
+            break;
+    }
 }
