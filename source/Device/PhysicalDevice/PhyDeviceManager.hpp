@@ -29,10 +29,13 @@ private:
                            sec_t startSector, FSMountCandidates mountCandidates,
                            MountedPartition::Filesystem *mountedFilesystem);
 	bool tryMountNative(const std::string& deviceName);
+    bool tryMountPartitionAndAddToDevice(std::shared_ptr<PhysicalDevice> &device, const std::string &partitionName, sec_t startSector);
 
+    void unmountPartition(const std::shared_ptr<MountedPartition> &partition);
 	void unmountAll();
 
-	static void updateMountedPartitionName(const std::shared_ptr<MountedPartition>& partition);
+	static void updateMountedPartitionName(const std::shared_ptr<MountedPartition> &partition);
+	static void updateDeviceType(const std::shared_ptr<PhysicalDevice> &device);
 
 	unsigned int m_lastUpdate;
 	int m_fsaFd;

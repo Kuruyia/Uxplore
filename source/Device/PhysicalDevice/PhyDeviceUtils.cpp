@@ -72,6 +72,7 @@ bool PhysicalDeviceUtils::isNative(const std::string& id) {
 }
 
 std::string PhysicalDeviceUtils::getNativeDeviceName(const std::string& id) {
+    // TODO: Add more names
     if (id == "odd01")
         return "Disc tickets";
     else if (id == "odd02")

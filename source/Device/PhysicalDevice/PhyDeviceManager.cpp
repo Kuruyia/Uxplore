@@ -43,10 +43,29 @@ bool PhysicalDeviceManager::update() {
 			bool isNative = PhysicalDeviceUtils::isNative(addedDevice);
 
             std::shared_ptr<PhysicalDevice> newDevice(new PhysicalDevice(addedDevice, isNative));
+            updateDeviceType(newDevice);
             m_insertedDevices.emplace_back(newDevice->getDeviceId(), newDevice);
 
             if (newDevice->isPartitionTableAvailable()) {
                 // Partition table available, we can read from it
+                unsigned partitionCount = 1;
+                if (newDevice->getPartitionTableReader()->hasGPT()) {
+                    // Read the GPT
+                    // TODO: Support GPT
+                } else {
+                    // Read the MBR/EBRs
+                    for (const PartitionTableReader::MBR_PARTITION &partition : newDevice->getPartitionTableReader()->getMbrPartitions()) {
+                        if (tryMountPartitionAndAddToDevice(newDevice, newDevice->getDeviceId() + "p" + std::to_string(partitionCount), partition.startingLBA)) {
+                            ++partitionCount;
+                        }
+                    }
+
+                    for (const PartitionTableReader::EBR_PARTITION &partition : newDevice->getPartitionTableReader()->getEbrPartitions()) {
+                        if (tryMountPartitionAndAddToDevice(newDevice, newDevice->getDeviceId() + "p" + std::to_string(partitionCount), partition.ebrLBA + partition.partition.startingLBA)) {
+                            ++partitionCount;
+                        }
+                    }
+                }
             } else {
                 // Partition table not available, we have to rely on the system
                 MountedPartition::Filesystem mountedFilesystem;
@@ -62,33 +81,6 @@ bool PhysicalDeviceManager::update() {
             }
 
             hasChanged = true;
-
-            /*if (!isNative) {
-                // Added device is NOT native-exclusive
-                isMounted = tryMountPartition(newDevice.get(), 0, FSMountCandidates::All);
-            } else {
-                // Added device is native-exclusive
-                isMounted = tryMountPartition(newDevice.get(), 0, FSMountCandidates::Native);
-            }
-
-            if (isMounted) {
-                WHBLogPrintf("Device mounted - %s", addedDevice.c_str());
-
-                // Guess and set device type
-                if (addedDevice.compare(0, 3, "odd") == 0)
-                    newDevice->setDeviceType(PhysicalDevice::DeviceType::Disc);
-                else if (addedDevice.compare(0, 3, "usb") == 0)
-                    newDevice->setDeviceType(PhysicalDevice::DeviceType::USB);
-                else if (addedDevice.compare(0, 6, "sdcard") == 0)
-                    newDevice->setDeviceType(PhysicalDevice::DeviceType::SD);
-
-                m_insertedDevices.emplace_back(newDevice->getDeviceId(), newDevice);
-                hasChanged = true;
-            } else {
-                WHBLogPrintf("Device failed to mount - %s", addedDevice.c_str());
-
-                m_blacklist.push_back(addedDevice);
-            }*/
 		}
 
 		for (auto & removedDevice : removedDevices) {
@@ -96,9 +88,11 @@ bool PhysicalDeviceManager::update() {
 
 			for (auto it = m_insertedDevices.begin(); it != m_insertedDevices.end(); it++) {
 				if (it->first == removedDevice) {
-					WHBLogPrintf("Confirmed device removed - %s", it->first.c_str());
+					WHBLogPrintf("Found removed device - %s", it->first.c_str());
 
-					// TODO: Unmount every partition on device
+                    for (const std::shared_ptr<MountedPartition>& partition : it->second->getMountedPartitions()) {
+                        unmountPartition(partition);
+                    }
 
 					m_insertedDevices.erase(it);
 
@@ -169,7 +163,7 @@ bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice, co
 }
 
 bool PhysicalDeviceManager::tryMountNative(const std::string& deviceName) {
-    WHBLogPrintf("Checking nativeness of %s", deviceName.c_str());
+    WHBLogPrintf("Trying to mount %s natively", deviceName.c_str());
 
     if (m_fsaFd < 0) return false;
 
@@ -205,7 +199,7 @@ void PhysicalDeviceManager::unmountAll() {
     // TODO: Unmount all partitions of all devices
 }
 
-void PhysicalDeviceManager::updateMountedPartitionName(const std::shared_ptr<MountedPartition>& partition) {
+void PhysicalDeviceManager::updateMountedPartitionName(const std::shared_ptr<MountedPartition> &partition) {
     switch (partition->getFilesystem()) {
         case MountedPartition::Filesystem::FAT:
             char deviceName[11];
@@ -220,6 +214,48 @@ void PhysicalDeviceManager::updateMountedPartitionName(const std::shared_ptr<Mou
 
             break;
         default:
+            WHBLogPrintf("PhysicalDeviceManager::updateMountedPartitionName - Unhandled partition type");
+            break;
+    }
+}
+
+void PhysicalDeviceManager::updateDeviceType(const std::shared_ptr<PhysicalDevice> &device) {
+    const std::string deviceId = device->getDeviceId();
+    if (deviceId.compare(0, 3, "odd") == 0)
+        device->setDeviceType(PhysicalDevice::DeviceType::Disc);
+    else if (deviceId.compare(0, 3, "usb") == 0)
+        device->setDeviceType(PhysicalDevice::DeviceType::USB);
+    else if (deviceId.compare(0, 6, "sdcard") == 0)
+        device->setDeviceType(PhysicalDevice::DeviceType::SD);
+}
+
+bool PhysicalDeviceManager::tryMountPartitionAndAddToDevice(std::shared_ptr<PhysicalDevice> &device, const std::string &partitionName,
+                                                            sec_t startSector) {
+    MountedPartition::Filesystem mountedFilesystem;
+    if (tryMountPartition(device.get(), partitionName, startSector,FSMountCandidates::All, &mountedFilesystem)) {
+        std::shared_ptr<MountedPartition> newPartition(new MountedPartition(partitionName, mountedFilesystem));
+
+        device->addMountedPartition(newPartition);
+        updateMountedPartitionName(newPartition);
+
+        return true;
+    }
+
+    return false;
+}
+
+void PhysicalDeviceManager::unmountPartition(const std::shared_ptr<MountedPartition> &partition) {
+    switch (partition->getFilesystem()) {
+        case MountedPartition::Filesystem::FAT:
+            fatUnmount(partition->getId().c_str());
+
+            break;
+        case MountedPartition::Filesystem::Native:
+            unmount_fs(partition->getId().c_str());
+
+            break;
+        default:
+            WHBLogPrintf("PhysicalDeviceManager::unmountPartition - Unhandled partition type");
             break;
     }
 }
