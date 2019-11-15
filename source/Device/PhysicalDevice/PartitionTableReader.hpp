@@ -42,6 +42,8 @@ public:
 
     bool isReady() const;
 
+    static bool isExtendedPartitionType(const uint8_t partitionType);
+
 private:
     static void discoverExtendedPartition(const DiscInterface *discInterface,
                                           const MBR_PARTITION &extendedPartitionEntry,

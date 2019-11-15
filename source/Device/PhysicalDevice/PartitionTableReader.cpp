@@ -19,7 +19,12 @@ PartitionTableReader::PartitionTableReader(const DiscInterface *discInterface)
     }
 
     // Extract partitions from MBR
-    m_mbrPartitions = std::vector<MBR_PARTITION>(std::begin(m_mbr.partitions), std::end(m_mbr.partitions));
+    for (const MBR_PARTITION partition : m_mbr.partitions) {
+        // Ensure valid partition
+        if (partition.partitionType != 0x00) {
+            m_mbrPartitions.push_back(partition);
+        }
+    }
 
     // We want little endian
     for (MBR_PARTITION& partition : m_mbrPartitions) {
@@ -33,7 +38,7 @@ PartitionTableReader::PartitionTableReader(const DiscInterface *discInterface)
         m_gptPresent = true;
     } else {
         // This is not a protective MBR, so we attempt to discover any extended partition
-        for (const MBR_PARTITION& partition : m_mbrPartitions) {
+        for (const MBR_PARTITION &partition : m_mbrPartitions) {
             discoverExtendedPartition(discInterface, partition, &m_ebrPartitions);
         }
 
@@ -47,7 +52,7 @@ void PartitionTableReader::discoverExtendedPartition(const DiscInterface *discIn
                                                      const MBR_PARTITION &extendedPartitionEntry,
                                                      std::vector<EBR_PARTITION> *logicalPartitions) {
     // Check that the entry partition type is extended partition
-    if (extendedPartitionEntry.partitionType != 0x05 && extendedPartitionEntry.partitionType != 0x0F && extendedPartitionEntry.partitionType != 0x85)
+    if (!isExtendedPartitionType(extendedPartitionEntry.partitionType))
         return;
 
     MBR_PARTITION nextEBR;
@@ -68,9 +73,11 @@ void PartitionTableReader::discoverExtendedPartition(const DiscInterface *discIn
         currentLogicalPartition.ebrLBA = sectorToCheck;
 
         // Store first two entries
-        correctMBRPartitionEndianness(&ebr.partitions[0]);
-        currentLogicalPartition.partition = ebr.partitions[0];
-        logicalPartitions->push_back(currentLogicalPartition);
+        if (ebr.partitions[0].partitionType != 0x00) {
+            correctMBRPartitionEndianness(&ebr.partitions[0]);
+            currentLogicalPartition.partition = ebr.partitions[0];
+            logicalPartitions->push_back(currentLogicalPartition);
+        }
 
         correctMBRPartitionEndianness(&ebr.partitions[1]);
         nextEBR = ebr.partitions[1];
@@ -101,4 +108,8 @@ const std::vector<PartitionTableReader::MBR_PARTITION> &PartitionTableReader::ge
 
 const std::vector<PartitionTableReader::EBR_PARTITION> &PartitionTableReader::getEbrPartitions() const {
     return m_ebrPartitions;
+}
+
+bool PartitionTableReader::isExtendedPartitionType(const uint8_t partitionType) {
+    return (partitionType == 0x05 || partitionType == 0x0F || partitionType == 0x85);
 }
