@@ -14,7 +14,7 @@ Application::Application() {
     m_sdlWindowGamepad = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_WIIU_GAMEPAD_ONLY);
     m_sdlRendererGamepad = SDL_CreateRenderer(m_sdlWindowGamepad, -1, SDL_RENDERER_ACCELERATED);
 
-    m_textFont = TTF_OpenFont("romfs:/res/opensans.ttf", 32);
+    m_textFont = TTF_OpenFont("romfs:/res/fonts/opensans.ttf", 32);
     m_renderKit = new RenderKit(m_sdlRendererTV, m_sdlRendererGamepad, m_textFont);
     ImageCache::getInstance().setRenderer(m_sdlRendererTV);
 

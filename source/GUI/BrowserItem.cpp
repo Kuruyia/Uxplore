@@ -6,7 +6,7 @@ BrowserItem::BrowserItem(Drawable* parent, const Entry &entry, SDL_Point pos)
 , m_entry(entry.clone())
 , m_entryName(this, {96, 0}, m_entry->getText())
 {
-    m_icon = ImageCache::getImage("romfs:/res/" + m_entry->getIconName());
+    m_icon = ImageCache::getImage("romfs:/res/icons/" + m_entry->getIconName());
 
 	m_entryName.setScale(0.7f);
 

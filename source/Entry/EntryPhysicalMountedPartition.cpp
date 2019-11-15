@@ -18,13 +18,13 @@ Entry::EntryType EntryPhysicalMountedPartition::getType() const {
 std::string EntryPhysicalMountedPartition::getIconName() const {
     switch (m_device->getDeviceType()) {
         case PhysicalDevice::Disc:
-            return "disc.png";
+            return "devices/disc.png";
         case PhysicalDevice::USB:
-            return "usb.png";
+            return "devices/usb.png";
         case PhysicalDevice::SD:
-            return "sd.png";
+            return "devices/sd.png";
         default:
-            return "generic_fs.png";
+            return "devices/generic_fs.png";
     }
 }
 

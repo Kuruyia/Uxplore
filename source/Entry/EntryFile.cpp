@@ -13,7 +13,7 @@ Entry::EntryType EntryFile::getType() const {
 }
 
 std::string EntryFile::getIconName() const {
-	return "file.png";
+	return "files/file.png";
 }
 
 std::unique_ptr<Entry> EntryFile::clone() const {
