@@ -73,8 +73,7 @@ int PhysicalDeviceUtils::getDeviceDelta(std::vector<std::string> mountedDevices,
 	return 0;
 }
 
-// TODO: Replace this with a string array
-bool PhysicalDeviceUtils::isStringInArray(const char* string, const char* array[], int arraySize) {
+bool PhysicalDeviceUtils::isStringInArray(const char* string, const char *array[], int arraySize) {
 	for (int i = 0; i < arraySize; i++) {
 		if (strncmp(string, array[i], strlen(array[i])) == 0)
 			return true;
@@ -84,19 +83,24 @@ bool PhysicalDeviceUtils::isStringInArray(const char* string, const char* array[
 }
 
 bool PhysicalDeviceUtils::isNative(const std::string& id) {
-    // TODO: Add more native devices
     return (startsWith(id, "odd")
-            || startsWith(id, "mlc"));
+            || startsWith(id, "mlc")
+            || startsWith(id, "slc"));
 }
 
 std::string PhysicalDeviceUtils::getNativeDeviceName(const std::string& id) {
-    // TODO: Add more names
     if (id == "odd01")
         return "Disc tickets";
     else if (id == "odd02")
         return "Disc update";
     else if (id == "odd03" || id == "odd04")
         return "Disc content";
+    else if (id == "slccmpt01")
+        return "NAND SLC (vWii compatible)";
+    else if (id == "slc01")
+        return "NAND SLC";
+    else if (id == "mlc01")
+        return "NAND MLC";
 
     return id;
 }

@@ -24,7 +24,7 @@
 
 class PhysicalDeviceUtils {
 public:
-	static int getMountableDevices(std::vector<std::string>* devices);
+    static int getMountableDevices(std::vector<std::string>* devices);
 	static int getDeviceDelta(std::vector<std::string> mountedDevices, std::vector<std::string> *addedDevices,
                               std::vector<std::string> *removedDevices);
 
