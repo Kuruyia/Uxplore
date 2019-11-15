@@ -23,7 +23,7 @@ public:
 
     typedef struct {
         MBR_PARTITION partition;
-        uint32_t firstRecordLBA;
+        uint32_t ebrLBA;
     } EBR_PARTITION;
 
     typedef struct {

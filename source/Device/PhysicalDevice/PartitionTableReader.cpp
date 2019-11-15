@@ -50,21 +50,22 @@ void PartitionTableReader::discoverExtendedPartition(const DiscInterface *discIn
     if (extendedPartitionEntry.partitionType != 0x05 && extendedPartitionEntry.partitionType != 0x0F && extendedPartitionEntry.partitionType != 0x85)
         return;
 
-    EBR_PARTITION currentLogicalPartition;
     MBR_PARTITION nextEBR;
-    MASTER_BOOT_RECORD ebr;
     uint32_t sectorToCheck = extendedPartitionEntry.startingLBA;
 
-    // We need to keep track of this because an EBR entry starting LBA is relative to the first EBR LBA
-    currentLogicalPartition.firstRecordLBA = extendedPartitionEntry.startingLBA;
-
     do {
+        MASTER_BOOT_RECORD ebr;
+
         // Sanity checks
         if (!discInterface->readSectors(sectorToCheck, 1, &ebr))
             break;
 
         if (ebr.signature != 0x55AA && ebr.signature != 0x55AB)
             break;
+
+        // We need to keep track of this because an EBR entry's starting LBA is relative to the EBR starting LBA
+        EBR_PARTITION currentLogicalPartition;
+        currentLogicalPartition.ebrLBA = sectorToCheck;
 
         // Store first two entries
         correctMBRPartitionEndianness(&ebr.partitions[0]);
