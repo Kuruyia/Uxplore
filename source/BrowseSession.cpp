@@ -1,6 +1,6 @@
 #include "BrowseSession.hpp"
 
-#include <Entry/EntryPhyDevice.hpp>
+#include <Entry/EntryPhysicalMountedPartition.hpp>
 
 BrowseSession::BrowseSession(PhysicalDeviceManager *physicalDeviceManager)
 : m_physicalDeviceManager(physicalDeviceManager)
@@ -67,8 +67,10 @@ void BrowseSession::reloadList() {
     m_browserList.reset();
 
 	if (m_navigationHistory.getHistoryPosition() == 0) {
-        for (const auto & mountedDevice : m_physicalDeviceManager->getInsertedDevices()) {
-            m_browserList.addItem(new EntryPhyDevice(mountedDevice.get()));
+        for (const auto &device : m_physicalDeviceManager->getInsertedDevices()) {
+            for (const auto &partition : device->getMountedPartitions()) {
+                m_browserList.addItem(EntryPhysicalMountedPartition(device, partition));
+            }
         }
 	} else {
 		

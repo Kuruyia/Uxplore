@@ -9,9 +9,11 @@ class EntryFile : public Entry {
 public:
 	EntryFile(std::shared_ptr<File>& file);
 
-	std::string getText() override;
-	EntryType getType() override;
-	std::string getIconName() override;
+	std::string getText() const override;
+	EntryType getType() const override;
+	std::string getIconName() const override;
+
+    std::unique_ptr<Entry> clone() const override;
 
 private:
     std::shared_ptr<File> m_file;

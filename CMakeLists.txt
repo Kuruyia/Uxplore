@@ -41,7 +41,6 @@ add_executable(uxplore_cpp
         source/Device/PhysicalDevice/PhyDeviceUtils.cpp
         source/DiscInterface/DiscInterface.cpp
         source/DiscInterface/DiscInterfaceWrapper.cpp
-        source/Entry/EntryPhyDevice.cpp
         source/Entry/EntryFile.cpp
         source/GUI/BrowserItem.cpp
         source/GUI/Drawable.cpp
@@ -50,7 +49,7 @@ add_executable(uxplore_cpp
         source/Overlay/Dialog.cpp
         source/Device/PhysicalDevice/PartitionTableReader.cpp
         source/Utils.cpp
-        source/Device/PhysicalDevice/MountedPartition.cpp)
+        source/Device/PhysicalDevice/MountedPartition.cpp source/Entry/EntryPhysicalMountedPartition.cpp source/Entry/EntryPhysicalMountedPartition.hpp)
 
 romfs_add(uxplore_cpp "romfs")
 

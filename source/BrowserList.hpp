@@ -26,7 +26,7 @@ public:
 	void draw(SDL_Renderer* renderer, TTF_Font* font) override;
 	void update(float delta);
 
-	void addItem(Entry* entry);
+	void addItem(const Entry &entry);
 	std::shared_ptr<BrowserItem> getItem(unsigned int index);
 	void reset();
 

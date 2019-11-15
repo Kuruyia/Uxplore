@@ -10,12 +10,14 @@ public:
 
 		ENTRY_FOLDER,
 		ENTRY_FILE,
-		ENTRY_DEVICE
+		ENTRY_PARTITION
 	};
 
-	virtual std::string getText() = 0;
-	virtual EntryType getType() = 0;
-	virtual std::string getIconName() = 0;
+	virtual std::string getText() const = 0;
+	virtual EntryType getType() const = 0;
+	virtual std::string getIconName() const = 0;
+
+	virtual std::unique_ptr<Entry> clone() const = 0;
 };
 
 #endif // ENTRYITEM_HPP

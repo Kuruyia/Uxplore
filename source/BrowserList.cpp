@@ -20,7 +20,7 @@ void BrowserList::update(float delta) {
 	m_tweenManager.update(delta);
 }
 
-void BrowserList::addItem(Entry* entry) {
+void BrowserList::addItem(const Entry &entry) {
 	SDL_Point itemPosition = getPositionFromIndex(m_items.size());
 
 	std::shared_ptr<BrowserItem> item(new BrowserItem(this, entry, itemPosition));
