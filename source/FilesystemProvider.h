@@ -27,6 +27,8 @@
 
 class FilesystemProvider {
 public:
+    virtual ~FilesystemProvider() = default;
+
 	virtual std::shared_ptr<File> getFile(std::string path) = 0;
 	virtual std::vector<std::shared_ptr<File>> listFolder(std::string path) = 0;
 

@@ -25,7 +25,9 @@
 
 class EntryFile : public Entry {
 public:
-	EntryFile(std::shared_ptr<File>& file);
+	explicit EntryFile(std::shared_ptr<File>& file);
+
+	~EntryFile() override = default;;
 
 	std::string getText() const override;
 	EntryType getType() const override;

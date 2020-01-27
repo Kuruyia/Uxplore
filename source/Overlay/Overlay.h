@@ -23,7 +23,7 @@
 
 class Overlay {
 public:
-	virtual ~Overlay() {};
+	virtual ~Overlay() = default;
 
 	virtual void update(float delta) = 0;
 	virtual void processEvent(SDL_Event event) = 0;

@@ -31,6 +31,8 @@ public:
 		ENTRY_PARTITION
 	};
 
+	virtual ~Entry() = default;
+
 	virtual std::string getText() const = 0;
 	virtual EntryType getType() const = 0;
 	virtual std::string getIconName() const = 0;

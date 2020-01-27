@@ -26,7 +26,7 @@
 class Text: public Drawable {
 public:
 	Text(Drawable* parent, SDL_Point position, std::string text);
-	~Text();
+	~Text() override;
 
 	void draw(SDL_Renderer* renderer, TTF_Font* font) override;
 

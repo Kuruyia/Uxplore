@@ -28,6 +28,7 @@
 class Browser: public Overlay {
 public:
 	Browser();
+	~Browser() override = default;
 	
 	void update(float delta) override;
 	void processEvent(SDL_Event event) override;

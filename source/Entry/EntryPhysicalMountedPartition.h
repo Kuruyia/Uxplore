@@ -27,6 +27,8 @@ class EntryPhysicalMountedPartition: public Entry {
 public:
     EntryPhysicalMountedPartition(const std::shared_ptr<PhysicalDevice> &device, const std::shared_ptr<MountedPartition> &partition);
 
+    ~EntryPhysicalMountedPartition() override = default;
+
     std::string getText() const override;
     EntryType getType() const override;
     std::string getIconName() const override;

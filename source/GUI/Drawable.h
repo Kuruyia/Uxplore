@@ -24,6 +24,8 @@
 
 class Drawable {
 public:
+    virtual ~Drawable() = default;
+
 	virtual void draw(SDL_Renderer* renderer, TTF_Font* font) = 0;
 
 	float getScale();

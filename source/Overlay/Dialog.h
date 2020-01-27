@@ -25,7 +25,8 @@
 
 class Dialog: public Overlay {
 public:
-	Dialog(std::string message);
+	explicit Dialog(std::string message);
+	~Dialog() override = default;
 
 	void update(float delta) override;
 	void processEvent(SDL_Event event) override;
