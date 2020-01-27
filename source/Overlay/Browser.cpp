@@ -66,15 +66,16 @@ void Browser::processEvent(SDL_Event event) {
 	m_browseSession.processEvent(event);
 }
 
-void Browser::render(RenderKit* renderKit) {
+void Browser::renderTV(RenderKit* renderKit) {
 	SDL_Renderer* tvRenderer = renderKit->getTVRenderer();
-	SDL_Renderer* gamepadRenderer = renderKit->getGamepadRenderer();
 	TTF_Font* font = renderKit->getTextFont();
 
-	// Render TV
 	m_browseSession.draw(tvRenderer, font);
+}
 
-	// Render Gamepad
+void Browser::renderDRC(RenderKit *renderKit) {
+	SDL_Renderer* gamepadRenderer = renderKit->getGamepadRenderer();
+
 	SDL_SetRenderDrawColor(gamepadRenderer, 255, 0, 0, 128);
 	SDL_Rect rect;
 	rect.x = 50;

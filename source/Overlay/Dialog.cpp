@@ -30,6 +30,10 @@ void Dialog::processEvent(SDL_Event event) {
 
 }
 
-void Dialog::render(RenderKit* renderKit) {
+void Dialog::renderTV(RenderKit* renderKit) {
+
+}
+
+void Dialog::renderDRC(RenderKit *renderKit) {
 
 }

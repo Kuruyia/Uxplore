@@ -29,10 +29,12 @@ class Browser: public Overlay {
 public:
 	Browser();
 	~Browser() override = default;
-	
-	void update(float delta) override;
-	void processEvent(SDL_Event event) override;
-	void render(RenderKit* renderKit) override;
+
+    void processEvent(SDL_Event event) override;
+    void update(float delta) override;
+
+	void renderTV(RenderKit* renderKit) override;
+	void renderDRC(RenderKit* renderKit) override;
 
 private:
 	BrowseSession m_browseSession;
