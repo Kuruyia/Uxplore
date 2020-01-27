@@ -19,10 +19,14 @@
 #include <stdint-gcc.h>
 #include "Utils.h"
 
-uint16_t Utils::swapEndian16(uint16_t n) {
+uint16_t Utils::swapEndian16(const uint16_t n) {
     return (n >> 8) | (n << 8);
 }
 
-uint32_t Utils::swapEndian32(uint32_t n) {
-    return ((n >> 24) & 0xFF) | ((n << 24) & 0xFF000000) | ((n << 8) & 0xFF0000) | ((n >> 8) & 0xFF00);
+uint32_t Utils::swapEndian32(const uint32_t n) {
+    return (uint32_t)(swapEndian16(n & 0xFFFF)) << 16 | swapEndian16(n >> 16);
+}
+
+uint64_t Utils::swapEndian64(const uint64_t n) {
+    return (uint64_t)(swapEndian32(n & 0xFFFFFFFF)) << 32 | swapEndian32(n >> 32);
 }

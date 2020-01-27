@@ -50,6 +50,38 @@ public:
         uint16_t signature;
     } __attribute__((packed)) MASTER_BOOT_RECORD;
 
+    typedef struct {
+        uint64_t lowPart;
+        uint64_t highPart;
+    } __attribute__((packed)) EFI_GUID;
+
+    typedef struct {
+        char signature[0x08];
+        uint32_t revision;
+        uint32_t headerSize;
+        uint32_t headerCRC32;
+        uint32_t reserved;
+        uint64_t myLBA;
+        uint64_t alternateLBA;
+        uint64_t firstUsableLBA;
+        uint64_t lastUsableLBA;
+        EFI_GUID diskGUID;
+        uint64_t partitionEntryLBA;
+        uint32_t partitionCount;
+        uint32_t partitionEntrySize;
+        uint32_t partitionEntryCRC32;
+        uint8_t reserved2[0x1A4];
+    } __attribute__((packed)) GPT_HEADER;
+
+    typedef struct {
+        EFI_GUID partitionTypeGUID;
+        EFI_GUID uniquePartitionGUID;
+        uint64_t startingLBA;
+        uint64_t endingLBA;
+        uint64_t attributes;
+        char partitionName[0x48];
+    } __attribute__((packed)) GPT_PARTITION_ENTRY;
+
     explicit PartitionTableReader(const DiscInterface *discInterface);
 
     const MASTER_BOOT_RECORD &getMbr() const;
@@ -59,21 +91,27 @@ public:
     bool hasGPT();
 
     bool isReady() const;
-
-    static bool isExtendedPartitionType(const uint8_t partitionType);
-
 private:
-    static void discoverExtendedPartition(const DiscInterface *discInterface,
+    bool readMbrFromDisc(const DiscInterface *discInterface);
+    bool detectProtectiveMbr(const DiscInterface *discInterface);
+    bool readGptFromDisc(const DiscInterface *discInterface, uint32_t headerSector);
+    void detectExtendedPartitions(const DiscInterface *discInterface);
+
+    bool isExtendedPartitionType(uint8_t partitionType);
+    void discoverExtendedPartition(const DiscInterface *discInterface,
                                           const MBR_PARTITION &extendedPartitionEntry,
                                           std::vector<EBR_PARTITION> *logicalPartitions);
 
-    static void correctMBRPartitionEndianness(MBR_PARTITION *partition);
+    void correctMBRPartitionEndianness(MBR_PARTITION &partition);
+    void correctGptHeaderEndianness(GPT_HEADER &header);
 
     MASTER_BOOT_RECORD m_mbr;
     std::vector<MBR_PARTITION> m_mbrPartitions;
     std::vector<EBR_PARTITION> m_ebrPartitions;
 
     bool m_gptPresent;
+    GPT_HEADER m_gptHeader;
+    std::vector<GPT_PARTITION_ENTRY> m_gptPartitionEntries;
 
     bool m_ready;
 };
