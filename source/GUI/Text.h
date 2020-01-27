@@ -16,22 +16,36 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DISCINTERFACEWRAPPER_H
-#define DISCINTERFACEWRAPPER_H
+#ifndef TEXT_HPP
+#define TEXT_HPP
 
-#include "DiscInterface.hpp"
+#include <string>
 
-class DiscInterfaceWrapper {
+#include "Drawable.h"
+
+class Text: public Drawable {
 public:
-	static bool startup(void* data);
-	static bool isInserted(void* data);
-	static bool clearStatus(void* data);
-	static bool shutdown(void* data);
-	static bool readSectors(void* data, uint32_t sector, uint32_t numSectors, void* buffer);
-	static bool writeSectors(void* data, uint32_t sector, uint32_t numSectors, const void* buffer);
+	Text(Drawable* parent, SDL_Point position, std::string text);
+	~Text();
+
+	void draw(SDL_Renderer* renderer, TTF_Font* font) override;
+
+	std::string getText();
+	void setText(std::string text);
+
+	void setScale(float scale);
+
+	void setColor(SDL_Color color);
+	SDL_Color getColor();
 
 private:
-	static DiscInterface* getInterfaceFromData(void* data);
+	std::string m_text;
+	SDL_Color m_textColor;
+
+	bool m_needsUpdate;
+
+	SDL_Texture* m_textTexture;
+	SDL_Rect m_textRect;
 };
 
-#endif // DISCINTERFACEWRAPPER_H
+#endif // TEXT_HPP

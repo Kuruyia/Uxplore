@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "Drawable.hpp"
+#include "Drawable.h"
 
 float Drawable::getScale() {
 	return m_scale;

@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "DiscInterface.hpp"
-#include "DiscInterfaceWrapper.hpp"
+#include "DiscInterface.h"
+#include "DiscInterfaceWrapper.h"
 
 #include <iosuhax.h>
 

@@ -16,24 +16,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOCALFILE_H
-#define LOCALFILE_H
+#ifndef UXPLORE_CPP_ENTRYPHYSICALMOUNTEDPARTITION_H
+#define UXPLORE_CPP_ENTRYPHYSICALMOUNTEDPARTITION_H
 
-#include "FilesystemProvider.hpp"
-#include "File.hpp"
+#include "Device/PhysicalDevice.h"
+#include "Device/PhysicalDevice/MountedPartition.h"
+#include "Entry.h"
 
-class LocalFile: public File {
+class EntryPhysicalMountedPartition: public Entry {
 public:
-	LocalFile(std::string name, std::string path, FilesystemProvider* device);
+    EntryPhysicalMountedPartition(const std::shared_ptr<PhysicalDevice> &device, const std::shared_ptr<MountedPartition> &partition);
 
-	std::string getPath();
+    std::string getText() const override;
+    EntryType getType() const override;
+    std::string getIconName() const override;
 
-	FilesystemProvider* getDevice();
+    std::unique_ptr<Entry> clone() const override;
 
 private:
-	std::string m_path;
-
-	FilesystemProvider* m_device;
+    std::shared_ptr<PhysicalDevice> m_device;
+    std::shared_ptr<MountedPartition> m_partition;
 };
 
-#endif // LOCALFILE_H
+
+#endif //UXPLORE_CPP_ENTRYPHYSICALMOUNTEDPARTITION_H

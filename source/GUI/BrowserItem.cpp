@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "BrowserItem.hpp"
-#include "../ImageCache.hpp"
+#include "BrowserItem.h"
+#include "ImageCache.h"
 
 BrowserItem::BrowserItem(Drawable* parent, const Entry &entry, SDL_Point pos)
 : m_selected(false)

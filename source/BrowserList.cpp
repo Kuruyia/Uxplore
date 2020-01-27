@@ -17,7 +17,7 @@
 */
 
 #include <TweenEngine/Tween.h>
-#include "BrowserList.hpp"
+#include "BrowserList.h"
 
 BrowserList::BrowserList()
 : m_selectedItemIndex(0)

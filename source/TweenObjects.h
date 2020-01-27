@@ -20,7 +20,7 @@
 #define TWEENABLEOBJECTS_H
 
 #include <TweenEngine/Tweenable.h>
-#include "GUI/Drawable.hpp"
+#include "GUI/Drawable.h"
 
 template <class T>
 class TweenTransformable: public T, public TweenEngine::Tweenable

@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "PhyDeviceUtils.hpp"
+#include "PhyDeviceUtils.h"
 
 #include <fat.h>
 #include <iosuhax.h>

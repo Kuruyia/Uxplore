@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "DiscInterfaceWrapper.hpp"
+#include "DiscInterfaceWrapper.h"
 
 bool DiscInterfaceWrapper::startup(void* data) {
     return getInterfaceFromData(data)->startup();

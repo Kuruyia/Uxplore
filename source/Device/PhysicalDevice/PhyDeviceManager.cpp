@@ -16,9 +16,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "PhyDeviceManager.hpp"
-#include "PhyDeviceUtils.hpp"
-#include "PartitionTableReader.hpp"
+#include "PhyDeviceManager.h"
+#include "PhyDeviceUtils.h"
+#include "PartitionTableReader.h"
 
 #include <SDL2/SDL.h>
 #include <whb/log.h>

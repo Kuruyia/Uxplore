@@ -22,9 +22,9 @@
 #include <string>
 #include <memory>
 
-#include "Text.hpp"
-#include "../Entry/Entry.hpp"
-#include "../TweenObjects.hpp"
+#include "Text.h"
+#include "Entry/Entry.h"
+#include "TweenObjects.h"
 
 class BrowserItem: public TweenDrawable {
 public:

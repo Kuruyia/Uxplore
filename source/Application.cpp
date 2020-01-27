@@ -16,9 +16,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "Application.hpp"
-#include "ImageCache.hpp"
-#include "Overlay/Browser.hpp"
+#include "Application.h"
+#include "ImageCache.h"
+#include "Overlay/Browser.h"
 #include <whb/log.h>
 #include <iosuhax.h>
 

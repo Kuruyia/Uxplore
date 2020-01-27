@@ -16,41 +16,53 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BROWSESESSION_HPP
-#define BROWSESESSION_HPP
+#ifndef BROWSERLIST_HPP
+#define BROWSERLIST_HPP
+
+#define VISIBLE_ROWS 6
+#define ITEM_PER_ROW 3
+#define ITEM_WIDTH 396
+#define ITEM_HEIGHT 89
+#define ITEM_MARGIN_X 23
+#define ITEM_MARGIN_Y 18
+#define ITEM_OFFSET 23
 
 #include <map>
 #include <memory>
 #include <vector>
 #include <SDL2/SDL_image.h>
 #include <TweenEngine/TweenManager.h>
-#include <Device/PhysicalDevice/PhyDeviceManager.hpp>
 
-#include "GUI/BrowserItem.hpp"
-#include "BrowserList.hpp"
-#include "NavigationHistory.hpp"
-#include "TweenObjects.hpp"
+#include "Entry/Entry.h"
+#include "TweenObjects.h"
+#include "GUI/BrowserItem.h"
 
-class BrowseSession: public TweenDrawable {
+class BrowserList: public TweenDrawable {
 public:
-	BrowseSession(PhysicalDeviceManager *physicalDeviceManager);
+	BrowserList();
 
 	void draw(SDL_Renderer* renderer, TTF_Font* font) override;
 	void update(float delta);
-	void processEvent(SDL_Event event);
 
-	void reloadList();
-	BrowserList* getBrowserList();
+	void addItem(const Entry &entry);
+	std::shared_ptr<BrowserItem> getItem(unsigned int index);
+	void reset();
 
-	void notifyDevicesChanged();
+	std::shared_ptr<BrowserItem> getSelectedItem();
+	unsigned int getSelectedItemIndex();
+	void setSelectedItemIndex(unsigned int index);
+	void moveSelectedItemIndex(int indexDelta);
 
 private:
-	BrowserList m_browserList;
-	NavigationHistory m_navigationHistory;
+	SDL_Point getPositionFromIndex(unsigned int index);
 
-	PhysicalDeviceManager *m_physicalDeviceManager;
+	std::vector<std::shared_ptr<BrowserItem>> m_items;
+	Text m_emptyListText;
+	unsigned int m_selectedItemIndex;
+	int m_firstRow;
 
+	std::map<Entry::EntryType, SDL_Texture*> m_icons;
 	TweenEngine::TweenManager m_tweenManager;
 };
 
-#endif // BROWSESESSION_HPP
+#endif // BROWSERLIST_HPP

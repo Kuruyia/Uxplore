@@ -16,36 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TEXT_HPP
-#define TEXT_HPP
+#ifndef UXPLORE_CPP_UTILS_H
+#define UXPLORE_CPP_UTILS_H
 
-#include <string>
-
-#include "Drawable.hpp"
-
-class Text: public Drawable {
+class Utils {
 public:
-	Text(Drawable* parent, SDL_Point position, std::string text);
-	~Text();
-
-	void draw(SDL_Renderer* renderer, TTF_Font* font) override;
-
-	std::string getText();
-	void setText(std::string text);
-
-	void setScale(float scale);
-
-	void setColor(SDL_Color color);
-	SDL_Color getColor();
-
-private:
-	std::string m_text;
-	SDL_Color m_textColor;
-
-	bool m_needsUpdate;
-
-	SDL_Texture* m_textTexture;
-	SDL_Rect m_textRect;
+    static uint16_t swapEndian16(uint16_t n);
+    static uint32_t swapEndian32(uint32_t n);
 };
 
-#endif // TEXT_HPP
+
+#endif //UXPLORE_CPP_UTILS_H

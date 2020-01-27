@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "LocalFile.hpp"
+#include "LocalFile.h"
 
 LocalFile::LocalFile(std::string name, std::string path, FilesystemProvider* device)
 : File(name)

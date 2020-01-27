@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "EntryPhysicalMountedPartition.hpp"
+#include "EntryPhysicalMountedPartition.h"
 
 EntryPhysicalMountedPartition::EntryPhysicalMountedPartition(const std::shared_ptr<PhysicalDevice> &device, const std::shared_ptr<MountedPartition> &partition)
 : m_device(device)

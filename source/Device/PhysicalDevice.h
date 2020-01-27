@@ -19,9 +19,9 @@
 #ifndef PHYSICALDEVICE_H
 #define PHYSICALDEVICE_H
 
-#include "PhysicalDevice/MountedPartition.hpp"
-#include "PhysicalDevice/PartitionTableReader.hpp"
-#include "../DiscInterface/DiscInterface.hpp"
+#include "Device/PhysicalDevice/MountedPartition.h"
+#include "Device/PhysicalDevice/PartitionTableReader.h"
+#include "DiscInterface/DiscInterface.h"
 
 #include <memory>
 

@@ -16,18 +16,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OVERLAY_HPP
-#define OVERLAY_HPP
+#ifndef DEVICE_HPP
+#define DEVICE_HPP
 
-#include "../RenderKit.hpp"
+#include <memory>
+#include <string>
+#include <vector>
 
-class Overlay {
+#include "File.h"
+
+class FilesystemProvider {
 public:
-	virtual ~Overlay() {};
+	virtual std::shared_ptr<File> getFile(std::string path) = 0;
+	virtual std::vector<std::shared_ptr<File>> listFolder(std::string path) = 0;
 
-	virtual void update(float delta) = 0;
-	virtual void processEvent(SDL_Event event) = 0;
-	virtual void render(RenderKit* renderKit) = 0;
+	virtual void writeFile(std::string path) = 0;
+	virtual void readFile(std::string path) = 0;
+
+	virtual void deleteEntry(std::string path) = 0;
+
+	virtual void createFolder(std::string path) = 0;
 };
 
-#endif // OVERLAY_HPP
+#endif // DEVICE_HPP

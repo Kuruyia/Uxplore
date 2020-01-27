@@ -16,26 +16,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DEVICE_HPP
-#define DEVICE_HPP
+#ifndef DIALOG_HPP
+#define DIALOG_HPP
 
-#include <memory>
-#include <string>
-#include <vector>
+#include <TweenEngine/TweenManager.h>
 
-#include "File.hpp"
+#include "Overlay.h"
 
-class FilesystemProvider {
+class Dialog: public Overlay {
 public:
-	virtual std::shared_ptr<File> getFile(std::string path) = 0;
-	virtual std::vector<std::shared_ptr<File>> listFolder(std::string path) = 0;
+	Dialog(std::string message);
 
-	virtual void writeFile(std::string path) = 0;
-	virtual void readFile(std::string path) = 0;
-
-	virtual void deleteEntry(std::string path) = 0;
-
-	virtual void createFolder(std::string path) = 0;
+	void update(float delta) override;
+	void processEvent(SDL_Event event) override;
+	void render(RenderKit* renderKit) override;
 };
 
-#endif // DEVICE_HPP
+#endif // DIALOG_HPP

@@ -16,17 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "Browser.hpp"
+#include "Browser.h"
 
 #include <TweenEngine/Tween.h>
 #include <whb/log.h>
 #include <fat.h>
 
-#include "../Device/PhysicalDevice/PhyDeviceUtils.hpp"
-#include "../DiscInterface/DiscInterface.hpp"
-#include "../Entry/EntryFile.hpp"
-#include "../BrowserList.hpp"
-#include "../File.hpp"
+#include "Device/PhysicalDevice/PhyDeviceUtils.h"
+#include "DiscInterface/DiscInterface.h"
+#include "Entry/EntryFile.h"
+#include "BrowserList.h"
+#include "File.h"
 
 Browser::Browser()
 : m_browseSession(&m_physicalDeviceManager)

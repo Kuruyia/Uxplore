@@ -16,14 +16,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UXPLORE_CPP_UTILS_HPP
-#define UXPLORE_CPP_UTILS_HPP
+#ifndef BROWSER_HPP
+#define BROWSER_HPP
 
-class Utils {
+#include <TweenEngine/TweenManager.h>
+
+#include "BrowseSession.h"
+#include "Device/PhysicalDevice/PhyDeviceManager.h"
+#include "Overlay.h"
+
+class Browser: public Overlay {
 public:
-    static uint16_t swapEndian16(uint16_t n);
-    static uint32_t swapEndian32(uint32_t n);
+	Browser();
+	
+	void update(float delta) override;
+	void processEvent(SDL_Event event) override;
+	void render(RenderKit* renderKit) override;
+
+private:
+	BrowseSession m_browseSession;
+	PhysicalDeviceManager m_physicalDeviceManager;
+
+	TweenEngine::TweenManager m_tweenManager;
 };
 
-
-#endif //UXPLORE_CPP_UTILS_HPP
+#endif // BROWSER_HPP

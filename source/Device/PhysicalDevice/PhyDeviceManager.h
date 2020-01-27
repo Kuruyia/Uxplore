@@ -19,7 +19,7 @@
 #ifndef PHYDEVICEMANAGER_H
 #define PHYDEVICEMANAGER_H
 
-#include "../PhysicalDevice.hpp"
+#include "Device/PhysicalDevice.h"
 
 #include <memory>
 #include <string>

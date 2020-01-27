@@ -16,10 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UXPLORE_CPP_MOUNTEDPARTITION_HPP
-#define UXPLORE_CPP_MOUNTEDPARTITION_HPP
+#ifndef UXPLORE_CPP_MOUNTEDPARTITION_H
+#define UXPLORE_CPP_MOUNTEDPARTITION_H
 
-#include <FilesystemProvider.hpp>
+#include <FilesystemProvider.h>
 
 class MountedPartition: public FilesystemProvider {
 public:
@@ -52,4 +52,4 @@ private:
 };
 
 
-#endif //UXPLORE_CPP_MOUNTEDPARTITION_HPP
+#endif //UXPLORE_CPP_MOUNTEDPARTITION_H

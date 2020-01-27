@@ -16,25 +16,35 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENTRYFILE_HPP
-#define ENTRYFILE_HPP
+#ifndef APPLICATION_HPP
+#define APPLICATION_HPP
 
 #include <memory>
-#include "Entry.hpp"
-#include "../File.hpp"
+#include <vector>
 
-class EntryFile : public Entry {
+#include "RenderKit.h"
+#include "Overlay/Overlay.h"
+
+class Application {
 public:
-	EntryFile(std::shared_ptr<File>& file);
+	Application();
+	~Application();
 
-	std::string getText() const override;
-	EntryType getType() const override;
-	std::string getIconName() const override;
-
-    std::unique_ptr<Entry> clone() const override;
+	void render(float delta);
 
 private:
-    std::shared_ptr<File> m_file;
+	SDL_Window* m_sdlWindowTV;
+	SDL_Renderer* m_sdlRendererTV;
+
+	SDL_Window* m_sdlWindowGamepad;
+	SDL_Renderer* m_sdlRendererGamepad;
+
+	TTF_Font* m_textFont;
+	RenderKit* m_renderKit;
+
+	std::vector<SDL_Joystick*> m_openedJoysticks;
+
+	std::vector<std::unique_ptr<Overlay>> m_overlays;
 };
 
-#endif // ENTRYFILE_HPP
+#endif // APPLICATION_HPP

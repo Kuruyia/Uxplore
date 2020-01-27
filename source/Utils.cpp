@@ -17,7 +17,7 @@
 */
 
 #include <stdint-gcc.h>
-#include "Utils.hpp"
+#include "Utils.h"
 
 uint16_t Utils::swapEndian16(uint16_t n) {
     return (n >> 8) | (n << 8);

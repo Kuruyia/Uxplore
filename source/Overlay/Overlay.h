@@ -16,35 +16,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef APPLICATION_HPP
-#define APPLICATION_HPP
+#ifndef OVERLAY_HPP
+#define OVERLAY_HPP
 
-#include <memory>
-#include <vector>
+#include "RenderKit.h"
 
-#include "RenderKit.hpp"
-#include "Overlay/Overlay.hpp"
-
-class Application {
+class Overlay {
 public:
-	Application();
-	~Application();
+	virtual ~Overlay() {};
 
-	void render(float delta);
-
-private:
-	SDL_Window* m_sdlWindowTV;
-	SDL_Renderer* m_sdlRendererTV;
-
-	SDL_Window* m_sdlWindowGamepad;
-	SDL_Renderer* m_sdlRendererGamepad;
-
-	TTF_Font* m_textFont;
-	RenderKit* m_renderKit;
-
-	std::vector<SDL_Joystick*> m_openedJoysticks;
-
-	std::vector<std::unique_ptr<Overlay>> m_overlays;
+	virtual void update(float delta) = 0;
+	virtual void processEvent(SDL_Event event) = 0;
+	virtual void render(RenderKit* renderKit) = 0;
 };
 
-#endif // APPLICATION_HPP
+#endif // OVERLAY_HPP

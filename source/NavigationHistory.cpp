@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "NavigationHistory.hpp"
+#include "NavigationHistory.h"
 
 NavigationHistory::NavigationHistory()
 : m_historyPosition(0)

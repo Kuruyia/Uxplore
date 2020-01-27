@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "RenderKit.hpp"
+#include "RenderKit.h"
 
 RenderKit::RenderKit(SDL_Renderer* tvRenderer, SDL_Renderer* gamepadRenderer, TTF_Font* textFont)
 : m_tvRenderer(tvRenderer)

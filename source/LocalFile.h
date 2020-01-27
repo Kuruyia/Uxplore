@@ -16,28 +16,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BROWSER_HPP
-#define BROWSER_HPP
+#ifndef LOCALFILE_H
+#define LOCALFILE_H
 
-#include <TweenEngine/TweenManager.h>
+#include "FilesystemProvider.h"
+#include "File.h"
 
-#include "../BrowseSession.hpp"
-#include "../Device/PhysicalDevice/PhyDeviceManager.hpp"
-#include "Overlay.hpp"
-
-class Browser: public Overlay {
+class LocalFile: public File {
 public:
-	Browser();
-	
-	void update(float delta) override;
-	void processEvent(SDL_Event event) override;
-	void render(RenderKit* renderKit) override;
+	LocalFile(std::string name, std::string path, FilesystemProvider* device);
+
+	std::string getPath();
+
+	FilesystemProvider* getDevice();
 
 private:
-	BrowseSession m_browseSession;
-	PhysicalDeviceManager m_physicalDeviceManager;
+	std::string m_path;
 
-	TweenEngine::TweenManager m_tweenManager;
+	FilesystemProvider* m_device;
 };
 
-#endif // BROWSER_HPP
+#endif // LOCALFILE_H

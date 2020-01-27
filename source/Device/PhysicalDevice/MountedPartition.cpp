@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "MountedPartition.hpp"
+#include "MountedPartition.h"
 
 MountedPartition::MountedPartition(const std::string &id, Filesystem filesystem)
 : m_id(id)

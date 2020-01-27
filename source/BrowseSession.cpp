@@ -16,9 +16,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "BrowseSession.hpp"
+#include "BrowseSession.h"
 
-#include <Entry/EntryPhysicalMountedPartition.hpp>
+#include <Entry/EntryPhysicalMountedPartition.h>
 
 BrowseSession::BrowseSession(PhysicalDeviceManager *physicalDeviceManager)
 : m_physicalDeviceManager(physicalDeviceManager)

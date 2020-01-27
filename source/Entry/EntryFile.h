@@ -16,27 +16,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UXPLORE_CPP_ENTRYPHYSICALMOUNTEDPARTITION_HPP
-#define UXPLORE_CPP_ENTRYPHYSICALMOUNTEDPARTITION_HPP
+#ifndef ENTRYFILE_HPP
+#define ENTRYFILE_HPP
 
-#include "../Device/PhysicalDevice.hpp"
-#include "../Device/PhysicalDevice/MountedPartition.hpp"
-#include "Entry.hpp"
+#include <memory>
+#include "Entry.h"
+#include "File.h"
 
-class EntryPhysicalMountedPartition: public Entry {
+class EntryFile : public Entry {
 public:
-    EntryPhysicalMountedPartition(const std::shared_ptr<PhysicalDevice> &device, const std::shared_ptr<MountedPartition> &partition);
+	EntryFile(std::shared_ptr<File>& file);
 
-    std::string getText() const override;
-    EntryType getType() const override;
-    std::string getIconName() const override;
+	std::string getText() const override;
+	EntryType getType() const override;
+	std::string getIconName() const override;
 
     std::unique_ptr<Entry> clone() const override;
 
 private:
-    std::shared_ptr<PhysicalDevice> m_device;
-    std::shared_ptr<MountedPartition> m_partition;
+    std::shared_ptr<File> m_file;
 };
 
-
-#endif //UXPLORE_CPP_ENTRYPHYSICALMOUNTEDPARTITION_HPP
+#endif // ENTRYFILE_HPP

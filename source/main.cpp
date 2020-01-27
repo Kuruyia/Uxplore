@@ -28,7 +28,7 @@
 #include <iosuhax.h>
 #include <romfs-wiiu.h>
 
-#include "Application.hpp"
+#include "Application.h"
 
 // Taken from dynamic_libs
 #define BUS_SPEED                       248625000

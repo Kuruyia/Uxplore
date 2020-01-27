@@ -16,20 +16,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DIALOG_HPP
-#define DIALOG_HPP
+#ifndef DISCINTERFACEWRAPPER_H
+#define DISCINTERFACEWRAPPER_H
 
-#include <TweenEngine/TweenManager.h>
+#include "DiscInterface.h"
 
-#include "Overlay.hpp"
-
-class Dialog: public Overlay {
+class DiscInterfaceWrapper {
 public:
-	Dialog(std::string message);
+	static bool startup(void* data);
+	static bool isInserted(void* data);
+	static bool clearStatus(void* data);
+	static bool shutdown(void* data);
+	static bool readSectors(void* data, uint32_t sector, uint32_t numSectors, void* buffer);
+	static bool writeSectors(void* data, uint32_t sector, uint32_t numSectors, const void* buffer);
 
-	void update(float delta) override;
-	void processEvent(SDL_Event event) override;
-	void render(RenderKit* renderKit) override;
+private:
+	static DiscInterface* getInterfaceFromData(void* data);
 };
 
-#endif // DIALOG_HPP
+#endif // DISCINTERFACEWRAPPER_H

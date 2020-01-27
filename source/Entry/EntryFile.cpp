@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "EntryFile.hpp"
+#include "EntryFile.h"
 
 EntryFile::EntryFile(std::shared_ptr<File>& file)
 : m_file(file)

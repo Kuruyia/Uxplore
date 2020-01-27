@@ -21,7 +21,7 @@
 
 #include <string>
 #include <vector>
-#include <DiscInterface/DiscInterface.hpp>
+#include <DiscInterface/DiscInterface.h>
 #include <memory>
 
 class PartitionTableReader {

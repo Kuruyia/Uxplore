@@ -17,7 +17,7 @@
 */
 
 #include <SDL2/SDL_image.h>
-#include "ImageCache.hpp"
+#include "ImageCache.h"
 
 ImageCache::ImageCache() {
 
