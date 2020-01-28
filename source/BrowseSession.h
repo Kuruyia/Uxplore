@@ -31,26 +31,29 @@
 #include "NavigationHistory.h"
 #include "TweenObjects.h"
 
-class BrowseSession: public TweenDrawable {
+class BrowseSession : public TweenDrawable {
 public:
-	BrowseSession(PhysicalDeviceManager *physicalDeviceManager);
+    BrowseSession(PhysicalDeviceManager *physicalDeviceManager);
 
-	void draw(SDL_Renderer* renderer, TTF_Font* font) override;
-	void update(float delta);
-	void processEvent(SDL_Event event);
+    void draw(SDL_Renderer *renderer, TTF_Font *font) override;
 
-	void reloadList();
-	BrowserList* getBrowserList();
+    void update(float delta);
 
-	void notifyDevicesChanged();
+    void processEvent(SDL_Event event);
+
+    void reloadList();
+
+    BrowserList *getBrowserList();
+
+    void notifyDevicesChanged();
 
 private:
-	BrowserList m_browserList;
-	NavigationHistory m_navigationHistory;
+    BrowserList m_browserList;
+    NavigationHistory m_navigationHistory;
 
-	PhysicalDeviceManager *m_physicalDeviceManager;
+    PhysicalDeviceManager *m_physicalDeviceManager;
 
-	TweenEngine::TweenManager m_tweenManager;
+    TweenEngine::TweenManager m_tweenManager;
 };
 
 #endif // BROWSESESSION_HPP

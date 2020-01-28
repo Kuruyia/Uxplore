@@ -32,33 +32,35 @@
 #define DEFAULT_SECTORS_PAGE 64
 
 PhysicalDeviceManager::PhysicalDeviceManager()
-: m_lastUpdate(0)
+        : m_lastUpdate(0)
 {
     m_fsaFd = IOSUHAX_FSA_Open();
 }
 
-PhysicalDeviceManager::~PhysicalDeviceManager() {
+PhysicalDeviceManager::~PhysicalDeviceManager()
+{
     IOSUHAX_FSA_Close(m_fsaFd);
     unmountAll();
 }
 
-bool PhysicalDeviceManager::update() {
-	if (SDL_TICKS_PASSED(SDL_GetTicks(), m_lastUpdate + 2000)) {
-	    WHBLogPrint("Starting Phy discovery");
+bool PhysicalDeviceManager::update()
+{
+    if (SDL_TICKS_PASSED(SDL_GetTicks(), m_lastUpdate + 2000)) {
+        WHBLogPrint("Starting Phy discovery");
 
-		m_lastUpdate = SDL_GetTicks();
-		bool hasChanged = false;
+        m_lastUpdate = SDL_GetTicks();
+        bool hasChanged = false;
 
-		std::vector<std::string> addedDevices, removedDevices;
-		int ret = PhysicalDeviceUtils::getDeviceDelta(getInsertedDevicesId(), &addedDevices, &removedDevices);
+        std::vector<std::string> addedDevices, removedDevices;
+        int ret = PhysicalDeviceUtils::getDeviceDelta(getInsertedDevicesId(), &addedDevices, &removedDevices);
         if (ret < 0) {
             WHBLogPrintf("getDeviceDelta has failed with %i", ret);
             return false;
         }
 
-		for (auto & addedDevice : addedDevices) {
-			WHBLogPrintf("Device inserted - %s", addedDevice.c_str());
-			bool isNative = PhysicalDeviceUtils::isNative(addedDevice);
+        for (auto &addedDevice : addedDevices) {
+            WHBLogPrintf("Device inserted - %s", addedDevice.c_str());
+            bool isNative = PhysicalDeviceUtils::isNative(addedDevice);
 
             std::shared_ptr<PhysicalDevice> newDevice(new PhysicalDevice(addedDevice, isNative));
             updateDeviceType(newDevice);
@@ -73,13 +75,17 @@ bool PhysicalDeviceManager::update() {
                 } else {
                     // Read the MBR/EBRs
                     for (const PartitionTableReader::MBR_PARTITION &partition : newDevice->getPartitionTableReader()->getMbrPartitions()) {
-                        if (tryMountPartitionAndAddToDevice(newDevice, newDevice->getDeviceId() + "p" + std::to_string(partitionCount), partition.startingLBA)) {
+                        if (tryMountPartitionAndAddToDevice(newDevice, newDevice->getDeviceId() + "p" +
+                                                                       std::to_string(partitionCount),
+                                                            partition.startingLBA)) {
                             ++partitionCount;
                         }
                     }
 
                     for (const PartitionTableReader::EBR_PARTITION &partition : newDevice->getPartitionTableReader()->getEbrPartitions()) {
-                        if (tryMountPartitionAndAddToDevice(newDevice, newDevice->getDeviceId() + "p" + std::to_string(partitionCount), partition.ebrLBA + partition.partition.startingLBA)) {
+                        if (tryMountPartitionAndAddToDevice(newDevice, newDevice->getDeviceId() + "p" +
+                                                                       std::to_string(partitionCount),
+                                                            partition.ebrLBA + partition.partition.startingLBA)) {
                             ++partitionCount;
                         }
                     }
@@ -91,7 +97,8 @@ bool PhysicalDeviceManager::update() {
                                                  FSMountCandidates::Native, &mountedFilesystem);
 
                 if (success) {
-                    std::shared_ptr<MountedPartition> newPartition(new MountedPartition(newDevice->getDeviceId(), mountedFilesystem));
+                    std::shared_ptr<MountedPartition> newPartition(
+                            new MountedPartition(newDevice->getDeviceId(), mountedFilesystem));
 
                     newDevice->addMountedPartition(newPartition);
                     updateMountedPartitionName(newPartition);
@@ -99,77 +106,79 @@ bool PhysicalDeviceManager::update() {
             }
 
             hasChanged = true;
-		}
+        }
 
-		for (auto & removedDevice : removedDevices) {
-			WHBLogPrintf("Device removed - %s", removedDevice.c_str());
+        for (auto &removedDevice : removedDevices) {
+            WHBLogPrintf("Device removed - %s", removedDevice.c_str());
 
-			for (auto it = m_insertedDevices.begin(); it != m_insertedDevices.end(); it++) {
-				if (it->first == removedDevice) {
-					WHBLogPrintf("Found removed device - %s", it->first.c_str());
+            for (auto it = m_insertedDevices.begin(); it != m_insertedDevices.end(); it++) {
+                if (it->first == removedDevice) {
+                    WHBLogPrintf("Found removed device - %s", it->first.c_str());
 
-                    for (const std::shared_ptr<MountedPartition>& partition : it->second->getMountedPartitions()) {
+                    for (const std::shared_ptr<MountedPartition> &partition : it->second->getMountedPartitions()) {
                         unmountPartition(partition);
                     }
 
-					m_insertedDevices.erase(it);
+                    m_insertedDevices.erase(it);
 
-					hasChanged = true;
-					break;
-				}
-			}
-		}
+                    hasChanged = true;
+                    break;
+                }
+            }
+        }
 
-		if (hasChanged) {
-			WHBLogPrint("===== Device list changed =====");
-			for (const std::pair<std::basic_string<char>, std::shared_ptr<PhysicalDevice>> &device : m_insertedDevices) {
+        if (hasChanged) {
+            WHBLogPrint("===== Device list changed =====");
+            for (const std::pair<std::basic_string<char>, std::shared_ptr<PhysicalDevice>> &device : m_insertedDevices) {
                 WHBLogPrintf("Inserted device: %s", device.first.c_str());
-			}
-		}
+            }
+        }
 
-		return hasChanged;
-	}
+        return hasChanged;
+    }
 
-	return false;
+    return false;
 }
 
 bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice, const std::string &partitionName,
                                               sec_t startSector, FSMountCandidates mountCandidates,
-                                              MountedPartition::Filesystem *mountedFilesystem) {
+                                              MountedPartition::Filesystem *mountedFilesystem)
+{
     if (mountCandidates & FSMountCandidates::FAT &&
-            fatMount(partitionName.c_str(), physicalDevice->getDiscInterface()->getInterface(), startSector, DEFAULT_CACHE_PAGES, DEFAULT_SECTORS_PAGE)) {
+        fatMount(partitionName.c_str(), physicalDevice->getDiscInterface()->getInterface(), startSector,
+                 DEFAULT_CACHE_PAGES, DEFAULT_SECTORS_PAGE)) {
         // TODO: Remove this
-		/*WHBLogPrint("");
-		WHBLogPrintf("LISTING DEVICE %s", physicalDevice->getDeviceId().c_str());
+        /*WHBLogPrint("");
+        WHBLogPrintf("LISTING DEVICE %s", physicalDevice->getDeviceId().c_str());
 
-		DIR *pdir;
-	    struct dirent *pent;
-	    
-	    pdir=opendir((physicalDevice->getDeviceId() + ":/").c_str());
-	    
-	    WHBLogPrint("dir opened");
-	    
-	    if (pdir) {
-	        while ((pent=readdir(pdir))!=nullptr) {
-	            if(strcmp(".", pent->d_name) == 0 || strcmp("..", pent->d_name) == 0)
-	                continue;
-	            if(pent->d_type == DT_DIR)
-	                WHBLogPrintf("[%s]", pent->d_name);
-	            else
-	                WHBLogPrintf("%s", pent->d_name);
-	        }
-	        closedir(pdir);
-	    } else {
-	        WHBLogPrintf("opendir() failure; terminating");
-	    }
+        DIR *pdir;
+        struct dirent *pent;
 
-	    WHBLogPrint("END LISTING");
-	    WHBLogPrint("");*/
+        pdir=opendir((physicalDevice->getDeviceId() + ":/").c_str());
 
-		*mountedFilesystem = MountedPartition::Filesystem::FAT;
+        WHBLogPrint("dir opened");
 
-		return true;
-	}
+        if (pdir) {
+            while ((pent=readdir(pdir))!=nullptr) {
+                if(strcmp(".", pent->d_name) == 0 || strcmp("..", pent->d_name) == 0)
+                    continue;
+                if(pent->d_type == DT_DIR)
+                    WHBLogPrintf("[%s]", pent->d_name);
+                else
+                    WHBLogPrintf("%s", pent->d_name);
+            }
+            closedir(pdir);
+        } else {
+            WHBLogPrintf("opendir() failure; terminating");
+        }
+
+        WHBLogPrint("END LISTING");
+        WHBLogPrint("");*/
+
+        *mountedFilesystem = MountedPartition::Filesystem::FAT;
+
+        return true;
+    }
 
     if (mountCandidates & FSMountCandidates::Native && tryMountNative(partitionName)) {
         *mountedFilesystem = MountedPartition::Filesystem::Native;
@@ -177,10 +186,11 @@ bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice, co
         return true;
     }
 
-	return false;
+    return false;
 }
 
-bool PhysicalDeviceManager::tryMountNative(const std::string& deviceName) {
+bool PhysicalDeviceManager::tryMountNative(const std::string &deviceName)
+{
     WHBLogPrintf("Trying to mount %s natively", deviceName.c_str());
 
     if (m_fsaFd < 0) return false;
@@ -192,17 +202,19 @@ bool PhysicalDeviceManager::tryMountNative(const std::string& deviceName) {
     return ret >= 0;
 }
 
-std::vector<std::string> PhysicalDeviceManager::getInsertedDevicesId() {
-	std::vector<std::string> deviceIds;
+std::vector<std::string> PhysicalDeviceManager::getInsertedDevicesId()
+{
+    std::vector<std::string> deviceIds;
 
-	for (auto & m_mountedDevice : m_insertedDevices) {
-		deviceIds.push_back(m_mountedDevice.first);
-	}
+    for (auto &m_mountedDevice : m_insertedDevices) {
+        deviceIds.push_back(m_mountedDevice.first);
+    }
 
-	return deviceIds;
+    return deviceIds;
 }
 
-std::vector<std::shared_ptr<PhysicalDevice>> PhysicalDeviceManager::getInsertedDevices() {
+std::vector<std::shared_ptr<PhysicalDevice>> PhysicalDeviceManager::getInsertedDevices()
+{
     std::vector<std::shared_ptr<PhysicalDevice>> devices;
 
     for (auto &m_mountedDevice : m_insertedDevices) {
@@ -212,12 +224,14 @@ std::vector<std::shared_ptr<PhysicalDevice>> PhysicalDeviceManager::getInsertedD
     return devices;
 }
 
-void PhysicalDeviceManager::unmountAll() {
+void PhysicalDeviceManager::unmountAll()
+{
     WHBLogPrint("Unmounting everything");
     // TODO: Unmount all partitions of all devices
 }
 
-void PhysicalDeviceManager::updateMountedPartitionName(const std::shared_ptr<MountedPartition> &partition) {
+void PhysicalDeviceManager::updateMountedPartitionName(const std::shared_ptr<MountedPartition> &partition)
+{
     switch (partition->getFilesystem()) {
         case MountedPartition::Filesystem::FAT:
             char deviceName[11];
@@ -228,7 +242,8 @@ void PhysicalDeviceManager::updateMountedPartitionName(const std::shared_ptr<Mou
             break;
         case MountedPartition::Filesystem::Native:
             // TODO: Show devId more cleanly
-            partition->setName(PhysicalDeviceUtils::getNativeDeviceName(partition->getId()) + " (" + partition->getId() + ")");
+            partition->setName(
+                    PhysicalDeviceUtils::getNativeDeviceName(partition->getId()) + " (" + partition->getId() + ")");
 
             break;
         default:
@@ -237,7 +252,8 @@ void PhysicalDeviceManager::updateMountedPartitionName(const std::shared_ptr<Mou
     }
 }
 
-void PhysicalDeviceManager::updateDeviceType(const std::shared_ptr<PhysicalDevice> &device) {
+void PhysicalDeviceManager::updateDeviceType(const std::shared_ptr<PhysicalDevice> &device)
+{
     const std::string deviceId = device->getDeviceId();
     if (deviceId.compare(0, 3, "odd") == 0)
         device->setDeviceType(PhysicalDevice::DeviceType::Disc);
@@ -247,10 +263,12 @@ void PhysicalDeviceManager::updateDeviceType(const std::shared_ptr<PhysicalDevic
         device->setDeviceType(PhysicalDevice::DeviceType::SD);
 }
 
-bool PhysicalDeviceManager::tryMountPartitionAndAddToDevice(std::shared_ptr<PhysicalDevice> &device, const std::string &partitionName,
-                                                            sec_t startSector) {
+bool PhysicalDeviceManager::tryMountPartitionAndAddToDevice(std::shared_ptr<PhysicalDevice> &device,
+                                                            const std::string &partitionName,
+                                                            sec_t startSector)
+{
     MountedPartition::Filesystem mountedFilesystem;
-    if (tryMountPartition(device.get(), partitionName, startSector,FSMountCandidates::All, &mountedFilesystem)) {
+    if (tryMountPartition(device.get(), partitionName, startSector, FSMountCandidates::All, &mountedFilesystem)) {
         std::shared_ptr<MountedPartition> newPartition(new MountedPartition(partitionName, mountedFilesystem));
 
         device->addMountedPartition(newPartition);
@@ -262,7 +280,8 @@ bool PhysicalDeviceManager::tryMountPartitionAndAddToDevice(std::shared_ptr<Phys
     return false;
 }
 
-void PhysicalDeviceManager::unmountPartition(const std::shared_ptr<MountedPartition> &partition) {
+void PhysicalDeviceManager::unmountPartition(const std::shared_ptr<MountedPartition> &partition)
+{
     switch (partition->getFilesystem()) {
         case MountedPartition::Filesystem::FAT:
             fatUnmount(partition->getId().c_str());

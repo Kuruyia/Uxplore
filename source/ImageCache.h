@@ -25,17 +25,17 @@
 
 class ImageCache {
 public:
-	static ImageCache& getInstance();
+    static ImageCache &getInstance();
 
-	static void setRenderer(SDL_Renderer* renderer);
+    static void setRenderer(SDL_Renderer *renderer);
 
-	static SDL_Texture* getImage(const std::string& path);
+    static SDL_Texture *getImage(const std::string &path);
 
 private:
-	ImageCache();
+    ImageCache();
 
-	SDL_Renderer* m_renderer;
-	std::map<std::string, SDL_Texture*> m_textureList;
+    SDL_Renderer *m_renderer;
+    std::map<std::string, SDL_Texture *> m_textureList;
 };
 
 #endif // IMAGECACHE_HPP

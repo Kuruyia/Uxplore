@@ -23,13 +23,15 @@
 
 class Overlay {
 public:
-	virtual ~Overlay() = default;
+    virtual ~Overlay() = default;
 
     virtual void processEvent(SDL_Event event) = 0;
+
     virtual void update(float delta) = 0;
 
-	virtual void renderTV(RenderKit* renderKit) = 0;
-	virtual void renderDRC(RenderKit* renderKit) = 0;
+    virtual void renderTV(RenderKit *renderKit) = 0;
+
+    virtual void renderDRC(RenderKit *renderKit) = 0;
 };
 
 #endif // OVERLAY_HPP

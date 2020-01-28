@@ -27,38 +27,45 @@
 
 class PhysicalDeviceManager {
 public:
-	PhysicalDeviceManager();
-	~PhysicalDeviceManager();
+    PhysicalDeviceManager();
 
-	bool update();
+    ~PhysicalDeviceManager();
+
+    bool update();
 
     std::vector<std::string> getInsertedDevicesId();
+
     std::vector<std::shared_ptr<PhysicalDevice>> getInsertedDevices();
 
 private:
     enum FSMountCandidates {
         Native = 1 << 0,
-        FAT    = 1 << 1,
+        FAT = 1 << 1,
 
-        All    = Native | FAT
+        All = Native | FAT
     };
 
     bool tryMountPartition(PhysicalDevice *physicalDevice, const std::string &partitionName,
                            sec_t startSector, FSMountCandidates mountCandidates,
                            MountedPartition::Filesystem *mountedFilesystem);
-	bool tryMountNative(const std::string& deviceName);
-    bool tryMountPartitionAndAddToDevice(std::shared_ptr<PhysicalDevice> &device, const std::string &partitionName, sec_t startSector);
+
+    bool tryMountNative(const std::string &deviceName);
+
+    bool tryMountPartitionAndAddToDevice(std::shared_ptr<PhysicalDevice> &device, const std::string &partitionName,
+                                         sec_t startSector);
 
     void unmountPartition(const std::shared_ptr<MountedPartition> &partition);
-	void unmountAll();
 
-	static void updateMountedPartitionName(const std::shared_ptr<MountedPartition> &partition);
-	static void updateDeviceType(const std::shared_ptr<PhysicalDevice> &device);
+    void unmountAll();
 
-	unsigned int m_lastUpdate;
-	int m_fsaFd;
+    static void updateMountedPartitionName(const std::shared_ptr<MountedPartition> &partition);
 
-	std::vector<std::pair<std::string, std::shared_ptr<PhysicalDevice>>> m_insertedDevices;
+    static void updateDeviceType(const std::shared_ptr<PhysicalDevice> &device);
+
+    unsigned int m_lastUpdate;
+    int m_fsaFd;
+
+    std::vector<std::pair<std::string, std::shared_ptr<PhysicalDevice>>> m_insertedDevices;
 };
 
 #endif // PHYDEVICEMANAGER_H

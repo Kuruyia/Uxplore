@@ -18,10 +18,11 @@
 
 #include "File.h"
 
-File::File(const std::string& name)
-: m_name(name)
+File::File(const std::string &name)
+        : m_name(name)
 {}
 
-std::string File::getName() {
-	return m_name;
+std::string File::getName()
+{
+    return m_name;
 }

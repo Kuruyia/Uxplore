@@ -23,12 +23,12 @@
 
 class File {
 public:
-	File(const std::string& name);
+    File(const std::string &name);
 
-	std::string getName();
+    std::string getName();
 
 protected:
-	std::string m_name;
+    std::string m_name;
 };
 
 #endif // FILE_HPP

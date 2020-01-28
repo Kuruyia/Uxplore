@@ -18,22 +18,27 @@
 
 #include "Dialog.h"
 
-Dialog::Dialog(std::string message) {
+Dialog::Dialog(std::string message)
+{
 
 }
 
-void Dialog::update(float delta) {
+void Dialog::update(float delta)
+{
 
 }
 
-void Dialog::processEvent(SDL_Event event) {
+void Dialog::processEvent(SDL_Event event)
+{
 
 }
 
-void Dialog::renderTV(RenderKit* renderKit) {
+void Dialog::renderTV(RenderKit *renderKit)
+{
 
 }
 
-void Dialog::renderDRC(RenderKit *renderKit) {
+void Dialog::renderDRC(RenderKit *renderKit)
+{
 
 }

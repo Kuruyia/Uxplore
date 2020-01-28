@@ -24,10 +24,10 @@
 #include "Utils.h"
 
 PartitionTableReader::PartitionTableReader(const DiscInterface *discInterface)
-: m_mbr()
-, m_gptPresent(false)
-, m_gptHeader()
-, m_ready(false)
+        : m_mbr()
+        , m_gptPresent(false)
+        , m_gptHeader()
+        , m_ready(false)
 {
     if (readMbrFromDisc(discInterface)) {
         /* We have successfully read the MBR from the disc, let's go deeper:
@@ -42,27 +42,33 @@ PartitionTableReader::PartitionTableReader(const DiscInterface *discInterface)
     }
 }
 
-const PartitionTableReader::MASTER_BOOT_RECORD &PartitionTableReader::getMbr() const {
+const PartitionTableReader::MASTER_BOOT_RECORD &PartitionTableReader::getMbr() const
+{
     return m_mbr;
 }
 
-const std::vector<PartitionTableReader::MBR_PARTITION> &PartitionTableReader::getMbrPartitions() const {
+const std::vector<PartitionTableReader::MBR_PARTITION> &PartitionTableReader::getMbrPartitions() const
+{
     return m_mbrPartitions;
 }
 
-const std::vector<PartitionTableReader::EBR_PARTITION> &PartitionTableReader::getEbrPartitions() const {
+const std::vector<PartitionTableReader::EBR_PARTITION> &PartitionTableReader::getEbrPartitions() const
+{
     return m_ebrPartitions;
 }
 
-bool PartitionTableReader::hasGPT() {
+bool PartitionTableReader::hasGPT()
+{
     return m_gptPresent;
 }
 
-bool PartitionTableReader::isReady() const {
+bool PartitionTableReader::isReady() const
+{
     return m_ready;
 }
 
-bool PartitionTableReader::readMbrFromDisc(const DiscInterface *discInterface) {
+bool PartitionTableReader::readMbrFromDisc(const DiscInterface *discInterface)
+{
     if (!discInterface->readSectors(0, 1, &m_mbr)) {
         WHBLogPrintf("PartitionTableReader: Error while reading first sector");
         return false;
@@ -83,14 +89,15 @@ bool PartitionTableReader::readMbrFromDisc(const DiscInterface *discInterface) {
     }
 
     // We want little endian
-    for (MBR_PARTITION& partition : m_mbrPartitions) {
-        correctMBRPartitionEndianness(partition);
+    for (MBR_PARTITION &partition : m_mbrPartitions) {
+        correctMbrPartitionEndianness(partition);
     }
 
     return true;
 }
 
-bool PartitionTableReader::detectProtectiveMbr(const DiscInterface *discInterface) {
+bool PartitionTableReader::detectProtectiveMbr(const DiscInterface *discInterface)
+{
     // Check if it's a protective MBR
     if (m_mbrPartitions[0].partitionType == 0xEE) {
         WHBLogPrintf("PartitionTableReader: Protective MBR found!");
@@ -102,7 +109,8 @@ bool PartitionTableReader::detectProtectiveMbr(const DiscInterface *discInterfac
     return m_gptPresent;
 }
 
-bool PartitionTableReader::readGptFromDisc(const DiscInterface *discInterface, const uint32_t headerSector) {
+bool PartitionTableReader::readGptFromDisc(const DiscInterface *discInterface, const uint32_t headerSector)
+{
     // Read the sector where we expect the header
     if (!discInterface->readSectors(headerSector, 1, &m_gptHeader)) {
         WHBLogPrint("PartitionTableReader: Error while reading GPT header sector");
@@ -129,7 +137,7 @@ bool PartitionTableReader::readGptFromDisc(const DiscInterface *discInterface, c
 
     // We read all the GPT partition entry array (assuming sector size of 512 bytes)
     const unsigned sectorsToParse = (m_gptHeader.partitionCount * m_gptHeader.partitionEntrySize) / 512;
-    auto* entryArray = new GPT_PARTITION_ENTRY[m_gptHeader.partitionCount];
+    auto *entryArray = new GPT_PARTITION_ENTRY[m_gptHeader.partitionCount];
     if (!discInterface->readSectors(m_gptHeader.partitionEntryLBA, sectorsToParse, entryArray)) {
         WHBLogPrint("PartitionTableReader: Error while reading GPT partition array sectors");
 
@@ -160,7 +168,8 @@ bool PartitionTableReader::readGptFromDisc(const DiscInterface *discInterface, c
     return true;
 }
 
-void PartitionTableReader::detectExtendedPartitions(const DiscInterface *discInterface) {
+void PartitionTableReader::detectExtendedPartitions(const DiscInterface *discInterface)
+{
     // Check every partition entry in the MBR for an extended partition
     for (const MBR_PARTITION &partition : m_mbrPartitions) {
         discoverExtendedPartition(discInterface, partition, &m_ebrPartitions);
@@ -169,13 +178,15 @@ void PartitionTableReader::detectExtendedPartitions(const DiscInterface *discInt
     WHBLogPrintf("Discovered %u EBRs", m_ebrPartitions.size());
 }
 
-bool PartitionTableReader::isExtendedPartitionType(const uint8_t partitionType) {
+bool PartitionTableReader::isExtendedPartitionType(const uint8_t partitionType)
+{
     return (partitionType == 0x05 || partitionType == 0x0F || partitionType == 0x85);
 }
 
 void PartitionTableReader::discoverExtendedPartition(const DiscInterface *discInterface,
                                                      const MBR_PARTITION &extendedPartitionEntry,
-                                                     std::vector<EBR_PARTITION> *logicalPartitions) {
+                                                     std::vector<EBR_PARTITION> *logicalPartitions)
+{
     // Check that the entry partition type is extended partition
     if (!isExtendedPartitionType(extendedPartitionEntry.partitionType))
         return;
@@ -199,23 +210,25 @@ void PartitionTableReader::discoverExtendedPartition(const DiscInterface *discIn
 
         // Store first two entries
         if (ebr.partitions[0].partitionType != 0x00) {
-            correctMBRPartitionEndianness(ebr.partitions[0]);
+            correctMbrPartitionEndianness(ebr.partitions[0]);
             currentLogicalPartition.partition = ebr.partitions[0];
             logicalPartitions->push_back(currentLogicalPartition);
         }
 
-        correctMBRPartitionEndianness(ebr.partitions[1]);
+        correctMbrPartitionEndianness(ebr.partitions[1]);
         nextEBR = ebr.partitions[1];
         sectorToCheck = nextEBR.startingLBA + extendedPartitionEntry.startingLBA;
     } while (nextEBR.startingLBA != 0);
 }
 
-void PartitionTableReader::correctMBRPartitionEndianness(PartitionTableReader::MBR_PARTITION &partition) {
+void PartitionTableReader::correctMbrPartitionEndianness(PartitionTableReader::MBR_PARTITION &partition)
+{
     partition.startingLBA = Utils::swapEndian32(partition.startingLBA);
     partition.totalBlocks = Utils::swapEndian32(partition.totalBlocks);
 }
 
-void PartitionTableReader::correctGptHeaderEndianness(PartitionTableReader::GPT_HEADER &header) {
+void PartitionTableReader::correctGptHeaderEndianness(PartitionTableReader::GPT_HEADER &header)
+{
     header.revision = Utils::swapEndian32(header.revision);
     header.headerSize = Utils::swapEndian32(header.headerSize);
     header.headerCRC32 = Utils::swapEndian32(header.headerCRC32);

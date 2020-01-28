@@ -38,110 +38,111 @@
 
 void someFunc(IOSError err, void *arg)
 {
-	(void)arg;
+    (void) arg;
 }
 
 static int mcp_hook_fd = -1;
+
 int MCPHookOpen(void)
 {
-   //take over mcp thread
-   mcp_hook_fd = IOS_Open("/dev/mcp", (IOSOpenMode)0);
+    //take over mcp thread
+    mcp_hook_fd = IOS_Open("/dev/mcp", (IOSOpenMode) 0);
 
-   if (mcp_hook_fd < 0)
-      return -1;
+    if (mcp_hook_fd < 0)
+        return -1;
 
-   IOS_IoctlAsync(mcp_hook_fd, 0x62, (void *)0, 0, (void *)0, 0, (IOSAsyncCallbackFn)&someFunc, (void *)0);
-   //let wupserver start up
-   usleep(1000);
+    IOS_IoctlAsync(mcp_hook_fd, 0x62, (void *) 0, 0, (void *) 0, 0, (IOSAsyncCallbackFn) &someFunc, (void *) 0);
+    //let wupserver start up
+    usleep(1000);
 
-   if (IOSUHAX_Open("/dev/mcp") < 0)
-   {
-      IOS_Close(mcp_hook_fd);
-      mcp_hook_fd = -1;
-      return -1;
-   }
+    if (IOSUHAX_Open("/dev/mcp") < 0) {
+        IOS_Close(mcp_hook_fd);
+        mcp_hook_fd = -1;
+        return -1;
+    }
 
-   return 0;
+    return 0;
 }
 
 void MCPHookClose(void)
 {
-   if (mcp_hook_fd < 0)
-      return;
+    if (mcp_hook_fd < 0)
+        return;
 
-   //close down wupserver, return control to mcp
-   IOSUHAX_Close();
-   //wait for mcp to return
-   usleep(1000);
-   IOS_Close(mcp_hook_fd);
-   mcp_hook_fd = -1;
+    //close down wupserver, return control to mcp
+    IOSUHAX_Close();
+    //wait for mcp to return
+    usleep(1000);
+    IOS_Close(mcp_hook_fd);
+    mcp_hook_fd = -1;
 }
 
 enum AccessLevel {
-	ACCESS_LEVEL_FULL,
-	ACCESS_LEVEL_SD,
+    ACCESS_LEVEL_FULL,
+    ACCESS_LEVEL_SD,
 };
 static enum AccessLevel g_accessLevel = ACCESS_LEVEL_FULL;
 
-int main(int argc, char** argv) {
-	// Init everything here
-	WHBLogCafeInit();
-	WHBLogUdpInit();
+int main(int argc, char **argv)
+{
+    // Init everything here
+    WHBLogCafeInit();
+    WHBLogUdpInit();
 
-	romfsInit();
+    romfsInit();
 
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO);
     TTF_Init();
 
     // Try to have an access to IOSUHAX
-	int res = IOSUHAX_Open(nullptr);
+    int res = IOSUHAX_Open(nullptr);
     if (res < 0) {
-    	res = MCPHookOpen();
+        res = MCPHookOpen();
     }
     if (res < 0) {
-    	// Unable to get access, falling back on SD card access only
-    	g_accessLevel = ACCESS_LEVEL_SD;
+        // Unable to get access, falling back on SD card access only
+        g_accessLevel = ACCESS_LEVEL_SD;
     }
 
-	WHBLogPrint("Uxplore started");
+    WHBLogPrint("Uxplore started");
 
-	auto* app = new Application();
+    auto *app = new Application();
 
-	Uint32 lastTime, nowTime, renderTime;
-	lastTime = nowTime = SDL_GetTicks();
+    Uint32 lastTime, nowTime, renderTime;
+    lastTime = nowTime = SDL_GetTicks();
 
-	while(WHBProcIsRunning()) {
-		app->render((nowTime - lastTime) / 1000.f);
-		
-		renderTime = SDL_GetTicks() - nowTime;
-		lastTime = nowTime;
+    while (WHBProcIsRunning()) {
+        app->render((nowTime - lastTime) / 1000.f);
 
-		//WHBLogPrintf("Rendering took %ims", renderTime);
+        renderTime = SDL_GetTicks() - nowTime;
+        lastTime = nowTime;
 
-		int delay = 1000 / 60 - renderTime;
-		SDL_Delay(delay > 0 ? delay : 0);
-		nowTime = SDL_GetTicks();
-	}
+        //WHBLogPrintf("Rendering took %ims", renderTime);
 
-	delete app;
+        int delay = 1000 / 60 - renderTime;
+        SDL_Delay(delay > 0 ? delay : 0);
+        nowTime = SDL_GetTicks();
+    }
 
-	WHBLogPrint("Stop requested");
+    delete app;
 
-	// Deinit everything
-	if (mcp_hook_fd >= 0)
-		MCPHookClose();
-	else
-		IOSUHAX_Close();
+    WHBLogPrint("Stop requested");
 
-	SDL_Quit();
+    // Deinit everything
+    if (mcp_hook_fd >= 0)
+        MCPHookClose();
+    else
+        IOSUHAX_Close();
+
+    SDL_Quit();
     TTF_Quit();
 
-	WHBLogPrint("After close");
+    WHBLogPrint("After close");
 
-	romfsExit();
+    romfsExit();
 
-	WHBLogCafeDeinit();
-	WHBLogUdpDeinit();
+    WHBLogCafeDeinit();
+    WHBLogUdpDeinit();
 
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

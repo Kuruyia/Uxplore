@@ -25,22 +25,25 @@
 #include "Device/PhysicalDevice/PhyDeviceManager.h"
 #include "Overlay.h"
 
-class Browser: public Overlay {
+class Browser : public Overlay {
 public:
-	Browser();
-	~Browser() override = default;
+    Browser();
+
+    ~Browser() override = default;
 
     void processEvent(SDL_Event event) override;
+
     void update(float delta) override;
 
-	void renderTV(RenderKit* renderKit) override;
-	void renderDRC(RenderKit* renderKit) override;
+    void renderTV(RenderKit *renderKit) override;
+
+    void renderDRC(RenderKit *renderKit) override;
 
 private:
-	BrowseSession m_browseSession;
-	PhysicalDeviceManager m_physicalDeviceManager;
+    BrowseSession m_browseSession;
+    PhysicalDeviceManager m_physicalDeviceManager;
 
-	TweenEngine::TweenManager m_tweenManager;
+    TweenEngine::TweenManager m_tweenManager;
 };
 
 #endif // BROWSER_HPP

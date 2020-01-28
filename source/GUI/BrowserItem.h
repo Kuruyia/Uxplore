@@ -26,21 +26,24 @@
 #include "Entry/Entry.h"
 #include "TweenObjects.h"
 
-class BrowserItem: public TweenDrawable {
+class BrowserItem : public TweenDrawable {
 public:
-	BrowserItem(Drawable* parent, const Entry &entry, SDL_Point pos);
-	~BrowserItem() override = default;
+    BrowserItem(Drawable *parent, const Entry &entry, SDL_Point pos);
 
-	void draw(SDL_Renderer* renderer, TTF_Font* font) override;
+    ~BrowserItem() override = default;
 
-	bool isSelected();
-	void setSelected(bool selected);
+    void draw(SDL_Renderer *renderer, TTF_Font *font) override;
+
+    bool isSelected();
+
+    void setSelected(bool selected);
+
 private:
-	std::unique_ptr<Entry> m_entry;
-	Text m_entryName;
-	SDL_Texture* m_icon;
+    std::unique_ptr<Entry> m_entry;
+    Text m_entryName;
+    SDL_Texture *m_icon;
 
-	bool m_selected;
+    bool m_selected;
 };
 
 #endif // BROWSERITEM_HPP

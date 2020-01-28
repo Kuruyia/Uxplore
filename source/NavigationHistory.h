@@ -24,20 +24,23 @@
 
 class NavigationHistory {
 public:
-	NavigationHistory();
+    NavigationHistory();
 
-	void go(std::string dirName);
+    void go(std::string dirName);
 
-	std::string getCurrentPathAsString();
+    std::string getCurrentPathAsString();
 
-	std::vector<std::string> *getHistory();
-	unsigned int getHistoryPosition();
+    std::vector<std::string> *getHistory();
 
-	void back();
-	void forward();
+    unsigned int getHistoryPosition();
+
+    void back();
+
+    void forward();
+
 private:
-	std::vector<std::string> m_history;
-	unsigned int m_historyPosition;
+    std::vector<std::string> m_history;
+    unsigned int m_historyPosition;
 };
 
 #endif // NAVIGATIONHISTORY_HPP

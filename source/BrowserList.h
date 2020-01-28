@@ -37,32 +37,38 @@
 #include "TweenObjects.h"
 #include "GUI/BrowserItem.h"
 
-class BrowserList: public TweenDrawable {
+class BrowserList : public TweenDrawable {
 public:
-	BrowserList();
+    BrowserList();
 
-	void draw(SDL_Renderer* renderer, TTF_Font* font) override;
-	void update(float delta);
+    void draw(SDL_Renderer *renderer, TTF_Font *font) override;
 
-	void addItem(const Entry &entry);
-	std::shared_ptr<BrowserItem> getItem(unsigned int index);
-	void reset();
+    void update(float delta);
 
-	std::shared_ptr<BrowserItem> getSelectedItem();
-	unsigned int getSelectedItemIndex();
-	void setSelectedItemIndex(unsigned int index);
-	void moveSelectedItemIndex(int indexDelta);
+    void addItem(const Entry &entry);
+
+    std::shared_ptr<BrowserItem> getItem(unsigned int index);
+
+    void reset();
+
+    std::shared_ptr<BrowserItem> getSelectedItem();
+
+    unsigned int getSelectedItemIndex();
+
+    void setSelectedItemIndex(unsigned int index);
+
+    void moveSelectedItemIndex(int indexDelta);
 
 private:
-	SDL_Point getPositionFromIndex(unsigned int index);
+    SDL_Point getPositionFromIndex(unsigned int index);
 
-	std::vector<std::shared_ptr<BrowserItem>> m_items;
-	Text m_emptyListText;
-	unsigned int m_selectedItemIndex;
-	int m_firstRow;
+    std::vector<std::shared_ptr<BrowserItem>> m_items;
+    Text m_emptyListText;
+    unsigned int m_selectedItemIndex;
+    int m_firstRow;
 
-	std::map<Entry::EntryType, SDL_Texture*> m_icons;
-	TweenEngine::TweenManager m_tweenManager;
+    std::map<Entry::EntryType, SDL_Texture *> m_icons;
+    TweenEngine::TweenManager m_tweenManager;
 };
 
 #endif // BROWSERLIST_HPP

@@ -18,22 +18,26 @@
 
 #include "EntryPhysicalMountedPartition.h"
 
-EntryPhysicalMountedPartition::EntryPhysicalMountedPartition(const std::shared_ptr<PhysicalDevice> &device, const std::shared_ptr<MountedPartition> &partition)
-: m_device(device)
-, m_partition(partition)
+EntryPhysicalMountedPartition::EntryPhysicalMountedPartition(const std::shared_ptr<PhysicalDevice> &device,
+                                                             const std::shared_ptr<MountedPartition> &partition)
+        : m_device(device)
+        , m_partition(partition)
 {
 
 }
 
-std::string EntryPhysicalMountedPartition::getText() const {
+std::string EntryPhysicalMountedPartition::getText() const
+{
     return m_partition->getName();
 }
 
-Entry::EntryType EntryPhysicalMountedPartition::getType() const {
+Entry::EntryType EntryPhysicalMountedPartition::getType() const
+{
     return ENTRY_PARTITION;
 }
 
-std::string EntryPhysicalMountedPartition::getIconName() const {
+std::string EntryPhysicalMountedPartition::getIconName() const
+{
     switch (m_device->getDeviceType()) {
         case PhysicalDevice::Disc:
             return "devices/disc.png";
@@ -46,6 +50,7 @@ std::string EntryPhysicalMountedPartition::getIconName() const {
     }
 }
 
-std::unique_ptr<Entry> EntryPhysicalMountedPartition::clone() const {
+std::unique_ptr<Entry> EntryPhysicalMountedPartition::clone() const
+{
     return std::make_unique<EntryPhysicalMountedPartition>(*this);
 }

@@ -24,26 +24,32 @@
 
 class DiscInterface {
 public:
-	explicit DiscInterface(std::string devicePath);
+    explicit DiscInterface(std::string devicePath);
 
-	DISC_INTERFACE* getInterface();
+    DISC_INTERFACE *getInterface();
 
-	bool startup();
-	bool isInserted() const;
-	bool clearStatus();
-	bool shutdown();
-	bool readSectors(uint32_t sector, uint32_t numSectors, void* buffer) const;
-	bool writeSectors(uint32_t sector, uint32_t numSectors, const void* buffer);
+    bool startup();
+
+    bool isInserted() const;
+
+    bool clearStatus();
+
+    bool shutdown();
+
+    bool readSectors(uint32_t sector, uint32_t numSectors, void *buffer) const;
+
+    bool writeSectors(uint32_t sector, uint32_t numSectors, const void *buffer);
 
 private:
-	bool openFSA();
-	void closeFSA();
+    bool openFSA();
 
-	int m_fsaFdUSB;
-	int m_usbFd;
+    void closeFSA();
 
-	std::string m_devicePath;
-	DISC_INTERFACE m_discInterface{};
+    int m_fsaFdUSB;
+    int m_usbFd;
+
+    std::string m_devicePath;
+    DISC_INTERFACE m_discInterface{};
 };
 
 #endif // DISCINTERFACE_HPP

@@ -23,21 +23,23 @@
 
 class Entry {
 public:
-	enum EntryType {
-		ENTRY_UNKNOWN,
+    enum EntryType {
+        ENTRY_UNKNOWN,
 
-		ENTRY_FOLDER,
-		ENTRY_FILE,
-		ENTRY_PARTITION
-	};
+        ENTRY_FOLDER,
+        ENTRY_FILE,
+        ENTRY_PARTITION
+    };
 
-	virtual ~Entry() = default;
+    virtual ~Entry() = default;
 
-	virtual std::string getText() const = 0;
-	virtual EntryType getType() const = 0;
-	virtual std::string getIconName() const = 0;
+    virtual std::string getText() const = 0;
 
-	virtual std::unique_ptr<Entry> clone() const = 0;
+    virtual EntryType getType() const = 0;
+
+    virtual std::string getIconName() const = 0;
+
+    virtual std::unique_ptr<Entry> clone() const = 0;
 };
 
 #endif // ENTRYITEM_HPP

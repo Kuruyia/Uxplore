@@ -22,18 +22,18 @@
 #include "FilesystemProvider.h"
 #include "File.h"
 
-class LocalFile: public File {
+class LocalFile : public File {
 public:
-	LocalFile(std::string name, std::string path, FilesystemProvider* device);
+    LocalFile(std::string name, std::string path, FilesystemProvider *device);
 
-	std::string getPath();
+    std::string getPath();
 
-	FilesystemProvider* getDevice();
+    FilesystemProvider *getDevice();
 
 private:
-	std::string m_path;
+    std::string m_path;
 
-	FilesystemProvider* m_device;
+    FilesystemProvider *m_device;
 };
 
 #endif // LOCALFILE_H
