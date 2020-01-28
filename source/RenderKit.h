@@ -24,17 +24,15 @@
 
 class RenderKit {
 public:
-    RenderKit(SDL_Renderer *tvRenderer, SDL_Renderer *gamepadRenderer, TTF_Font *textFont);
+    RenderKit(SDL_Renderer *primaryRenderer, SDL_Renderer *secondaryRenderer, TTF_Font *textFont);
 
-    SDL_Renderer *getTVRenderer();
-
-    SDL_Renderer *getGamepadRenderer();
-
+    SDL_Renderer *getPrimaryRenderer();
+    SDL_Renderer *getSecondaryRenderer();
     TTF_Font *getTextFont();
 
 private:
-    SDL_Renderer *m_tvRenderer;
-    SDL_Renderer *m_gamepadRenderer;
+    SDL_Renderer *m_primaryRenderer;
+    SDL_Renderer *m_secondaryRenderer;
 
     TTF_Font *m_textFont;
 };

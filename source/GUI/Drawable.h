@@ -29,19 +29,15 @@ public:
     virtual void draw(SDL_Renderer *renderer, TTF_Font *font) = 0;
 
     float getScale();
-
     virtual void setScale(float scale);
 
     SDL_Point getRelativePosition();
-
     void setRelativePosition(SDL_Point relativePosition);
-
     void setRelativePosition(int positionX, int positionY);
 
     SDL_Point getAbsolutePosition();
 
     Drawable *getParent();
-
     void setParent(Drawable *parent);
 
 private:

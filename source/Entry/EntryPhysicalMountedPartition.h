@@ -31,9 +31,7 @@ public:
     ~EntryPhysicalMountedPartition() override = default;
 
     std::string getText() const override;
-
     EntryType getType() const override;
-
     std::string getIconName() const override;
 
     std::unique_ptr<Entry> clone() const override;

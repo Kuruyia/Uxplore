@@ -85,32 +85,27 @@ public:
     explicit PartitionTableReader(const DiscInterface *discInterface);
 
     const MASTER_BOOT_RECORD &getMbr() const;
-
     const std::vector<MBR_PARTITION> &getMbrPartitions() const;
-
     const std::vector<EBR_PARTITION> &getEbrPartitions() const;
 
-    bool hasGPT();
+    bool hasGpt();
+    const GPT_HEADER &getGptHeader() const;
+    const std::vector<GPT_PARTITION_ENTRY> &getGptPartitions() const;
 
     bool isReady() const;
 
 private:
     bool readMbrFromDisc(const DiscInterface *discInterface);
-
     bool detectProtectiveMbr(const DiscInterface *discInterface);
-
     bool readGptFromDisc(const DiscInterface *discInterface, uint32_t headerSector);
-
     void detectExtendedPartitions(const DiscInterface *discInterface);
 
     bool isExtendedPartitionType(uint8_t partitionType);
-
     void discoverExtendedPartition(const DiscInterface *discInterface,
                                    const MBR_PARTITION &extendedPartitionEntry,
                                    std::vector<EBR_PARTITION> *logicalPartitions);
 
     void correctMbrPartitionEndianness(MBR_PARTITION &partition);
-
     void correctGptHeaderEndianness(GPT_HEADER &header);
 
     MASTER_BOOT_RECORD m_mbr;

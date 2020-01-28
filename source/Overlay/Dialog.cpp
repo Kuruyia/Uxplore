@@ -33,12 +33,12 @@ void Dialog::processEvent(SDL_Event event)
 
 }
 
-void Dialog::renderTV(RenderKit *renderKit)
+void Dialog::renderPrimary(RenderKit *renderKit)
 {
 
 }
 
-void Dialog::renderDRC(RenderKit *renderKit)
+void Dialog::renderSecondary(RenderKit *renderKit)
 {
 
 }

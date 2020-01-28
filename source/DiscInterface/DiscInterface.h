@@ -29,20 +29,14 @@ public:
     DISC_INTERFACE *getInterface();
 
     bool startup();
-
     bool isInserted() const;
-
     bool clearStatus();
-
     bool shutdown();
-
     bool readSectors(uint32_t sector, uint32_t numSectors, void *buffer) const;
-
     bool writeSectors(uint32_t sector, uint32_t numSectors, const void *buffer);
 
 private:
     bool openFSA();
-
     void closeFSA();
 
     int m_fsaFdUSB;

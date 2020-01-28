@@ -29,13 +29,11 @@
 class BrowserItem : public TweenDrawable {
 public:
     BrowserItem(Drawable *parent, const Entry &entry, SDL_Point pos);
-
     ~BrowserItem() override = default;
 
     void draw(SDL_Renderer *renderer, TTF_Font *font) override;
 
     bool isSelected();
-
     void setSelected(bool selected);
 
 private:

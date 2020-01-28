@@ -29,9 +29,8 @@ public:
 
     virtual void update(float delta) = 0;
 
-    virtual void renderTV(RenderKit *renderKit) = 0;
-
-    virtual void renderDRC(RenderKit *renderKit) = 0;
+    virtual void renderPrimary(RenderKit *renderKit) = 0;
+    virtual void renderSecondary(RenderKit *renderKit) = 0;
 };
 
 #endif // OVERLAY_HPP

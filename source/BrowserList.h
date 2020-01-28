@@ -46,17 +46,12 @@ public:
     void update(float delta);
 
     void addItem(const Entry &entry);
-
     std::shared_ptr<BrowserItem> getItem(unsigned int index);
-
     void reset();
 
     std::shared_ptr<BrowserItem> getSelectedItem();
-
     unsigned int getSelectedItemIndex();
-
     void setSelectedItemIndex(unsigned int index);
-
     void moveSelectedItemIndex(int indexDelta);
 
 private:

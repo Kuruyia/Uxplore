@@ -23,9 +23,7 @@
 class Utils {
 public:
     static uint16_t swapEndian16(uint16_t n);
-
     static uint32_t swapEndian32(uint32_t n);
-
     static uint64_t swapEndian64(uint64_t n);
 };
 

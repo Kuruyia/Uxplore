@@ -26,16 +26,14 @@
 class Dialog : public Overlay {
 public:
     explicit Dialog(std::string message);
-
     ~Dialog() override = default;
 
     void processEvent(SDL_Event event) override;
 
     void update(float delta) override;
 
-    void renderTV(RenderKit *renderKit) override;
-
-    void renderDRC(RenderKit *renderKit) override;
+    void renderPrimary(RenderKit *renderKit) override;
+    void renderSecondary(RenderKit *renderKit) override;
 };
 
 #endif // DIALOG_HPP

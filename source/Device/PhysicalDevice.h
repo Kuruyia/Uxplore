@@ -35,27 +35,22 @@ public:
     };
 
     PhysicalDevice(const std::string &deviceId, const bool &skipPartitionTableRead);
-
     ~PhysicalDevice();
 
     DiscInterface *getDiscInterface();
 
     DeviceType getDeviceType() const;
-
     void setDeviceType(DeviceType deviceType);
 
     const std::string &getDeviceId() const;
-
     std::string getDevicePath() const;
 
     const std::unique_ptr<PartitionTableReader> &getPartitionTableReader() const;
-
     bool isPartitionTableAvailable() const;
 
     const std::vector<std::shared_ptr<MountedPartition>> &getMountedPartitions() const;
-
+    const std::shared_ptr<MountedPartition> &getMountedPartition(std::size_t pos) const;
     void addMountedPartition(const std::shared_ptr<MountedPartition> &newPartition);
-
     void removeMountedPartition(unsigned pos);
 
 private:

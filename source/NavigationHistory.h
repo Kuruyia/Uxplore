@@ -29,13 +29,10 @@ public:
     void go(std::string dirName);
 
     std::string getCurrentPathAsString();
-
     std::vector<std::string> *getHistory();
-
     unsigned int getHistoryPosition();
 
     void back();
-
     void forward();
 
 private:

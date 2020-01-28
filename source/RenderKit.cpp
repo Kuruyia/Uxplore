@@ -18,22 +18,22 @@
 
 #include "RenderKit.h"
 
-RenderKit::RenderKit(SDL_Renderer *tvRenderer, SDL_Renderer *gamepadRenderer, TTF_Font *textFont)
-        : m_tvRenderer(tvRenderer)
-        , m_gamepadRenderer(gamepadRenderer)
+RenderKit::RenderKit(SDL_Renderer *primaryRenderer, SDL_Renderer *secondaryRenderer, TTF_Font *textFont)
+        : m_primaryRenderer(primaryRenderer)
+        , m_secondaryRenderer(secondaryRenderer)
         , m_textFont(textFont)
 {
 
 }
 
-SDL_Renderer *RenderKit::getTVRenderer()
+SDL_Renderer *RenderKit::getPrimaryRenderer()
 {
-    return m_tvRenderer;
+    return m_primaryRenderer;
 }
 
-SDL_Renderer *RenderKit::getGamepadRenderer()
+SDL_Renderer *RenderKit::getSecondaryRenderer()
 {
-    return m_gamepadRenderer;
+    return m_secondaryRenderer;
 }
 
 TTF_Font *RenderKit::getTextFont()

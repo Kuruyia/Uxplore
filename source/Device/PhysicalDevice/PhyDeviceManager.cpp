@@ -69,7 +69,7 @@ bool PhysicalDeviceManager::update()
             if (newDevice->isPartitionTableAvailable()) {
                 // Partition table available, we can read from it
                 unsigned partitionCount = 1;
-                if (newDevice->getPartitionTableReader()->hasGPT()) {
+                if (newDevice->getPartitionTableReader()->hasGpt()) {
                     // Read the GPT
                     // TODO: Support GPT
                 } else {

@@ -28,7 +28,6 @@
 class Application {
 public:
     Application();
-
     ~Application();
 
     void render(float delta);

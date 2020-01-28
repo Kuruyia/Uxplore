@@ -35,14 +35,13 @@ class BrowseSession : public TweenDrawable {
 public:
     BrowseSession(PhysicalDeviceManager *physicalDeviceManager);
 
-    void draw(SDL_Renderer *renderer, TTF_Font *font) override;
+    void processEvent(SDL_Event event);
 
     void update(float delta);
 
-    void processEvent(SDL_Event event);
+    void draw(SDL_Renderer *renderer, TTF_Font *font) override;
 
     void reloadList();
-
     BrowserList *getBrowserList();
 
     void notifyDevicesChanged();

@@ -33,11 +33,9 @@ public:
     MountedPartition(const std::string &id, Filesystem filesystem);
 
     const std::string &getId() const;
-
     const Filesystem getFilesystem() const;
 
     const std::string &getName() const;
-
     void setName(const std::string &name);
 
     std::shared_ptr<File> getFile(std::string path) override;
@@ -45,7 +43,6 @@ public:
     std::vector<std::shared_ptr<File>> listFolder(std::string path) override;
 
     void writeFile(std::string path) override;
-
     void readFile(std::string path) override;
 
     void deleteEntry(std::string path) override;

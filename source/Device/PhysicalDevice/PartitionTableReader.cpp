@@ -57,9 +57,19 @@ const std::vector<PartitionTableReader::EBR_PARTITION> &PartitionTableReader::ge
     return m_ebrPartitions;
 }
 
-bool PartitionTableReader::hasGPT()
+bool PartitionTableReader::hasGpt()
 {
     return m_gptPresent;
+}
+
+const PartitionTableReader::GPT_HEADER &PartitionTableReader::getGptHeader() const
+{
+    return m_gptHeader;
+}
+
+const std::vector<PartitionTableReader::GPT_PARTITION_ENTRY> &PartitionTableReader::getGptPartitions() const
+{
+    return m_gptPartitionEntries;
 }
 
 bool PartitionTableReader::isReady() const

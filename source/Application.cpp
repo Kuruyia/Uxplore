@@ -79,7 +79,7 @@ void Application::render(float delta)
     SDL_RenderClear(m_sdlRendererTV);
 
     for (auto &m_overlay : m_overlays) {
-        m_overlay->renderTV(m_renderKit);
+        m_overlay->renderPrimary(m_renderKit);
     }
 
     // Clear and draw the DRC for every overlay
@@ -87,7 +87,7 @@ void Application::render(float delta)
     SDL_RenderClear(m_sdlRendererGamepad);
 
     for (auto &m_overlay : m_overlays) {
-        m_overlay->renderDRC(m_renderKit);
+        m_overlay->renderSecondary(m_renderKit);
     }
 
     SDL_RenderPresent(m_sdlRendererTV);
