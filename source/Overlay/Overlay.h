@@ -19,18 +19,19 @@
 #ifndef OVERLAY_HPP
 #define OVERLAY_HPP
 
-#include "RenderKit.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 class Overlay {
 public:
     virtual ~Overlay() = default;
 
-    virtual void processEvent(SDL_Event event) = 0;
+    virtual void processEvent(const SDL_Event &event) = 0;
 
-    virtual void update(float delta) = 0;
+    virtual void update(const float &delta) = 0;
 
-    virtual void renderPrimary(RenderKit *renderKit) = 0;
-    virtual void renderSecondary(RenderKit *renderKit) = 0;
+    virtual void renderPrimary(SDL_Renderer &renderer, TTF_Font &font) = 0;
+    virtual void renderSecondary(SDL_Renderer &renderer, TTF_Font &font) = 0;
 };
 
 #endif // OVERLAY_HPP

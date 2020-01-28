@@ -22,7 +22,7 @@ NavigationHistory::NavigationHistory()
         : m_historyPosition(0)
 {}
 
-void NavigationHistory::go(std::string dirName)
+void NavigationHistory::go(const std::string &dirName)
 {
     if (m_historyPosition < m_history.size())
         m_history.erase(m_history.begin() + m_historyPosition, m_history.end());
@@ -41,12 +41,12 @@ std::string NavigationHistory::getCurrentPathAsString()
     return currentPath;
 }
 
-std::vector<std::string> *NavigationHistory::getHistory()
+const std::vector<std::string> & NavigationHistory::getHistory()
 {
-    return &m_history;
+    return m_history;
 }
 
-unsigned int NavigationHistory::getHistoryPosition()
+const size_t & NavigationHistory::getHistoryPosition()
 {
     return m_historyPosition;
 }

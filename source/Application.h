@@ -22,7 +22,6 @@
 #include <memory>
 #include <vector>
 
-#include "RenderKit.h"
 #include "Overlay/Overlay.h"
 
 class Application {
@@ -30,7 +29,7 @@ public:
     Application();
     ~Application();
 
-    void render(float delta);
+    void render(const float &delta);
 
 private:
     SDL_Window *m_sdlWindowTV;
@@ -40,7 +39,6 @@ private:
     SDL_Renderer *m_sdlRendererGamepad;
 
     TTF_Font *m_textFont;
-    RenderKit *m_renderKit;
 
     std::vector<SDL_Joystick *> m_openedJoysticks;
 

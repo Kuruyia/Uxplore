@@ -41,25 +41,25 @@ class BrowserList : public TweenDrawable {
 public:
     BrowserList();
 
-    void draw(SDL_Renderer *renderer, TTF_Font *font) override;
+    void draw(SDL_Renderer &renderer, TTF_Font &font) override;
 
-    void update(float delta);
+    void update(const float &delta);
 
     void addItem(const Entry &entry);
-    std::shared_ptr<BrowserItem> getItem(unsigned int index);
+    std::shared_ptr<BrowserItem> getItem(const size_t &index);
     void reset();
 
     std::shared_ptr<BrowserItem> getSelectedItem();
     unsigned int getSelectedItemIndex();
-    void setSelectedItemIndex(unsigned int index);
-    void moveSelectedItemIndex(int indexDelta);
+    void setSelectedItemIndex(size_t index);
+    void moveSelectedItemIndex(const int &indexDelta);
 
 private:
     SDL_Point getPositionFromIndex(unsigned int index);
 
     std::vector<std::shared_ptr<BrowserItem>> m_items;
     Text m_emptyListText;
-    unsigned int m_selectedItemIndex;
+    size_t m_selectedItemIndex;
     int m_firstRow;
 
     std::map<Entry::EntryType, SDL_Texture *> m_icons;

@@ -33,16 +33,16 @@
 
 class BrowseSession : public TweenDrawable {
 public:
-    BrowseSession(PhysicalDeviceManager *physicalDeviceManager);
+    explicit BrowseSession(PhysicalDeviceManager &physicalDeviceManager);
 
-    void processEvent(SDL_Event event);
+    void processEvent(const SDL_Event &event);
 
-    void update(float delta);
+    void update(const float &delta);
 
-    void draw(SDL_Renderer *renderer, TTF_Font *font) override;
+    void draw(SDL_Renderer &renderer, TTF_Font &font) override;
 
     void reloadList();
-    BrowserList *getBrowserList();
+    const BrowserList & getBrowserList() const;
 
     void notifyDevicesChanged();
 
@@ -50,7 +50,7 @@ private:
     BrowserList m_browserList;
     NavigationHistory m_navigationHistory;
 
-    PhysicalDeviceManager *m_physicalDeviceManager;
+    const PhysicalDeviceManager &m_physicalDeviceManager;
 
     TweenEngine::TweenManager m_tweenManager;
 };

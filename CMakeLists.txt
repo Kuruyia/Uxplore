@@ -34,7 +34,6 @@ add_executable(uxplore_cpp
         source/ImageCache.cpp
         source/LocalFile.cpp
         source/NavigationHistory.cpp
-        source/RenderKit.cpp
         source/TweenObjects.h
         source/Device/PhysicalDevice.cpp
         source/Device/PhysicalDevice/PhyDeviceManager.cpp

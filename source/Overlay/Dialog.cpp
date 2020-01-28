@@ -23,22 +23,22 @@ Dialog::Dialog(std::string message)
 
 }
 
-void Dialog::update(float delta)
+void Dialog::update(const float &delta)
 {
 
 }
 
-void Dialog::processEvent(SDL_Event event)
+void Dialog::processEvent(const SDL_Event &event)
 {
 
 }
 
-void Dialog::renderPrimary(RenderKit *renderKit)
+void Dialog::renderPrimary(SDL_Renderer &renderer, TTF_Font &font)
 {
 
 }
 
-void Dialog::renderSecondary(RenderKit *renderKit)
+void Dialog::renderSecondary(SDL_Renderer &renderer, TTF_Font &font)
 {
 
 }

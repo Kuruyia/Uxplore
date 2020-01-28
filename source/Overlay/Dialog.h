@@ -28,12 +28,12 @@ public:
     explicit Dialog(std::string message);
     ~Dialog() override = default;
 
-    void processEvent(SDL_Event event) override;
+    void processEvent(const SDL_Event &event) override;
 
-    void update(float delta) override;
+    void update(const float &delta) override;
 
-    void renderPrimary(RenderKit *renderKit) override;
-    void renderSecondary(RenderKit *renderKit) override;
+    void renderPrimary(SDL_Renderer &renderer, TTF_Font &font) override;
+    void renderSecondary(SDL_Renderer &renderer, TTF_Font &font) override;
 };
 
 #endif // DIALOG_HPP

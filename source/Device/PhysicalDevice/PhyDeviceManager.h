@@ -32,8 +32,8 @@ public:
 
     bool update();
 
-    std::vector<std::string> getInsertedDevicesId();
-    std::vector<std::shared_ptr<PhysicalDevice>> getInsertedDevices();
+    std::vector<std::string> getInsertedDevicesId() const;
+    std::vector<std::shared_ptr<PhysicalDevice>> getInsertedDevices() const;
 
 private:
     enum FSMountCandidates {
@@ -43,9 +43,9 @@ private:
         All = Native | FAT
     };
 
-    bool tryMountPartition(PhysicalDevice *physicalDevice, const std::string &partitionName,
-                           sec_t startSector, FSMountCandidates mountCandidates,
-                           MountedPartition::Filesystem *mountedFilesystem);
+    bool tryMountPartition(std::shared_ptr<PhysicalDevice> &physicalDevice, const std::string &partitionName,
+                           const sec_t &startSector, const FSMountCandidates &mountCandidates,
+                           MountedPartition::Filesystem &mountedFilesystem);
     bool tryMountNative(const std::string &deviceName);
     bool tryMountPartitionAndAddToDevice(std::shared_ptr<PhysicalDevice> &device, const std::string &partitionName,
                                          sec_t startSector);

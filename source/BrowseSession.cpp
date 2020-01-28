@@ -20,24 +20,24 @@
 
 #include <Entry/EntryPhysicalMountedPartition.h>
 
-BrowseSession::BrowseSession(PhysicalDeviceManager *physicalDeviceManager)
+BrowseSession::BrowseSession(PhysicalDeviceManager &physicalDeviceManager)
         : m_physicalDeviceManager(physicalDeviceManager)
 {
     reloadList();
 }
 
-void BrowseSession::draw(SDL_Renderer *renderer, TTF_Font *font)
+void BrowseSession::draw(SDL_Renderer &renderer, TTF_Font &font)
 {
     m_browserList.draw(renderer, font);
 }
 
-void BrowseSession::update(float delta)
+void BrowseSession::update(const float &delta)
 {
     m_browserList.update(delta);
     m_tweenManager.update(delta);
 }
 
-void BrowseSession::processEvent(SDL_Event event)
+void BrowseSession::processEvent(const SDL_Event &event)
 {
     switch (event.type) {
         case SDL_JOYBUTTONDOWN: {
@@ -89,7 +89,7 @@ void BrowseSession::reloadList()
     m_browserList.reset();
 
     if (m_navigationHistory.getHistoryPosition() == 0) {
-        for (const auto &device : m_physicalDeviceManager->getInsertedDevices()) {
+        for (const auto &device : m_physicalDeviceManager.getInsertedDevices()) {
             for (const auto &partition : device->getMountedPartitions()) {
                 m_browserList.addItem(EntryPhysicalMountedPartition(device, partition));
             }
@@ -99,9 +99,9 @@ void BrowseSession::reloadList()
     }
 }
 
-BrowserList *BrowseSession::getBrowserList()
+const BrowserList &BrowseSession::getBrowserList() const
 {
-    return &m_browserList;
+    return m_browserList;
 }
 
 void BrowseSession::notifyDevicesChanged()

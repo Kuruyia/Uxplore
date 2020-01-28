@@ -25,7 +25,7 @@ class File {
 public:
     File(const std::string &name);
 
-    std::string getName();
+    const std::string & getName() const;
 
 protected:
     std::string m_name;

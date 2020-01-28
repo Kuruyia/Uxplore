@@ -18,22 +18,28 @@
 
 #include "Drawable.h"
 
-float Drawable::getScale()
+Drawable::Drawable()
+    : m_parent(nullptr)
+{
+
+}
+
+const float &Drawable::getScale() const
 {
     return m_scale;
 }
 
-void Drawable::setScale(float scale)
+void Drawable::setScale(const float &scale)
 {
     m_scale = scale;
 }
 
-SDL_Point Drawable::getRelativePosition()
+const SDL_Point &Drawable::getRelativePosition() const
 {
     return m_relativePosition;
 }
 
-void Drawable::setRelativePosition(SDL_Point relativePosition)
+void Drawable::setRelativePosition(const SDL_Point &relativePosition)
 {
     m_relativePosition = relativePosition;
 }
@@ -44,11 +50,11 @@ void Drawable::setRelativePosition(int positionX, int positionY)
     setRelativePosition(position);
 }
 
-SDL_Point Drawable::getAbsolutePosition()
+SDL_Point Drawable::getAbsolutePosition() const
 {
     SDL_Point parentPosition = {0, 0};
     SDL_Point myPosition = getRelativePosition();
-    if (m_parent != NULL)
+    if (m_parent != nullptr)
         parentPosition = m_parent->getAbsolutePosition();
 
     SDL_Point absolutePosition;
@@ -58,7 +64,7 @@ SDL_Point Drawable::getAbsolutePosition()
     return absolutePosition;
 }
 
-Drawable *Drawable::getParent()
+const Drawable *Drawable::getParent() const
 {
     return m_parent;
 }

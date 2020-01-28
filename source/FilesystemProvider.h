@@ -9,7 +9,7 @@
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    MERCHANTABILITY or FITNESS FOstd::stringR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
@@ -29,16 +29,16 @@ class FilesystemProvider {
 public:
     virtual ~FilesystemProvider() = default;
 
-    virtual std::shared_ptr<File> getFile(std::string path) = 0;
+    virtual std::shared_ptr<File> getFile(const std::string &path) = 0;
 
-    virtual std::vector<std::shared_ptr<File>> listFolder(std::string path) = 0;
+    virtual std::vector<std::shared_ptr<File>> listFolder(const std::string &path) = 0;
 
-    virtual void writeFile(std::string path) = 0;
-    virtual void readFile(std::string path) = 0;
+    virtual void writeFile(const std::string &path) = 0;
+    virtual void readFile(const std::string &path) = 0;
 
-    virtual void deleteEntry(std::string path) = 0;
+    virtual void deleteEntry(const std::string &path) = 0;
 
-    virtual void createFolder(std::string path) = 0;
+    virtual void createFolder(const std::string &path) = 0;
 };
 
 #endif // DEVICE_HPP

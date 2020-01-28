@@ -18,7 +18,7 @@
 
 #include "Text.h"
 
-Text::Text(Drawable *parent, SDL_Point position, std::string text)
+Text::Text(Drawable *parent, const SDL_Point &position, const std::string &text)
         : m_text(text)
         , m_needsUpdate(true)
         , m_textColor({0, 0, 0})
@@ -32,11 +32,11 @@ Text::~Text()
     SDL_DestroyTexture(m_textTexture);
 }
 
-void Text::draw(SDL_Renderer *renderer, TTF_Font *font)
+void Text::draw(SDL_Renderer &renderer, TTF_Font &font)
 {
     if (m_needsUpdate) {
-        SDL_Surface *textSurface = TTF_RenderUTF8_Blended(font, m_text.c_str(), m_textColor);
-        m_textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        SDL_Surface *textSurface = TTF_RenderUTF8_Blended(&font, m_text.c_str(), m_textColor);
+        m_textTexture = SDL_CreateTextureFromSurface(&renderer, textSurface);
 
         m_textRect.w = textSurface->w * getScale();
         m_textRect.h = textSurface->h * getScale();
@@ -50,7 +50,7 @@ void Text::draw(SDL_Renderer *renderer, TTF_Font *font)
     m_textRect.x = position.x;
     m_textRect.y = position.y;
 
-    SDL_RenderCopy(renderer, m_textTexture, nullptr, &m_textRect);
+    SDL_RenderCopy(&renderer, m_textTexture, nullptr, &m_textRect);
 }
 
 std::string Text::getText()
@@ -64,7 +64,7 @@ void Text::setText(std::string text)
     m_needsUpdate = true;
 }
 
-void Text::setScale(float scale)
+void Text::setScale(const float &scale)
 {
     m_needsUpdate = true;
     Drawable::setScale(scale);

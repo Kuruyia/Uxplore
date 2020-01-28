@@ -103,7 +103,7 @@ private:
     bool isExtendedPartitionType(uint8_t partitionType);
     void discoverExtendedPartition(const DiscInterface *discInterface,
                                    const MBR_PARTITION &extendedPartitionEntry,
-                                   std::vector<EBR_PARTITION> *logicalPartitions);
+                                   std::vector<EBR_PARTITION> &logicalPartitions);
 
     void correctMbrPartitionEndianness(MBR_PARTITION &partition);
     void correctGptHeaderEndianness(GPT_HEADER &header);

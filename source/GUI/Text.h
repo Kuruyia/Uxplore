@@ -25,20 +25,17 @@
 
 class Text : public Drawable {
 public:
-    Text(Drawable *parent, SDL_Point position, std::string text);
-
+    Text(Drawable *parent, const SDL_Point &position, const std::string &text);
     ~Text() override;
 
-    void draw(SDL_Renderer *renderer, TTF_Font *font) override;
+    void draw(SDL_Renderer &renderer, TTF_Font &font) override;
 
     std::string getText();
-
     void setText(std::string text);
 
-    void setScale(float scale);
+    void setScale(const float &scale) override;
 
     void setColor(SDL_Color color);
-
     SDL_Color getColor();
 
 private:
@@ -47,8 +44,8 @@ private:
 
     bool m_needsUpdate;
 
-    SDL_Texture *m_textTexture;
-    SDL_Rect m_textRect;
+    SDL_Texture *m_textTexture{};
+    SDL_Rect m_textRect{};
 };
 
 #endif // TEXT_HPP

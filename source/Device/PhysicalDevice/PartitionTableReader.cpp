@@ -182,10 +182,8 @@ void PartitionTableReader::detectExtendedPartitions(const DiscInterface *discInt
 {
     // Check every partition entry in the MBR for an extended partition
     for (const MBR_PARTITION &partition : m_mbrPartitions) {
-        discoverExtendedPartition(discInterface, partition, &m_ebrPartitions);
+        discoverExtendedPartition(discInterface, partition, m_ebrPartitions);
     }
-
-    WHBLogPrintf("Discovered %u EBRs", m_ebrPartitions.size());
 }
 
 bool PartitionTableReader::isExtendedPartitionType(const uint8_t partitionType)
@@ -195,7 +193,7 @@ bool PartitionTableReader::isExtendedPartitionType(const uint8_t partitionType)
 
 void PartitionTableReader::discoverExtendedPartition(const DiscInterface *discInterface,
                                                      const MBR_PARTITION &extendedPartitionEntry,
-                                                     std::vector<EBR_PARTITION> *logicalPartitions)
+                                                     std::vector<EBR_PARTITION> &logicalPartitions)
 {
     // Check that the entry partition type is extended partition
     if (!isExtendedPartitionType(extendedPartitionEntry.partitionType))
@@ -222,7 +220,7 @@ void PartitionTableReader::discoverExtendedPartition(const DiscInterface *discIn
         if (ebr.partitions[0].partitionType != 0x00) {
             correctMbrPartitionEndianness(ebr.partitions[0]);
             currentLogicalPartition.partition = ebr.partitions[0];
-            logicalPartitions->push_back(currentLogicalPartition);
+            logicalPartitions.push_back(currentLogicalPartition);
         }
 
         correctMbrPartitionEndianness(ebr.partitions[1]);

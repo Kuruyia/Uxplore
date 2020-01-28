@@ -38,16 +38,16 @@ public:
     const std::string &getName() const;
     void setName(const std::string &name);
 
-    std::shared_ptr<File> getFile(std::string path) override;
+    std::shared_ptr<File> getFile(const std::string &path) override;
 
-    std::vector<std::shared_ptr<File>> listFolder(std::string path) override;
+    std::vector<std::shared_ptr<File>> listFolder(const std::string &path) override;
 
-    void writeFile(std::string path) override;
-    void readFile(std::string path) override;
+    void writeFile(const std::string &path) override;
+    void readFile(const std::string &path) override;
 
-    void deleteEntry(std::string path) override;
+    void deleteEntry(const std::string &path) override;
 
-    void createFolder(std::string path) override;
+    void createFolder(const std::string &path) override;
 
 private:
     const std::string m_id;

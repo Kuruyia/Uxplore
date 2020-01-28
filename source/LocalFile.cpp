@@ -18,7 +18,7 @@
 
 #include "LocalFile.h"
 
-LocalFile::LocalFile(std::string name, std::string path, FilesystemProvider *device)
+LocalFile::LocalFile(const std::string &name, const std::string &path, FilesystemProvider &device)
         : File(name)
         , m_path(path)
         , m_device(device)
@@ -29,7 +29,7 @@ std::string LocalFile::getPath()
     return m_path;
 }
 
-FilesystemProvider *LocalFile::getDevice()
+const FilesystemProvider & LocalFile::getDevice() const
 {
     return m_device;
 }

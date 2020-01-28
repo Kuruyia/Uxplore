@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <algorithm>
 #include <TweenEngine/Tween.h>
 #include "BrowserList.h"
 
@@ -27,7 +28,7 @@ BrowserList::BrowserList()
 
 }
 
-void BrowserList::draw(SDL_Renderer *renderer, TTF_Font *font)
+void BrowserList::draw(SDL_Renderer &renderer, TTF_Font &font)
 {
     for (auto &m_item : m_items)
         m_item->draw(renderer, font);
@@ -35,7 +36,7 @@ void BrowserList::draw(SDL_Renderer *renderer, TTF_Font *font)
     //m_emptyListText.draw(renderer, font);
 }
 
-void BrowserList::update(float delta)
+void BrowserList::update(const float &delta)
 {
     m_tweenManager.update(delta);
 }
@@ -52,7 +53,7 @@ void BrowserList::addItem(const Entry &entry)
     m_items.emplace_back(std::move(item));
 }
 
-std::shared_ptr<BrowserItem> BrowserList::getItem(unsigned int index)
+std::shared_ptr<BrowserItem> BrowserList::getItem(const size_t &index)
 {
     return m_items.at(index);
 }
@@ -76,12 +77,9 @@ unsigned int BrowserList::getSelectedItemIndex()
     return m_selectedItemIndex;
 }
 
-void BrowserList::setSelectedItemIndex(unsigned int index)
+void BrowserList::setSelectedItemIndex(size_t index)
 {
-    if (index < 0)
-        index = 0;
-    else if (index >= m_items.size())
-        index = m_items.size() - 1;
+    index = std::min(index, m_items.size() - 1);
 
     m_items.at(m_selectedItemIndex)->setSelected(false);
     m_selectedItemIndex = index;
@@ -102,7 +100,7 @@ void BrowserList::setSelectedItemIndex(unsigned int index)
     }
 }
 
-void BrowserList::moveSelectedItemIndex(int indexDelta)
+void BrowserList::moveSelectedItemIndex(const int &indexDelta)
 {
     const int newIndex = (int) m_selectedItemIndex + indexDelta;
     setSelectedItemIndex(newIndex > 0 ? newIndex : 0);

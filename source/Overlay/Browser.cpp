@@ -29,7 +29,7 @@
 #include "File.h"
 
 Browser::Browser()
-        : m_browseSession(&m_physicalDeviceManager)
+        : m_browseSession(m_physicalDeviceManager)
 {
     /*DIR *pdir;
     struct dirent *pent;
@@ -53,7 +53,7 @@ Browser::Browser()
     }*/
 }
 
-void Browser::update(float delta)
+void Browser::update(const float &delta)
 {
     m_tweenManager.update(delta);
 
@@ -63,35 +63,30 @@ void Browser::update(float delta)
     m_browseSession.update(delta);
 }
 
-void Browser::processEvent(SDL_Event event)
+void Browser::processEvent(const SDL_Event &event)
 {
     m_browseSession.processEvent(event);
 }
 
-void Browser::renderPrimary(RenderKit *renderKit)
+void Browser::renderPrimary(SDL_Renderer &renderer, TTF_Font &font)
 {
-    SDL_Renderer *tvRenderer = renderKit->getPrimaryRenderer();
-    TTF_Font *font = renderKit->getTextFont();
-
-    m_browseSession.draw(tvRenderer, font);
+    m_browseSession.draw(renderer, font);
 }
 
-void Browser::renderSecondary(RenderKit *renderKit)
+void Browser::renderSecondary(SDL_Renderer &renderer, TTF_Font &font)
 {
-    SDL_Renderer *gamepadRenderer = renderKit->getSecondaryRenderer();
-
-    SDL_SetRenderDrawColor(gamepadRenderer, 255, 0, 0, 128);
+    SDL_SetRenderDrawColor(&renderer, 255, 0, 0, 128);
     SDL_Rect rect;
     rect.x = 50;
     rect.y = 50;
     rect.w = 200;
     rect.h = 200;
-    SDL_RenderFillRect(gamepadRenderer, &rect);
+    SDL_RenderFillRect(&renderer, &rect);
     rect.x += 100;
-    SDL_SetRenderDrawColor(gamepadRenderer, 0, 255, 0, 128);
-    SDL_RenderFillRect(gamepadRenderer, &rect);
+    SDL_SetRenderDrawColor(&renderer, 0, 255, 0, 128);
+    SDL_RenderFillRect(&renderer, &rect);
     rect.x -= 50;
     rect.y += 100;
-    SDL_SetRenderDrawColor(gamepadRenderer, 0, 0, 255, 128);
-    SDL_RenderFillRect(gamepadRenderer, &rect);
+    SDL_SetRenderDrawColor(&renderer, 0, 0, 255, 128);
+    SDL_RenderFillRect(&renderer, &rect);
 }

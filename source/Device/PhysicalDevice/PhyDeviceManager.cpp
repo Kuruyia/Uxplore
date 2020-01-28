@@ -52,7 +52,7 @@ bool PhysicalDeviceManager::update()
         bool hasChanged = false;
 
         std::vector<std::string> addedDevices, removedDevices;
-        int ret = PhysicalDeviceUtils::getDeviceDelta(getInsertedDevicesId(), &addedDevices, &removedDevices);
+        int ret = PhysicalDeviceUtils::getDeviceDelta(getInsertedDevicesId(), addedDevices, removedDevices);
         if (ret < 0) {
             WHBLogPrintf("getDeviceDelta has failed with %i", ret);
             return false;
@@ -93,8 +93,8 @@ bool PhysicalDeviceManager::update()
             } else {
                 // Partition table not available, we have to rely on the system
                 MountedPartition::Filesystem mountedFilesystem;
-                bool success = tryMountPartition(newDevice.get(), newDevice->getDeviceId(), 0,
-                                                 FSMountCandidates::Native, &mountedFilesystem);
+                bool success = tryMountPartition(newDevice, newDevice->getDeviceId(), 0,
+                                                 FSMountCandidates::Native, mountedFilesystem);
 
                 if (success) {
                     std::shared_ptr<MountedPartition> newPartition(
@@ -102,6 +102,8 @@ bool PhysicalDeviceManager::update()
 
                     newDevice->addMountedPartition(newPartition);
                     updateMountedPartitionName(newPartition);
+
+                    WHBLogPrintf("Mounted partition %s", newPartition->getId().c_str());
                 }
             }
 
@@ -137,9 +139,9 @@ bool PhysicalDeviceManager::update()
     return false;
 }
 
-bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice, const std::string &partitionName,
-                                              sec_t startSector, FSMountCandidates mountCandidates,
-                                              MountedPartition::Filesystem *mountedFilesystem)
+bool PhysicalDeviceManager::tryMountPartition(std::shared_ptr<PhysicalDevice> &physicalDevice, const std::string &partitionName,
+                                              const sec_t &startSector, const FSMountCandidates &mountCandidates,
+                                              MountedPartition::Filesystem &mountedFilesystem)
 {
     if (mountCandidates & FSMountCandidates::FAT &&
         fatMount(partitionName.c_str(), physicalDevice->getDiscInterface()->getInterface(), startSector,
@@ -172,13 +174,13 @@ bool PhysicalDeviceManager::tryMountPartition(PhysicalDevice *physicalDevice, co
         WHBLogPrint("END LISTING");
         WHBLogPrint("");*/
 
-        *mountedFilesystem = MountedPartition::Filesystem::FAT;
+        mountedFilesystem = MountedPartition::Filesystem::FAT;
 
         return true;
     }
 
     if (mountCandidates & FSMountCandidates::Native && tryMountNative(partitionName)) {
-        *mountedFilesystem = MountedPartition::Filesystem::Native;
+        mountedFilesystem = MountedPartition::Filesystem::Native;
 
         return true;
     }
@@ -199,7 +201,7 @@ bool PhysicalDeviceManager::tryMountNative(const std::string &deviceName)
     return ret >= 0;
 }
 
-std::vector<std::string> PhysicalDeviceManager::getInsertedDevicesId()
+std::vector<std::string> PhysicalDeviceManager::getInsertedDevicesId() const
 {
     std::vector<std::string> deviceIds;
 
@@ -210,7 +212,7 @@ std::vector<std::string> PhysicalDeviceManager::getInsertedDevicesId()
     return deviceIds;
 }
 
-std::vector<std::shared_ptr<PhysicalDevice>> PhysicalDeviceManager::getInsertedDevices()
+std::vector<std::shared_ptr<PhysicalDevice>> PhysicalDeviceManager::getInsertedDevices() const
 {
     std::vector<std::shared_ptr<PhysicalDevice>> devices;
 
@@ -259,7 +261,7 @@ bool PhysicalDeviceManager::tryMountPartitionAndAddToDevice(std::shared_ptr<Phys
                                                             sec_t startSector)
 {
     MountedPartition::Filesystem mountedFilesystem;
-    if (tryMountPartition(device.get(), partitionName, startSector, FSMountCandidates::All, &mountedFilesystem)) {
+    if (tryMountPartition(device, partitionName, startSector, FSMountCandidates::All, mountedFilesystem)) {
         std::shared_ptr<MountedPartition> newPartition(new MountedPartition(partitionName, mountedFilesystem));
 
         device->addMountedPartition(newPartition);

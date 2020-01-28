@@ -22,7 +22,7 @@ File::File(const std::string &name)
         : m_name(name)
 {}
 
-std::string File::getName()
+const std::string & File::getName() const
 {
     return m_name;
 }

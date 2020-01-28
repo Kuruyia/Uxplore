@@ -26,32 +26,32 @@ MountedPartition::MountedPartition(const std::string &id, Filesystem filesystem)
 
 }
 
-std::shared_ptr<File> MountedPartition::getFile(std::string path)
+std::shared_ptr<File> MountedPartition::getFile(const std::string &path)
 {
     return std::shared_ptr<File>();
 }
 
-std::vector<std::shared_ptr<File>> MountedPartition::listFolder(std::string path)
+std::vector<std::shared_ptr<File>> MountedPartition::listFolder(const std::string &path)
 {
     return std::vector<std::shared_ptr<File>>();
 }
 
-void MountedPartition::writeFile(std::string path)
+void MountedPartition::writeFile(const std::string &path)
 {
 
 }
 
-void MountedPartition::readFile(std::string path)
+void MountedPartition::readFile(const std::string &path)
 {
 
 }
 
-void MountedPartition::deleteEntry(std::string path)
+void MountedPartition::deleteEntry(const std::string &path)
 {
 
 }
 
-void MountedPartition::createFolder(std::string path)
+void MountedPartition::createFolder(const std::string &path)
 {
 
 }
