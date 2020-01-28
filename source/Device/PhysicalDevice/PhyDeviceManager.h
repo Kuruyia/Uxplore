@@ -50,7 +50,8 @@ private:
     bool tryMountPartitionAndAddToDevice(std::shared_ptr<PhysicalDevice> &device, const std::string &partitionName,
                                          sec_t startSector);
 
-    void unmountPartition(const std::shared_ptr<MountedPartition> &partition);
+    void unmountPartition(const std::shared_ptr<PhysicalDevice> &device, const std::size_t &pos);
+    void unmountDevice(const std::shared_ptr<PhysicalDevice> &device);
     void unmountAll();
 
     static void updateMountedPartitionName(const std::shared_ptr<MountedPartition> &partition);

@@ -49,9 +49,9 @@ public:
     bool isPartitionTableAvailable() const;
 
     const std::vector<std::shared_ptr<MountedPartition>> &getMountedPartitions() const;
-    const std::shared_ptr<MountedPartition> &getMountedPartition(std::size_t pos) const;
+    const std::shared_ptr<MountedPartition> &getMountedPartition(const size_t &pos) const;
     void addMountedPartition(const std::shared_ptr<MountedPartition> &newPartition);
-    void removeMountedPartition(unsigned pos);
+    void removeMountedPartition(const size_t &pos);
 
 private:
     DiscInterface m_discInterface;

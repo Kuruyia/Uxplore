@@ -115,10 +115,7 @@ bool PhysicalDeviceManager::update()
                 if (it->first == removedDevice) {
                     WHBLogPrintf("Found removed device - %s", it->first.c_str());
 
-                    for (const std::shared_ptr<MountedPartition> &partition : it->second->getMountedPartitions()) {
-                        unmountPartition(partition);
-                    }
-
+                    unmountDevice(it->second);
                     m_insertedDevices.erase(it);
 
                     hasChanged = true;
@@ -224,12 +221,6 @@ std::vector<std::shared_ptr<PhysicalDevice>> PhysicalDeviceManager::getInsertedD
     return devices;
 }
 
-void PhysicalDeviceManager::unmountAll()
-{
-    WHBLogPrint("Unmounting everything");
-    // TODO: Unmount all partitions of all devices
-}
-
 void PhysicalDeviceManager::updateMountedPartitionName(const std::shared_ptr<MountedPartition> &partition)
 {
     switch (partition->getFilesystem()) {
@@ -280,8 +271,9 @@ bool PhysicalDeviceManager::tryMountPartitionAndAddToDevice(std::shared_ptr<Phys
     return false;
 }
 
-void PhysicalDeviceManager::unmountPartition(const std::shared_ptr<MountedPartition> &partition)
+void PhysicalDeviceManager::unmountPartition(const std::shared_ptr<PhysicalDevice> &device, const std::size_t &pos)
 {
+    const std::shared_ptr<MountedPartition> partition = device->getMountedPartition(pos);
     switch (partition->getFilesystem()) {
         case MountedPartition::Filesystem::FAT:
             fatUnmount(partition->getId().c_str());
@@ -295,4 +287,24 @@ void PhysicalDeviceManager::unmountPartition(const std::shared_ptr<MountedPartit
             WHBLogPrintf("PhysicalDeviceManager::unmountPartition - Unhandled partition type");
             break;
     }
+
+    device->removeMountedPartition(pos);
+}
+
+void PhysicalDeviceManager::unmountDevice(const std::shared_ptr<PhysicalDevice> &device)
+{
+    const size_t mountedPartitionCount = device->getMountedPartitions().size();
+    for (size_t i = 0; i < mountedPartitionCount; ++i) {
+        unmountPartition(device, i);
+    }
+}
+
+void PhysicalDeviceManager::unmountAll()
+{
+    WHBLogPrint("Unmounting everything");
+    for (const auto &insertedDevice : m_insertedDevices) {
+        unmountDevice(insertedDevice.second);
+    }
+
+    m_insertedDevices.clear();
 }
