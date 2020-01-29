@@ -21,11 +21,11 @@
 
 #include <TweenEngine/TweenManager.h>
 
-#include "BrowseSession.h"
-#include "Device/PhysicalDevice/PhyDeviceManager.h"
-#include "Overlay.h"
+#include "../BrowseSession.h"
+#include "../Device/PhysicalDevice/PhyDeviceManager.h"
+#include "ManagedOverlay.h"
 
-class Browser : public Overlay {
+class Browser : public ManagedOverlay {
 public:
     Browser();
     ~Browser() override = default;

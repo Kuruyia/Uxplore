@@ -40,8 +40,7 @@ Application::Application()
     m_textFont = TTF_OpenFont("romfs:/res/fonts/opensans.ttf", 32);
     ImageCache::getInstance().setRenderer(m_sdlRendererTV);
 
-    std::unique_ptr<Browser> browser(new Browser());
-    m_overlays.emplace_back(std::move(browser));
+    m_overlayManager.pushOverlay(std::make_unique<Browser>());
 }
 
 Application::~Application()
@@ -64,30 +63,22 @@ void Application::render(const float &delta)
 {
     // Poll any event and dispatch it to the most recent overlay
     SDL_Event event;
-    if (SDL_PollEvent(&event) && !m_overlays.empty()) {
-        m_overlays.back()->processEvent(event);
+    if (SDL_PollEvent(&event)) {
+        m_overlayManager.processEvent(event);
     }
 
     // Update every overlay
-    for (auto &m_overlay : m_overlays) {
-        m_overlay->update(delta);
-    }
+    m_overlayManager.update(delta);
 
     // Clear and draw the TV for every overlay
     SDL_SetRenderDrawColor(m_sdlRendererTV, 255, 255, 255, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(m_sdlRendererTV);
-
-    for (auto &m_overlay : m_overlays) {
-        m_overlay->renderPrimary(*m_sdlRendererTV, *m_textFont);
-    }
+    m_overlayManager.renderPrimary(*m_sdlRendererTV, *m_textFont);
 
     // Clear and draw the DRC for every overlay
     SDL_SetRenderDrawColor(m_sdlRendererGamepad, 255, 255, 255, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(m_sdlRendererGamepad);
-
-    for (auto &m_overlay : m_overlays) {
-        m_overlay->renderSecondary(*m_sdlRendererGamepad, *m_textFont);
-    }
+    m_overlayManager.renderSecondary(*m_sdlRendererGamepad, *m_textFont);
 
     SDL_RenderPresent(m_sdlRendererTV);
     SDL_RenderPresent(m_sdlRendererGamepad);

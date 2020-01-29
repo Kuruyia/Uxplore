@@ -1,4 +1,4 @@
-/*Overlay
+/*
     Uxplore
     Copyright (C) 2019-2020, Kuruyia
 
@@ -16,22 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OVERLAY_HPP
-#define OVERLAY_HPP
+#ifndef UXPLORE_CPP_MANAGEDOVERLAY_H
+#define UXPLORE_CPP_MANAGEDOVERLAY_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include "Overlay.h"
 
-class Overlay {
+class ManagedOverlay : public Overlay {
 public:
-    virtual ~Overlay() = default;
-
-    virtual void processEvent(const SDL_Event &event) = 0;
-
-    virtual void update(const float &delta) = 0;
-
-    virtual void renderPrimary(SDL_Renderer &renderer, TTF_Font &font) = 0;
-    virtual void renderSecondary(SDL_Renderer &renderer, TTF_Font &font) = 0;
+    ~ManagedOverlay() override = default;
 };
 
-#endif // OVERLAY_HPP
+
+#endif //UXPLORE_CPP_MANAGEDOVERLAY_H

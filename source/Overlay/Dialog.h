@@ -21,9 +21,9 @@
 
 #include <TweenEngine/TweenManager.h>
 
-#include "Overlay.h"
+#include "ManagedOverlay.h"
 
-class Dialog : public Overlay {
+class Dialog : public ManagedOverlay {
 public:
     explicit Dialog(std::string message);
     ~Dialog() override = default;
