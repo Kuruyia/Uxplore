@@ -30,6 +30,7 @@ make
 ## Acknowlegments
 - The [wut](https://github.com/devkitPro/wut) development team for providing the toolkit
 - [SDL2](https://github.com/yawut/SDL) maintainers, and the Wii U version maintainers
+- UI icons by [Icons8](https://icons8.com/)
 - [libiosuhax](https://github.com/Arc13/libiosuhax)
 - [libfat](https://github.com/Arc13/libfat)
 - [universal-tween-engine](https://github.com/Arc13/universal-tween-engine-cpp)
