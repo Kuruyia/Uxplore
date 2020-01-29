@@ -163,6 +163,8 @@ bool PartitionTableReader::readGptFromDisc(const DiscInterface *discInterface, c
 
         // Add the partition if not unused
         if (entryArray[i].partitionTypeGUID.lowPart != 0 || entryArray[i].partitionTypeGUID.highPart != 0) {
+            // Correct the partition endianness and add the partition
+            correctGptPartitionEndianness(entryArray[i]);
             m_gptPartitionEntries.push_back(entryArray[i]);
         }
     }
@@ -248,4 +250,11 @@ void PartitionTableReader::correctGptHeaderEndianness(PartitionTableReader::GPT_
     header.partitionCount = Utils::swapEndian32(header.partitionCount);
     header.partitionEntrySize = Utils::swapEndian32(header.partitionEntrySize);
     header.partitionEntryCRC32 = Utils::swapEndian32(header.partitionEntryCRC32);
+}
+
+void PartitionTableReader::correctGptPartitionEndianness(PartitionTableReader::GPT_PARTITION_ENTRY &partition)
+{
+    partition.startingLBA = Utils::swapEndian64(partition.startingLBA);
+    partition.endingLBA = Utils::swapEndian64(partition.endingLBA);
+    partition.attributes = Utils::swapEndian64(partition.attributes);
 }

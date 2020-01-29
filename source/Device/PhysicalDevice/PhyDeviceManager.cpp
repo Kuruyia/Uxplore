@@ -71,21 +71,31 @@ bool PhysicalDeviceManager::update()
                 unsigned partitionCount = 1;
                 if (newDevice->getPartitionTableReader()->hasGpt()) {
                     // Read the GPT
-                    // TODO: Support GPT
+                    for (const PartitionTableReader::GPT_PARTITION_ENTRY &partition : newDevice->getPartitionTableReader()->getGptPartitions()) {
+                        WHBLogPrintf("Trying to mount GPT partition @ %llu", partition.startingLBA);
+                        if (tryMountPartitionAndAddToDevice(newDevice,
+                                newDevice->getDeviceId() + "p" + std::to_string(partitionCount),
+                                partition.startingLBA))
+                        {
+                            ++partitionCount;
+                        }
+                    }
                 } else {
                     // Read the MBR/EBRs
                     for (const PartitionTableReader::MBR_PARTITION &partition : newDevice->getPartitionTableReader()->getMbrPartitions()) {
-                        if (tryMountPartitionAndAddToDevice(newDevice, newDevice->getDeviceId() + "p" +
-                                                                       std::to_string(partitionCount),
-                                                            partition.startingLBA)) {
+                        if (tryMountPartitionAndAddToDevice(newDevice,
+                                newDevice->getDeviceId() + "p" + std::to_string(partitionCount),
+                                partition.startingLBA))
+                        {
                             ++partitionCount;
                         }
                     }
 
                     for (const PartitionTableReader::EBR_PARTITION &partition : newDevice->getPartitionTableReader()->getEbrPartitions()) {
-                        if (tryMountPartitionAndAddToDevice(newDevice, newDevice->getDeviceId() + "p" +
-                                                                       std::to_string(partitionCount),
-                                                            partition.ebrLBA + partition.partition.startingLBA)) {
+                        if (tryMountPartitionAndAddToDevice(newDevice,
+                                newDevice->getDeviceId() + "p" + std::to_string(partitionCount),
+                                partition.ebrLBA + partition.partition.startingLBA))
+                        {
                             ++partitionCount;
                         }
                     }
@@ -295,9 +305,8 @@ void PhysicalDeviceManager::unmountPartition(const std::shared_ptr<PhysicalDevic
 
 void PhysicalDeviceManager::unmountDevice(const std::shared_ptr<PhysicalDevice> &device)
 {
-    const size_t mountedPartitionCount = device->getMountedPartitions().size();
-    for (size_t i = 0; i < mountedPartitionCount; ++i) {
-        unmountPartition(device, i);
+    while (!device->getMountedPartitions().empty()) {
+        unmountPartition(device, 0);
     }
 }
 

@@ -107,6 +107,7 @@ private:
 
     void correctMbrPartitionEndianness(MBR_PARTITION &partition);
     void correctGptHeaderEndianness(GPT_HEADER &header);
+    void correctGptPartitionEndianness(GPT_PARTITION_ENTRY &partition);
 
     MASTER_BOOT_RECORD m_mbr;
     std::vector<MBR_PARTITION> m_mbrPartitions;
