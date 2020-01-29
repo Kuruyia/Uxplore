@@ -1,6 +1,6 @@
 /*
     Uxplore
-    Copyright (C) 2019-2019, Kuruyia
+    Copyright (C) 2019-2020, Kuruyia
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #include <memory>
 #include <vector>
 
-#include "Overlay/Overlay.h"
+#include "Overlay/OverlayManager.hpp"
 
 class Application {
 public:
@@ -42,7 +42,7 @@ private:
 
     std::vector<SDL_Joystick *> m_openedJoysticks;
 
-    std::vector<std::unique_ptr<Overlay>> m_overlays;
+    OverlayManager m_overlayManager;
 };
 
 #endif // APPLICATION_HPP

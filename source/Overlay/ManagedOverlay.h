@@ -16,22 +16,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DISCINTERFACEWRAPPER_H
-#define DISCINTERFACEWRAPPER_H
+#ifndef UXPLORE_CPP_MANAGEDOVERLAY_H
+#define UXPLORE_CPP_MANAGEDOVERLAY_H
 
-#include "DiscInterface.h"
+#include <memory>
 
-class DiscInterfaceWrapper {
+#include "Overlay.h"
+
+class OverlayManager;
+
+class ManagedOverlay : public Overlay {
 public:
-    static bool startup(void *data);
-    static bool isInserted(void *data);
-    static bool clearStatus(void *data);
-    static bool shutdown(void *data);
-    static bool readSectors(void *data, uint32_t sector, uint32_t numSectors, void *buffer);
-    static bool writeSectors(void *data, uint32_t sector, uint32_t numSectors, const void *buffer);
+    explicit ManagedOverlay(OverlayManager &manager);
+    ~ManagedOverlay() override = default;
 
-private:
-    static DiscInterface *getInterfaceFromData(void *data);
+protected:
+    OverlayManager &m_overlayManager;
 };
 
-#endif // DISCINTERFACEWRAPPER_H
+#endif //UXPLORE_CPP_MANAGEDOVERLAY_H

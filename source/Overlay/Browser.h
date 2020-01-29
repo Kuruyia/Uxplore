@@ -1,6 +1,6 @@
 /*
     Uxplore
-    Copyright (C) 2019-2019, Kuruyia
+    Copyright (C) 2019-2020, Kuruyia
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,13 +21,13 @@
 
 #include <TweenEngine/TweenManager.h>
 
-#include "BrowseSession.h"
-#include "Device/PhysicalDevice/PhyDeviceManager.h"
-#include "Overlay.h"
+#include "../BrowseSession.h"
+#include "../Device/PhysicalDevice/PhyDeviceManager.h"
+#include "ManagedOverlay.h"
 
-class Browser : public Overlay {
+class Browser : public ManagedOverlay {
 public:
-    Browser();
+    explicit Browser(OverlayManager &manager);
     ~Browser() override = default;
 
     void processEvent(const SDL_Event &event) override;

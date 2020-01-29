@@ -1,6 +1,6 @@
 /*
     Uxplore
-    Copyright (C) 2019-2019, Kuruyia
+    Copyright (C) 2019-2020, Kuruyia
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,11 +21,11 @@
 
 #include <TweenEngine/TweenManager.h>
 
-#include "Overlay.h"
+#include "ManagedOverlay.h"
 
-class Dialog : public Overlay {
+class Dialog : public ManagedOverlay {
 public:
-    explicit Dialog(std::string message);
+    explicit Dialog(OverlayManager &manager, const std::string &message);
     ~Dialog() override = default;
 
     void processEvent(const SDL_Event &event) override;
@@ -34,6 +34,9 @@ public:
 
     void renderPrimary(SDL_Renderer &renderer, TTF_Font &font) override;
     void renderSecondary(SDL_Renderer &renderer, TTF_Font &font) override;
+
+private:
+    std::string m_message;
 };
 
 #endif // DIALOG_HPP

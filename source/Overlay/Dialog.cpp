@@ -1,6 +1,6 @@
 /*
     Uxplore
-    Copyright (C) 2019-2019, Kuruyia
+    Copyright (C) 2019-2020, Kuruyia
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,8 +17,11 @@
 */
 
 #include "Dialog.h"
+#include "OverlayManager.hpp"
 
-Dialog::Dialog(std::string message)
+Dialog::Dialog(OverlayManager &manager, const std::string &message)
+    : ManagedOverlay(manager)
+    , m_message(message)
 {
 
 }
@@ -30,12 +33,21 @@ void Dialog::update(const float &delta)
 
 void Dialog::processEvent(const SDL_Event &event)
 {
-
+    // Remove the Dialog if the B button was pressed
+    if (event.type == SDL_JOYBUTTONUP && event.jbutton.button == 1) {
+        m_overlayManager.popOverlay();
+    }
 }
 
 void Dialog::renderPrimary(SDL_Renderer &renderer, TTF_Font &font)
 {
-
+    SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 0xDF);
+    SDL_Rect rect;
+    rect.x = 0;
+    rect.y = 0;
+    rect.w = 1280;
+    rect.h = 720;
+    SDL_RenderFillRect(&renderer, &rect);
 }
 
 void Dialog::renderSecondary(SDL_Renderer &renderer, TTF_Font &font)

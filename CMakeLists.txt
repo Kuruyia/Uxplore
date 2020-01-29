@@ -49,7 +49,7 @@ add_executable(uxplore_cpp
         source/Device/PhysicalDevice/PartitionTableReader.cpp
         source/Utils.cpp
         source/Device/PhysicalDevice/MountedPartition.cpp
-        source/Entry/EntryPhysicalMountedPartition.cpp)
+        source/Entry/EntryPhysicalMountedPartition.cpp source/Overlay/OverlayManager.hpp source/Overlay/ManagedOverlay.cpp source/Overlay/ManagedOverlay.h)
 
 romfs_add(uxplore_cpp "romfs")
 
