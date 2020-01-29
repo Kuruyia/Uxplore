@@ -40,7 +40,7 @@ Application::Application()
     m_textFont = TTF_OpenFont("romfs:/res/fonts/opensans.ttf", 32);
     ImageCache::getInstance().setRenderer(m_sdlRendererTV);
 
-    m_overlayManager.pushOverlay(std::make_unique<Browser>());
+    m_overlayManager.pushOverlay(std::make_unique<Browser>(m_overlayManager));
 }
 
 Application::~Application()

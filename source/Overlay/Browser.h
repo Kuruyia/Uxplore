@@ -27,7 +27,7 @@
 
 class Browser : public ManagedOverlay {
 public:
-    Browser();
+    explicit Browser(OverlayManager &manager);
     ~Browser() override = default;
 
     void processEvent(const SDL_Event &event) override;

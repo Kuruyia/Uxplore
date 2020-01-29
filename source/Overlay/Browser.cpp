@@ -28,29 +28,11 @@
 #include "BrowserList.h"
 #include "File.h"
 
-Browser::Browser()
-        : m_browseSession(m_physicalDeviceManager)
+Browser::Browser(OverlayManager &manager)
+        : ManagedOverlay(manager)
+        , m_browseSession(m_physicalDeviceManager)
 {
-    /*DIR *pdir;
-    struct dirent *pent;
-    
-    pdir=opendir("usb001:/");
-    
-    WHBLogPrint("dir opened");
-    
-    if (pdir) {
-        while ((pent=readdir(pdir))!=NULL) {
-            if(strcmp(".", pent->d_name) == 0 || strcmp("..", pent->d_name) == 0)
-                continue;
-            if(pent->d_type == DT_DIR)
-                WHBLogPrintf("[%s]", pent->d_name);
-            else
-                WHBLogPrintf("%s", pent->d_name);
-        }
-        closedir(pdir);
-    } else {
-        WHBLogPrintf("opendir() failure; terminating");
-    }*/
+
 }
 
 void Browser::update(const float &delta)

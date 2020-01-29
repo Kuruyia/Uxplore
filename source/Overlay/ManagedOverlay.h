@@ -19,11 +19,23 @@
 #ifndef UXPLORE_CPP_MANAGEDOVERLAY_H
 #define UXPLORE_CPP_MANAGEDOVERLAY_H
 
+#include <memory>
+
 #include "Overlay.h"
+
+class OverlayManager;
 
 class ManagedOverlay : public Overlay {
 public:
+    explicit ManagedOverlay(OverlayManager &manager);
     ~ManagedOverlay() override = default;
+
+protected:
+    void pushOverlay(std::unique_ptr<ManagedOverlay> overlay);
+    void popOverlay();
+
+private:
+    OverlayManager &m_manager;
 };
 
 

@@ -25,7 +25,7 @@
 
 class Dialog : public ManagedOverlay {
 public:
-    explicit Dialog(std::string message);
+    explicit Dialog(OverlayManager &manager, const std::string &message);
     ~Dialog() override = default;
 
     void processEvent(const SDL_Event &event) override;
@@ -34,6 +34,9 @@ public:
 
     void renderPrimary(SDL_Renderer &renderer, TTF_Font &font) override;
     void renderSecondary(SDL_Renderer &renderer, TTF_Font &font) override;
+
+private:
+    std::string m_message;
 };
 
 #endif // DIALOG_HPP

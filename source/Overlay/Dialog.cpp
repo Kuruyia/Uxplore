@@ -18,7 +18,9 @@
 
 #include "Dialog.h"
 
-Dialog::Dialog(std::string message)
+Dialog::Dialog(OverlayManager &manager, const std::string &message)
+    : ManagedOverlay(manager)
+    , m_message(message)
 {
 
 }
