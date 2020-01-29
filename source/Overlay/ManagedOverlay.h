@@ -31,12 +31,7 @@ public:
     ~ManagedOverlay() override = default;
 
 protected:
-    void pushOverlay(std::unique_ptr<ManagedOverlay> overlay);
-    void popOverlay();
-
-private:
-    OverlayManager &m_manager;
+    OverlayManager &m_overlayManager;
 };
-
 
 #endif //UXPLORE_CPP_MANAGEDOVERLAY_H

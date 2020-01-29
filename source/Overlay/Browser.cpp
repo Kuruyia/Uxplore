@@ -18,15 +18,7 @@
 
 #include "Browser.h"
 
-#include <TweenEngine/Tween.h>
-#include <whb/log.h>
-#include <fat.h>
-
-#include "Device/PhysicalDevice/PhyDeviceUtils.h"
-#include "DiscInterface/DiscInterface.h"
-#include "Entry/EntryFile.h"
-#include "BrowserList.h"
-#include "File.h"
+#include "OverlayManager.hpp"
 
 Browser::Browser(OverlayManager &manager)
         : ManagedOverlay(manager)

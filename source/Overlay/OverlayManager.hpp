@@ -50,8 +50,9 @@ public:
         }
     }
 
-    void pushOverlay(std::unique_ptr<ManagedOverlay> overlay) {
-        m_overlayStack.push_back(std::move(overlay));
+    template <typename T, typename... Args>
+    void pushOverlay(Args&&... args) {
+        m_overlayStack.push_back(std::make_unique<T>(*this, std::forward<Args>(args)...));
     }
 
     void popOverlay() {

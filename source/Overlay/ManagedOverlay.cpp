@@ -20,17 +20,7 @@
 #include "OverlayManager.hpp"
 
 ManagedOverlay::ManagedOverlay(OverlayManager &manager)
-    : m_manager(manager)
+    : m_overlayManager(manager)
 {
 
-}
-
-void ManagedOverlay::pushOverlay(std::unique_ptr<ManagedOverlay> overlay)
-{
-    // TODO: Implement this
-}
-
-void ManagedOverlay::popOverlay()
-{
-    m_manager.popOverlay();
 }
