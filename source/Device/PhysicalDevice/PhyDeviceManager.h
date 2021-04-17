@@ -60,7 +60,6 @@ private:
     static void updateMountedPartitionName(const std::shared_ptr<MountedPartition> &partition);
     static void updateDeviceType(const std::shared_ptr<PhysicalDevice> &device);
 
-    unsigned int m_lastUpdate;
     int m_fsaFd;
 
     std::vector<std::pair<std::string, std::shared_ptr<PhysicalDevice>>> m_insertedDevices;

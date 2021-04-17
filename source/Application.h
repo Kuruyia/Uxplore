@@ -36,15 +36,17 @@ private:
     SDL_Window *m_sdlWindowTV;
     SDL_Renderer *m_sdlRendererTV;
 
-    SDL_Window *m_sdlWindowGamepad;
-    SDL_Renderer *m_sdlRendererGamepad;
+    SDL_Window* m_sdlWindowGamepad;
+    SDL_Renderer* m_sdlRendererGamepad;
 
-    TTF_Font *m_textFont;
+    TTF_Font* m_textFont;
 
-    std::vector<SDL_Joystick *> m_openedJoysticks;
+    std::vector<SDL_Joystick*> m_openedJoysticks;
 
     OverlayManager m_overlayManager;
     PhysicalDeviceManager m_physicalDeviceManager;
+
+    unsigned m_lastPhysicalDeviceManagerUpdate;
 };
 
 #endif // APPLICATION_HPP

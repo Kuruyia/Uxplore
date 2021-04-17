@@ -16,31 +16,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "PhyDeviceManager.h"
-#include "PhyDeviceUtils.h"
-#include "PartitionTableReader.h"
-
-#include <SDL2/SDL.h>
 #include <whb/log.h>
 #include <iosuhax.h>
 #include <iosuhax_devoptab.h>
 #include <fat.h>
 
+#include "PhyDeviceManager.h"
+#include "PhyDeviceUtils.h"
+#include "PartitionTableReader.h"
+
 #define DEFAULT_CACHE_PAGES 4
 #define DEFAULT_SECTORS_PAGE 64
 
-// Remove altivec vector
-#ifdef vector
-#undef vector
-#endif
-
-// Remove altivec bool
-#ifdef bool
-#undef bool
-#endif
-
 PhysicalDeviceManager::PhysicalDeviceManager()
-        : m_lastUpdate(0)
 {
     m_fsaFd = IOSUHAX_FSA_Open();
 }
@@ -53,108 +41,116 @@ PhysicalDeviceManager::~PhysicalDeviceManager()
 
 bool PhysicalDeviceManager::update()
 {
-    if (SDL_TICKS_PASSED(SDL_GetTicks(), m_lastUpdate + 2000)) {
-        WHBLogPrint("Starting Phy discovery");
+    bool hasChanged = false;
 
-        m_lastUpdate = SDL_GetTicks();
-        bool hasChanged = false;
-
-        std::vector<std::string> addedDevices, removedDevices;
-        int ret = PhysicalDeviceUtils::getDeviceDelta(getInsertedDevicesId(), addedDevices, removedDevices);
-        if (ret < 0) {
-            WHBLogPrintf("getDeviceDelta has failed with %i", ret);
-            return false;
-        }
-
-        for (auto &addedDevice : addedDevices) {
-            WHBLogPrintf("Device inserted - %s", addedDevice.c_str());
-            bool isNative = PhysicalDeviceUtils::isNative(addedDevice);
-
-            std::shared_ptr<PhysicalDevice> newDevice(new PhysicalDevice(addedDevice, isNative));
-            updateDeviceType(newDevice);
-            m_insertedDevices.emplace_back(newDevice->getDeviceId(), newDevice);
-
-            if (newDevice->isPartitionTableAvailable()) {
-                // Partition table available, we can read from it
-                unsigned partitionCount = 1;
-                if (newDevice->getPartitionTableReader()->hasGpt()) {
-                    // Read the GPT
-                    for (const PartitionTableReader::GPT_PARTITION_ENTRY &partition : newDevice->getPartitionTableReader()->getGptPartitions()) {
-                        WHBLogPrintf("Trying to mount GPT partition @ %llu", partition.startingLBA);
-                        if (tryMountPartitionAndAddToDevice(newDevice,
-                                newDevice->getDeviceId() + "p" + std::to_string(partitionCount),
-                                partition.startingLBA))
-                        {
-                            ++partitionCount;
-                        }
-                    }
-                } else {
-                    // Read the MBR/EBRs
-                    for (const PartitionTableReader::MBR_PARTITION &partition : newDevice->getPartitionTableReader()->getMbrPartitions()) {
-                        if (tryMountPartitionAndAddToDevice(newDevice,
-                                newDevice->getDeviceId() + "p" + std::to_string(partitionCount),
-                                partition.startingLBA))
-                        {
-                            ++partitionCount;
-                        }
-                    }
-
-                    for (const PartitionTableReader::EBR_PARTITION &partition : newDevice->getPartitionTableReader()->getEbrPartitions()) {
-                        if (tryMountPartitionAndAddToDevice(newDevice,
-                                newDevice->getDeviceId() + "p" + std::to_string(partitionCount),
-                                partition.ebrLBA + partition.partition.startingLBA))
-                        {
-                            ++partitionCount;
-                        }
-                    }
-                }
-            } else {
-                // Partition table not available, we have to rely on the system
-                MountedPartition::Filesystem mountedFilesystem;
-                bool success = tryMountPartition(newDevice, newDevice->getDeviceId(), 0,
-                                                 FSMountCandidates::Native, mountedFilesystem);
-
-                if (success) {
-                    std::shared_ptr<MountedPartition> newPartition(
-                            new MountedPartition(newDevice->getDeviceId(), mountedFilesystem));
-
-                    newDevice->addMountedPartition(newPartition);
-                    updateMountedPartitionName(newPartition);
-
-                    WHBLogPrintf("Mounted partition %s", newPartition->getId().c_str());
-                }
-            }
-
-            hasChanged = true;
-        }
-
-        for (auto &removedDevice : removedDevices) {
-            WHBLogPrintf("Device removed - %s", removedDevice.c_str());
-
-            for (auto it = m_insertedDevices.begin(); it != m_insertedDevices.end(); it++) {
-                if (it->first == removedDevice) {
-                    WHBLogPrintf("Found removed device - %s", it->first.c_str());
-
-                    unmountDevice(it->second);
-                    m_insertedDevices.erase(it);
-
-                    hasChanged = true;
-                    break;
-                }
-            }
-        }
-
-        if (hasChanged) {
-            WHBLogPrint("===== Device list changed =====");
-            for (const std::pair<std::basic_string<char>, std::shared_ptr<PhysicalDevice>> &device : m_insertedDevices) {
-                WHBLogPrintf("Inserted device: %s", device.first.c_str());
-            }
-        }
-
-        return hasChanged;
+    std::vector<std::string> addedDevices, removedDevices;
+    int ret = PhysicalDeviceUtils::getDeviceDelta(getInsertedDevicesId(), addedDevices, removedDevices);
+    if (ret < 0)
+    {
+        WHBLogPrintf("getDeviceDelta has failed with %i", ret);
+        return false;
     }
 
-    return false;
+    for (auto& addedDevice : addedDevices)
+    {
+        WHBLogPrintf("Device inserted - %s", addedDevice.c_str());
+        bool isNative = PhysicalDeviceUtils::isNative(addedDevice);
+
+        std::shared_ptr<PhysicalDevice> newDevice(new PhysicalDevice(addedDevice, isNative));
+        updateDeviceType(newDevice);
+        m_insertedDevices.emplace_back(newDevice->getDeviceId(), newDevice);
+
+        if (newDevice->isPartitionTableAvailable())
+        {
+            // Partition table available, we can read from it
+            unsigned partitionCount = 1;
+            if (newDevice->getPartitionTableReader()->hasGpt())
+            {
+                // Read the GPT
+                for (const PartitionTableReader::GPT_PARTITION_ENTRY& partition : newDevice->getPartitionTableReader()->getGptPartitions())
+                {
+                    WHBLogPrintf("Trying to mount GPT partition @ %llu", partition.startingLBA);
+                    if (tryMountPartitionAndAddToDevice(newDevice,
+                                                        newDevice->getDeviceId() + "p" + std::to_string(partitionCount),
+                                                        partition.startingLBA))
+                    {
+                        ++partitionCount;
+                    }
+                }
+            } else
+            {
+                // Read the MBR/EBRs
+                for (const PartitionTableReader::MBR_PARTITION& partition : newDevice->getPartitionTableReader()->getMbrPartitions())
+                {
+                    if (tryMountPartitionAndAddToDevice(newDevice,
+                                                        newDevice->getDeviceId() + "p" + std::to_string(partitionCount),
+                                                        partition.startingLBA))
+                    {
+                        ++partitionCount;
+                    }
+                }
+
+                for (const PartitionTableReader::EBR_PARTITION& partition : newDevice->getPartitionTableReader()->getEbrPartitions())
+                {
+                    if (tryMountPartitionAndAddToDevice(newDevice,
+                                                        newDevice->getDeviceId() + "p" + std::to_string(partitionCount),
+                                                        partition.ebrLBA + partition.partition.startingLBA))
+                    {
+                        ++partitionCount;
+                    }
+                }
+            }
+        } else
+        {
+            // Partition table not available, we have to rely on the system
+            MountedPartition::Filesystem mountedFilesystem;
+            bool success = tryMountPartition(newDevice, newDevice->getDeviceId(), 0,
+                                             FSMountCandidates::Native, mountedFilesystem);
+
+            if (success)
+            {
+                std::shared_ptr<MountedPartition> newPartition(
+                        new MountedPartition(newDevice->getDeviceId(), mountedFilesystem));
+
+                newDevice->addMountedPartition(newPartition);
+                updateMountedPartitionName(newPartition);
+
+                WHBLogPrintf("Mounted partition %s", newPartition->getId().c_str());
+            }
+        }
+
+        hasChanged = true;
+    }
+
+    for (auto& removedDevice : removedDevices)
+    {
+        WHBLogPrintf("Device removed - %s", removedDevice.c_str());
+
+        for (auto it = m_insertedDevices.begin(); it != m_insertedDevices.end(); it++)
+        {
+            if (it->first == removedDevice)
+            {
+                WHBLogPrintf("Found removed device - %s", it->first.c_str());
+
+                unmountDevice(it->second);
+                m_insertedDevices.erase(it);
+
+                hasChanged = true;
+                break;
+            }
+        }
+    }
+
+    if (hasChanged)
+    {
+        WHBLogPrint("===== Device list changed =====");
+        for (const std::pair<std::basic_string<char>, std::shared_ptr<PhysicalDevice>>& device : m_insertedDevices)
+        {
+            WHBLogPrintf("Inserted device: %s", device.first.c_str());
+        }
+    }
+
+    return hasChanged;
 }
 
 bool PhysicalDeviceManager::tryMountPartition(std::shared_ptr<PhysicalDevice> &physicalDevice, const std::string &partitionName,

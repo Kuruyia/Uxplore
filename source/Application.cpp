@@ -21,6 +21,7 @@
 #include "Overlay/Browser.h"
 
 Application::Application()
+        : m_lastPhysicalDeviceManagerUpdate(0)
 {
     for (int i = 0; i < SDL_NumJoysticks(); i++)
         m_openedJoysticks.emplace_back(SDL_JoystickOpen(i));
@@ -72,13 +73,18 @@ void Application::render(const float &delta)
         m_overlayManager.dispatchEventToTopmost(sdlEvent);
     }
 
-    // Update the physical device manager
-    if (m_physicalDeviceManager.update())
+    // Update the physical device manager every 2s
+    if (SDL_TICKS_PASSED(SDL_GetTicks(), m_lastPhysicalDeviceManagerUpdate + 2000))
     {
-        m_overlayManager.dispatchEvent({
-                                               EventType::EVENT_PHYSICAL_DEVICES_CHANGED,
-                                               {}
-                                       });
+        m_lastPhysicalDeviceManagerUpdate = SDL_GetTicks();
+
+        if (m_physicalDeviceManager.update())
+        {
+            m_overlayManager.dispatchEvent({
+                                                   EventType::EVENT_PHYSICAL_DEVICES_CHANGED,
+                                                   {}
+                                           });
+        }
     }
 
     // Update every overlay
