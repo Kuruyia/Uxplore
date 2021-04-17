@@ -16,32 +16,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OVERLAY_HPP
-#define OVERLAY_HPP
+#ifndef UXPLORE_CPP_EVENT_H
+#define UXPLORE_CPP_EVENT_H
 
-
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_ttf.h>
-
-#include "../Event/Event.h"
-
-// Remove altivec vector definition
-#ifdef vector
-#undef vector
-#endif
-
-class Overlay
+enum class EventType
 {
-public:
-    virtual ~Overlay() = default;
-
-    virtual void processEvent(const Event& event) = 0;
-
-    virtual void update(const float& delta) = 0;
-
-    virtual void renderPrimary(SDL_Renderer& renderer, TTF_Font& font) = 0;
-    virtual void renderSecondary(SDL_Renderer &renderer, TTF_Font &font) = 0;
+    EVENT_SDL,
+    EVENT_PHYSICAL_DEVICES_CHANGED
 };
 
-#endif // OVERLAY_HPP
+union EventData
+{
+    SDL_Event m_sdlEvent;
+};
+
+struct Event
+{
+    EventType m_eventType;
+    EventData m_eventData;
+};
+
+#endif //UXPLORE_CPP_EVENT_H

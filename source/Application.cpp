@@ -59,15 +59,27 @@ Application::~Application()
 
 void Application::render(const float &delta)
 {
-    // Poll any event and dispatch it to the most recent overlay
-    SDL_Event event;
-    if (SDL_PollEvent(&event))
+    // Poll any SDL sdlEvent and dispatch it to the topmost overlay
+    Event sdlEvent = {
+            EventType::EVENT_SDL,
+            {
+                    .m_sdlEvent = SDL_Event()
+            }
+    };
+
+    if (SDL_PollEvent(&sdlEvent.m_eventData.m_sdlEvent))
     {
-        m_overlayManager.processEvent(event);
+        m_overlayManager.dispatchEventToTopmost(sdlEvent);
     }
 
     // Update the physical device manager
-    m_physicalDeviceManager.update();
+    if (m_physicalDeviceManager.update())
+    {
+        m_overlayManager.dispatchEvent({
+                                               EventType::EVENT_PHYSICAL_DEVICES_CHANGED,
+                                               {}
+                                       });
+    }
 
     // Update every overlay
     m_overlayManager.update(delta);

@@ -26,10 +26,11 @@
 
 class Dialog : public ManagedOverlay {
 public:
-    explicit Dialog(OverlayManager &manager, const std::string &message);
+    explicit Dialog(OverlayManager& manager, std::string message);
+
     ~Dialog() override = default;
 
-    void processEvent(const SDL_Event &event) override;
+    void processEvent(const Event& event) override;
 
     void update(const float &delta) override;
 

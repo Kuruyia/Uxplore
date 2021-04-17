@@ -26,6 +26,7 @@
 #include <TweenEngine/TweenManager.h>
 
 #include "Device/PhysicalDevice/PhyDeviceManager.h"
+#include "Event/Event.h"
 #include "GUI/BrowserItem.h"
 #include "BrowserList.h"
 #include "NavigationHistory.h"
@@ -35,7 +36,7 @@ class BrowseSession : public TweenDrawable {
 public:
     explicit BrowseSession(PhysicalDeviceManager &physicalDeviceManager);
 
-    void processEvent(const SDL_Event &event);
+    void processEvent(const Event& event);
 
     void update(const float &delta);
 
@@ -43,8 +44,6 @@ public:
 
     void reloadList();
     const BrowserList & getBrowserList() const;
-
-    void notifyDevicesChanged();
 
 private:
     BrowserList m_browserList;

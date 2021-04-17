@@ -37,50 +37,68 @@ void BrowseSession::update(const float &delta)
     m_tweenManager.update(delta);
 }
 
-void BrowseSession::processEvent(const SDL_Event &event)
+void BrowseSession::processEvent(const Event& event)
 {
-    switch (event.type) {
-        case SDL_JOYBUTTONDOWN: {
-            switch (event.jbutton.button) {
-                case 13: {
-                    m_browserList.moveSelectedItemIndex(-ITEM_PER_ROW);
+    if (event.m_eventType == EventType::EVENT_SDL)
+    {
+        switch (event.m_eventData.m_sdlEvent.type)
+        {
+            case SDL_JOYBUTTONDOWN:
+            {
+                switch (event.m_eventData.m_sdlEvent.jbutton.button)
+                {
+                    case 13:
+                    {
+                        m_browserList.moveSelectedItemIndex(-ITEM_PER_ROW);
 
-                    break;
-                }
-                case 15: {
-                    m_browserList.moveSelectedItemIndex(ITEM_PER_ROW);
+                        break;
+                    }
+                    case 15:
+                    {
+                        m_browserList.moveSelectedItemIndex(ITEM_PER_ROW);
 
-                    break;
-                }
-                case 14: {
-                    m_browserList.moveSelectedItemIndex(1);
+                        break;
+                    }
+                    case 14:
+                    {
+                        m_browserList.moveSelectedItemIndex(1);
 
-                    break;
-                }
-                case 12: {
-                    m_browserList.moveSelectedItemIndex(-1);
+                        break;
+                    }
+                    case 12:
+                    {
+                        m_browserList.moveSelectedItemIndex(-1);
 
-                    break;
-                }
-                case 6: {
-                    m_navigationHistory.back();
+                        break;
+                    }
+                    case 6:
+                    {
+                        m_navigationHistory.back();
 
-                    break;
-                }
-                case 7: {
-                    m_navigationHistory.forward();
+                        break;
+                    }
+                    case 7:
+                    {
+                        m_navigationHistory.forward();
 
-                    break;
-                }
-                case 2: {
-                    reloadList();
+                        break;
+                    }
+                    case 2:
+                    {
+                        reloadList();
 
-                    break;
+                        break;
+                    }
                 }
+
+                break;
             }
-
-            break;
         }
+    } else if (event.m_eventType == EventType::EVENT_PHYSICAL_DEVICES_CHANGED)
+    {
+        // Physical devices changed, reload the list if we're currently showing them
+        if (m_navigationHistory.getHistoryPosition() == 0)
+            reloadList();
     }
 }
 
@@ -102,10 +120,4 @@ void BrowseSession::reloadList()
 const BrowserList &BrowseSession::getBrowserList() const
 {
     return m_browserList;
-}
-
-void BrowseSession::notifyDevicesChanged()
-{
-    if (m_navigationHistory.getHistoryPosition() == 0)
-        reloadList();
 }

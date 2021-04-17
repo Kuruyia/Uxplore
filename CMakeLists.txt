@@ -53,7 +53,7 @@ add_executable(uxplore_cpp
         source/Entry/EntryPhysicalMountedPartition.cpp
         source/Overlay/OverlayManager.hpp
         source/Overlay/ManagedOverlay.cpp
-        source/Overlay/ManagedOverlay.h source/Macros.h)
+        source/Overlay/ManagedOverlay.h source/Macros.h source/Event/Event.h)
 
 romfs_add(uxplore_cpp "romfs")
 

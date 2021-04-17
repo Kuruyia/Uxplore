@@ -18,11 +18,13 @@
 
 #include "../Macros.h"
 #include "Dialog.h"
+
+#include <utility>
 #include "OverlayManager.hpp"
 
-Dialog::Dialog(OverlayManager &manager, const std::string &message)
-    : ManagedOverlay(manager)
-    , m_message(message)
+Dialog::Dialog(OverlayManager& manager, std::string message)
+        : ManagedOverlay(manager)
+        , m_message(std::move(message))
 {
 
 }
@@ -32,10 +34,12 @@ void Dialog::update(UNUSED_PARAM const float& delta)
 
 }
 
-void Dialog::processEvent(const SDL_Event &event)
+void Dialog::processEvent(const Event& event)
 {
     // Remove the Dialog if the B button was pressed
-    if (event.type == SDL_JOYBUTTONUP && event.jbutton.button == 1) {
+    if (event.m_eventType == EventType::EVENT_SDL && event.m_eventData.m_sdlEvent.type == SDL_JOYBUTTONUP &&
+        event.m_eventData.m_sdlEvent.jbutton.button == 1)
+    {
         m_overlayManager.popOverlay();
     }
 }

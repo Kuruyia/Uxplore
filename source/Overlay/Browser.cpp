@@ -35,7 +35,7 @@ void Browser::update(const float &delta)
     m_browseSession.update(delta);
 }
 
-void Browser::processEvent(const SDL_Event &event)
+void Browser::processEvent(const Event& event)
 {
     m_browseSession.processEvent(event);
 }

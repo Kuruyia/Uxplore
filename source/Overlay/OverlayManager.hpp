@@ -24,22 +24,37 @@
 
 #include "ManagedOverlay.h"
 
-class OverlayManager {
+class OverlayManager
+{
 public:
-    void processEvent(const SDL_Event &event) {
-        if (!m_overlayStack.empty()) {
+    void dispatchEventToTopmost(const Event& event)
+    {
+        if (!m_overlayStack.empty())
+        {
             m_overlayStack.back()->processEvent(event);
         }
     }
 
-    void update(const float &delta) {
-        for (auto &m_overlay : m_overlayStack) {
+    void dispatchEvent(const Event& event)
+    {
+        for (auto& m_overlay : m_overlayStack)
+        {
+            m_overlay->processEvent(event);
+        }
+    }
+
+    void update(const float& delta)
+    {
+        for (auto& m_overlay : m_overlayStack)
+        {
             m_overlay->update(delta);
         }
     }
 
-    void renderPrimary(SDL_Renderer &renderer, TTF_Font &font) {
-        for (auto &m_overlay : m_overlayStack) {
+    void renderPrimary(SDL_Renderer& renderer, TTF_Font& font)
+    {
+        for (auto& m_overlay : m_overlayStack)
+        {
             m_overlay->renderPrimary(renderer, font);
         }
     }

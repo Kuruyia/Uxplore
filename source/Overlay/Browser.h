@@ -31,7 +31,7 @@ public:
 
     ~Browser() override = default;
 
-    void processEvent(const SDL_Event &event) override;
+    void processEvent(const Event& event) override;
 
     void update(const float &delta) override;
 
