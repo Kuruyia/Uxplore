@@ -21,12 +21,15 @@
 
 #include <string>
 #include <vector>
-#include <DiscInterface/DiscInterface.h>
 #include <memory>
 
-class PartitionTableReader {
+#include "../../DiscInterface/DiscInterface.h"
+
+class PartitionTableReader
+{
 public:
-    typedef struct {
+    typedef struct
+    {
         uint8_t status;
         uint8_t startingHead;
         uint8_t startingSector;

@@ -16,28 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DIALOG_HPP
-#define DIALOG_HPP
+#ifndef UXPLORE_CPP_MACROS_H
+#define UXPLORE_CPP_MACROS_H
 
-#include <string>
-#include <TweenEngine/TweenManager.h>
+#ifdef __GNUC__
+#define UNUSED_PARAM __attribute__((unused))
+#else
+#define UNUSED_PARAM
+#endif
 
-#include "ManagedOverlay.h"
-
-class Dialog : public ManagedOverlay {
-public:
-    explicit Dialog(OverlayManager &manager, const std::string &message);
-    ~Dialog() override = default;
-
-    void processEvent(const SDL_Event &event) override;
-
-    void update(const float &delta) override;
-
-    void renderPrimary(SDL_Renderer &renderer, TTF_Font &font) override;
-    void renderSecondary(SDL_Renderer &renderer, TTF_Font &font) override;
-
-private:
-    std::string m_message;
-};
-
-#endif // DIALOG_HPP
+#endif //UXPLORE_CPP_MACROS_H

@@ -16,13 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "../ImageCache.h"
 #include "BrowserItem.h"
-#include "ImageCache.h"
 
-BrowserItem::BrowserItem(Drawable *parent, const Entry &entry, const SDL_Point &pos)
-        : m_selected(false)
-        , m_entry(entry.clone())
+BrowserItem::BrowserItem(Drawable* parent, const Entry& entry, const SDL_Point& pos)
+        : m_entry(entry.clone())
         , m_entryName(this, {96, 0}, m_entry->getText())
+        , m_selected(false)
 {
     m_icon = ImageCache::getImage("romfs:/res/icons/" + m_entry->getIconName());
 

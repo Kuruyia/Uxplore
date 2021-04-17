@@ -16,42 +16,45 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <utility>
+
+#include "../../Macros.h"
 #include "MountedPartition.h"
 
-MountedPartition::MountedPartition(const std::string &id, Filesystem filesystem)
-        : m_id(id)
-        , m_name("<MISSINGNO>")
+MountedPartition::MountedPartition(std::string id, Filesystem filesystem)
+        : m_id(std::move(id))
         , m_filesystem(filesystem)
+        , m_name("<MISSINGNO>")
 {
 
 }
 
-std::shared_ptr<File> MountedPartition::getFile(const std::string &path)
+std::shared_ptr<File> MountedPartition::getFile(UNUSED_PARAM const std::string& path)
 {
     return std::shared_ptr<File>();
 }
 
-std::vector<std::shared_ptr<File>> MountedPartition::listFolder(const std::string &path)
+std::vector<std::shared_ptr<File>> MountedPartition::listFolder(UNUSED_PARAM const std::string& path)
 {
     return std::vector<std::shared_ptr<File>>();
 }
 
-void MountedPartition::writeFile(const std::string &path)
+void MountedPartition::writeFile(UNUSED_PARAM const std::string& path)
 {
 
 }
 
-void MountedPartition::readFile(const std::string &path)
+void MountedPartition::readFile(UNUSED_PARAM const std::string& path)
 {
 
 }
 
-void MountedPartition::deleteEntry(const std::string &path)
+void MountedPartition::deleteEntry(UNUSED_PARAM const std::string& path)
 {
 
 }
 
-void MountedPartition::createFolder(const std::string &path)
+void MountedPartition::createFolder(UNUSED_PARAM const std::string& path)
 {
 
 }
@@ -71,7 +74,7 @@ const std::string &MountedPartition::getId() const
     return m_id;
 }
 
-const MountedPartition::Filesystem MountedPartition::getFilesystem() const
+MountedPartition::Filesystem MountedPartition::getFilesystem() const
 {
     return m_filesystem;
 }

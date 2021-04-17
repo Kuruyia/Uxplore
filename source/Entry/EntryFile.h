@@ -20,16 +20,20 @@
 #define ENTRYFILE_HPP
 
 #include <memory>
-#include "Entry.h"
-#include "File.h"
 
-class EntryFile : public Entry {
+#include "../File.h"
+#include "Entry.h"
+
+class EntryFile
+        : public Entry
+{
 public:
-    explicit EntryFile(std::shared_ptr<File> &file);
+    explicit EntryFile(std::shared_ptr<File>& file);
 
     ~EntryFile() override = default;;
 
     std::string getText() const override;
+
     EntryType getType() const override;
     std::string getIconName() const override;
 

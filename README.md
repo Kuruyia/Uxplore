@@ -13,11 +13,11 @@ You might want to [read this](https://github.com/yawut/ProgrammingOnTheU/blob/ma
 #### First time
 Once ``(dkp-)pacman`` has been installed on your system, you must install a few libraries to be able to build Uxplore (Note that you will need to have configured the [fling](https://gitlab.com/QuarkTheAwesome/wiiu-fling/tree/master#installing) repository):  
 ```shell
-(dkp-)pacman -Sy wiiu-libromfs wiiu-sdl2 wiiu-sdl2_gfx wiiu-sdl2_image wiiu-sdl2_mixer wiiu-sdl2_ttf
+(dkp-)pacman -Sy wiiu-libromfs wiiu-sdl2 wiiu-sdl2_gfx wiiu-sdl2_image wiiu-sdl2_mixer wiiu-sdl2_ttf ppc-libvorbisidec
 ```
 You are now ready clone this repository :
 ```
-git clone --recursive https://github.com/Arc13/Uxplore.git
+git clone --recursive https://github.com/Kuruyia/Uxplore.git
 ```
 
 #### Building

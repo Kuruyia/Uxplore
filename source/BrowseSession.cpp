@@ -18,7 +18,7 @@
 
 #include "BrowseSession.h"
 
-#include <Entry/EntryPhysicalMountedPartition.h>
+#include "Entry/EntryPhysicalMountedPartition.h"
 
 BrowseSession::BrowseSession(PhysicalDeviceManager &physicalDeviceManager)
         : m_physicalDeviceManager(physicalDeviceManager)

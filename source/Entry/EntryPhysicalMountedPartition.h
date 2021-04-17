@@ -19,14 +19,16 @@
 #ifndef UXPLORE_CPP_ENTRYPHYSICALMOUNTEDPARTITION_H
 #define UXPLORE_CPP_ENTRYPHYSICALMOUNTEDPARTITION_H
 
-#include "Device/PhysicalDevice.h"
-#include "Device/PhysicalDevice/MountedPartition.h"
+#include "../Device/PhysicalDevice.h"
+#include "../Device/PhysicalDevice/MountedPartition.h"
 #include "Entry.h"
 
-class EntryPhysicalMountedPartition : public Entry {
+class EntryPhysicalMountedPartition
+        : public Entry
+{
 public:
-    EntryPhysicalMountedPartition(const std::shared_ptr<PhysicalDevice> &device,
-                                  const std::shared_ptr<MountedPartition> &partition);
+    EntryPhysicalMountedPartition(const std::shared_ptr<PhysicalDevice>& device,
+                                  const std::shared_ptr<MountedPartition>& partition);
 
     ~EntryPhysicalMountedPartition() override = default;
 

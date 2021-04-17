@@ -19,18 +19,26 @@
 #ifndef OVERLAY_HPP
 #define OVERLAY_HPP
 
-#include <SDL2/SDL.h>
+
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
 
-class Overlay {
+// Remove altivec vector definition
+#ifdef vector
+#undef vector
+#endif
+
+class Overlay
+{
 public:
     virtual ~Overlay() = default;
 
-    virtual void processEvent(const SDL_Event &event) = 0;
+    virtual void processEvent(const SDL_Event& event) = 0;
 
-    virtual void update(const float &delta) = 0;
+    virtual void update(const float& delta) = 0;
 
-    virtual void renderPrimary(SDL_Renderer &renderer, TTF_Font &font) = 0;
+    virtual void renderPrimary(SDL_Renderer& renderer, TTF_Font& font) = 0;
     virtual void renderSecondary(SDL_Renderer &renderer, TTF_Font &font) = 0;
 };
 

@@ -18,10 +18,12 @@
 
 #include "Text.h"
 
-Text::Text(Drawable *parent, const SDL_Point &position, const std::string &text)
-        : m_text(text)
+#include <utility>
+
+Text::Text(Drawable* parent, const SDL_Point& position, std::string text)
+        : m_text(std::move(text))
+        , m_textColor({0, 0, 0, 255})
         , m_needsUpdate(true)
-        , m_textColor({0, 0, 0})
 {
     setParent(parent);
     setRelativePosition(position);

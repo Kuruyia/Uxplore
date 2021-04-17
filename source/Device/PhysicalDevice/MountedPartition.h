@@ -19,21 +19,27 @@
 #ifndef UXPLORE_CPP_MOUNTEDPARTITION_H
 #define UXPLORE_CPP_MOUNTEDPARTITION_H
 
-#include <FilesystemProvider.h>
+#include <string>
 
-class MountedPartition : public FilesystemProvider {
+#include "../../FilesystemProvider.h"
+
+class MountedPartition
+        : public FilesystemProvider
+{
 public:
-    enum Filesystem {
+    enum Filesystem
+    {
         Unknown,
 
         FAT,
         Native
     };
 
-    MountedPartition(const std::string &id, Filesystem filesystem);
+    MountedPartition(std::string id, Filesystem filesystem);
 
-    const std::string &getId() const;
-    const Filesystem getFilesystem() const;
+    const std::string& getId() const;
+
+    Filesystem getFilesystem() const;
 
     const std::string &getName() const;
     void setName(const std::string &name);

@@ -1,5 +1,4 @@
 /*
-    bool m_gptPresent;
     Uxplore
     Copyright (C) 2019-2020, Kuruyia
 
@@ -26,6 +25,5 @@ public:
     static uint32_t swapEndian32(uint32_t n);
     static uint64_t swapEndian64(uint64_t n);
 };
-
 
 #endif //UXPLORE_CPP_UTILS_H

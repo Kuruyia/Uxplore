@@ -24,8 +24,8 @@
 #include <vector>
 #include <SDL2/SDL_image.h>
 #include <TweenEngine/TweenManager.h>
-#include <Device/PhysicalDevice/PhyDeviceManager.h>
 
+#include "Device/PhysicalDevice/PhyDeviceManager.h"
 #include "GUI/BrowserItem.h"
 #include "BrowserList.h"
 #include "NavigationHistory.h"

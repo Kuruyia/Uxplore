@@ -20,8 +20,8 @@
 #include <whb/log.h>
 #include <zlib.h>
 
+#include "../../Utils.h"
 #include "PartitionTableReader.h"
-#include "Utils.h"
 
 PartitionTableReader::PartitionTableReader(const DiscInterface *discInterface)
         : m_mbr()

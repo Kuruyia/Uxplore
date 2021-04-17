@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "../Macros.h"
 #include "Dialog.h"
 #include "OverlayManager.hpp"
 
@@ -26,7 +27,7 @@ Dialog::Dialog(OverlayManager &manager, const std::string &message)
 
 }
 
-void Dialog::update(const float &delta)
+void Dialog::update(UNUSED_PARAM const float& delta)
 {
 
 }
@@ -39,7 +40,7 @@ void Dialog::processEvent(const SDL_Event &event)
     }
 }
 
-void Dialog::renderPrimary(SDL_Renderer &renderer, TTF_Font &font)
+void Dialog::renderPrimary(SDL_Renderer& renderer, UNUSED_PARAM TTF_Font& font)
 {
     SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 0xDF);
     SDL_Rect rect;
@@ -50,7 +51,7 @@ void Dialog::renderPrimary(SDL_Renderer &renderer, TTF_Font &font)
     SDL_RenderFillRect(&renderer, &rect);
 }
 
-void Dialog::renderSecondary(SDL_Renderer &renderer, TTF_Font &font)
+void Dialog::renderSecondary(UNUSED_PARAM SDL_Renderer& renderer, UNUSED_PARAM TTF_Font& font)
 {
 
 }

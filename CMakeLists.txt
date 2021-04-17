@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 add_definitions(-D__wiiu__)
 set(CMAKE_TOOLCHAIN_FILE $ENV{WUT_ROOT}/share/wut.toolchain.cmake)
 
-project(uxplore_cpp)
+project(uxplore_cpp LANGUAGES C CXX)
+
+set(CMAKE_CXX_STANDARD 14)
 
 # Include stuff from the devkitPro folder
 include("$ENV{WUT_ROOT}/share/wut.cmake" REQUIRED)
@@ -24,7 +26,6 @@ add_subdirectory(external/libfat)
 include_directories(external/libfat/include)
 
 # Add files from this project
-include_directories(source)
 add_executable(uxplore_cpp
         source/main.cpp
         source/Application.cpp
@@ -49,7 +50,10 @@ add_executable(uxplore_cpp
         source/Device/PhysicalDevice/PartitionTableReader.cpp
         source/Utils.cpp
         source/Device/PhysicalDevice/MountedPartition.cpp
-        source/Entry/EntryPhysicalMountedPartition.cpp source/Overlay/OverlayManager.hpp source/Overlay/ManagedOverlay.cpp source/Overlay/ManagedOverlay.h)
+        source/Entry/EntryPhysicalMountedPartition.cpp
+        source/Overlay/OverlayManager.hpp
+        source/Overlay/ManagedOverlay.cpp
+        source/Overlay/ManagedOverlay.h source/Macros.h)
 
 romfs_add(uxplore_cpp "romfs")
 
@@ -80,5 +84,7 @@ target_link_libraries(uxplore_cpp
         fat
         tween)
 
+target_compile_options(uxplore_cpp PRIVATE -Wall -Wextra -Werror)
+
 # Get our .rpx
-wut_create_rpx(uxplore.rpx uxplore_cpp)
+wut_create_rpx(uxplore_cpp)

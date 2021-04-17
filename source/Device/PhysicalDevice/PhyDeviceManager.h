@@ -19,20 +19,23 @@
 #ifndef PHYDEVICEMANAGER_H
 #define PHYDEVICEMANAGER_H
 
-#include "Device/PhysicalDevice.h"
-
 #include <memory>
 #include <string>
 #include <vector>
 
-class PhysicalDeviceManager {
+#include "../PhysicalDevice.h"
+
+class PhysicalDeviceManager
+{
 public:
     PhysicalDeviceManager();
+
     ~PhysicalDeviceManager();
 
     bool update();
 
     std::vector<std::string> getInsertedDevicesId() const;
+
     std::vector<std::shared_ptr<PhysicalDevice>> getInsertedDevices() const;
 
 private:

@@ -18,12 +18,14 @@
 
 #include <algorithm>
 #include <TweenEngine/Tween.h>
+
 #include "BrowserList.h"
+#include "Macros.h"
 
 BrowserList::BrowserList()
-        : m_selectedItemIndex(0)
+        : m_emptyListText(this, {0, 0}, "There is nothing to see here.")
+        , m_selectedItemIndex(0)
         , m_firstRow(0)
-        , m_emptyListText(this, {0, 0}, "There is nothing to see here.")
 {
 
 }
@@ -58,7 +60,7 @@ std::shared_ptr<BrowserItem> BrowserList::getItem(const size_t &index)
     return m_items.at(index);
 }
 
-SDL_Point BrowserList::getPositionFromIndex(unsigned int index)
+SDL_Point BrowserList::getPositionFromIndex(UNUSED_PARAM unsigned int index)
 {
     SDL_Point position;
     position.x = ITEM_OFFSET + (ITEM_WIDTH + ITEM_MARGIN_X) * (m_items.size() % ITEM_PER_ROW);

@@ -37,15 +37,22 @@
 #include "TweenObjects.h"
 #include "GUI/BrowserItem.h"
 
-class BrowserList : public TweenDrawable {
+// Remove altivec vector
+#ifdef vector
+#undef vector
+#endif
+
+class BrowserList
+        : public TweenDrawable
+{
 public:
     BrowserList();
 
-    void draw(SDL_Renderer &renderer, TTF_Font &font) override;
+    void draw(SDL_Renderer& renderer, TTF_Font& font) override;
 
-    void update(const float &delta);
+    void update(const float& delta);
 
-    void addItem(const Entry &entry);
+    void addItem(const Entry& entry);
     std::shared_ptr<BrowserItem> getItem(const size_t &index);
     void reset();
 

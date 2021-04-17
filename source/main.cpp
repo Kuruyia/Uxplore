@@ -29,6 +29,7 @@
 #include <romfs-wiiu.h>
 
 #include "Application.h"
+#include "Macros.h"
 
 // Taken from dynamic_libs
 #define BUS_SPEED                       248625000
@@ -36,14 +37,14 @@
 #define MICROSECS_TO_TICKS(usec)        (SECS_TO_TICKS(usec) / 1000000)
 #define usleep(usecs) OSSleepTicks(MICROSECS_TO_TICKS(usecs))
 
-void someFunc(IOSError err, void *arg)
+void someFunc(UNUSED_PARAM IOSError err, void* arg)
 {
     (void) arg;
 }
 
 static int mcp_hook_fd = -1;
 
-int MCPHookOpen(void)
+int MCPHookOpen()
 {
     //take over mcp thread
     mcp_hook_fd = IOS_Open("/dev/mcp", (IOSOpenMode) 0);
@@ -51,7 +52,7 @@ int MCPHookOpen(void)
     if (mcp_hook_fd < 0)
         return -1;
 
-    IOS_IoctlAsync(mcp_hook_fd, 0x62, (void *) 0, 0, (void *) 0, 0, (IOSAsyncCallbackFn) &someFunc, (void *) 0);
+    IOS_IoctlAsync(mcp_hook_fd, 0x62, (void*) 0, 0, (void*) 0, 0, (IOSAsyncCallbackFn) &someFunc, (void*) 0);
     //let wupserver start up
     usleep(1000);
 
@@ -64,7 +65,7 @@ int MCPHookOpen(void)
     return 0;
 }
 
-void MCPHookClose(void)
+void MCPHookClose()
 {
     if (mcp_hook_fd < 0)
         return;
@@ -83,7 +84,7 @@ enum AccessLevel {
 };
 static enum AccessLevel g_accessLevel = ACCESS_LEVEL_FULL;
 
-int main(int argc, char **argv)
+int main()
 {
     // Init everything here
     WHBLogCafeInit();

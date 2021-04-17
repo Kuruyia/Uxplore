@@ -16,7 +16,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <string>
 #include <SDL2/SDL_image.h>
+
 #include "ImageCache.h"
 
 ImageCache::ImageCache()

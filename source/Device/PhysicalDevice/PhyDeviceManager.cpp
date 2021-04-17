@@ -26,10 +26,18 @@
 #include <iosuhax_devoptab.h>
 #include <fat.h>
 
-#include <dirent.h>
-
 #define DEFAULT_CACHE_PAGES 4
 #define DEFAULT_SECTORS_PAGE 64
+
+// Remove altivec vector
+#ifdef vector
+#undef vector
+#endif
+
+// Remove altivec bool
+#ifdef bool
+#undef bool
+#endif
 
 PhysicalDeviceManager::PhysicalDeviceManager()
         : m_lastUpdate(0)

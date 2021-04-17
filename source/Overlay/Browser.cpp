@@ -18,6 +18,7 @@
 
 #include "Browser.h"
 
+#include "../Macros.h"
 #include "OverlayManager.hpp"
 
 Browser::Browser(OverlayManager &manager)
@@ -47,7 +48,7 @@ void Browser::renderPrimary(SDL_Renderer &renderer, TTF_Font &font)
     m_browseSession.draw(renderer, font);
 }
 
-void Browser::renderSecondary(SDL_Renderer &renderer, TTF_Font &font)
+void Browser::renderSecondary(SDL_Renderer& renderer, UNUSED_PARAM TTF_Font& font)
 {
     SDL_SetRenderDrawColor(&renderer, 255, 0, 0, 128);
     SDL_Rect rect;

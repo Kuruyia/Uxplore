@@ -19,15 +19,17 @@
 #ifndef PHYSICALDEVICE_H
 #define PHYSICALDEVICE_H
 
-#include "Device/PhysicalDevice/MountedPartition.h"
-#include "Device/PhysicalDevice/PartitionTableReader.h"
-#include "DiscInterface/DiscInterface.h"
-
 #include <memory>
 
-class PhysicalDevice {
+#include "../DiscInterface/DiscInterface.h"
+#include "PhysicalDevice/MountedPartition.h"
+#include "PhysicalDevice/PartitionTableReader.h"
+
+class PhysicalDevice
+{
 public:
-    enum DeviceType {
+    enum DeviceType
+    {
         Generic,
         Disc,
         USB,

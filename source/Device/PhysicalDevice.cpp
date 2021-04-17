@@ -18,8 +18,6 @@
 
 #include "PhysicalDevice.h"
 
-#include <memory>
-
 PhysicalDevice::PhysicalDevice(const std::string &deviceId, const bool &skipPartitionTableRead)
         : m_discInterface("/dev/" + deviceId)
         , m_id(deviceId)

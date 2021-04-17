@@ -18,15 +18,10 @@
 
 #include "PhyDeviceUtils.h"
 
-#include <fat.h>
 #include <iosuhax.h>
-#include <sys/iosupport.h>
-#include <whb/log.h>
 
 #include <algorithm>
 #include <cstring>
-#include <iostream>
-#include <iterator>
 #include <set>
 
 const char *m_whitelistedDevices[] = {"sdcard", "usb", "odd"};

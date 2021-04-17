@@ -19,21 +19,30 @@
 #ifndef BROWSERITEM_HPP
 #define BROWSERITEM_HPP
 
-#include <string>
 #include <memory>
+#include <string>
 
+#include "../Entry/Entry.h"
+#include "../TweenObjects.h"
 #include "Text.h"
-#include "Entry/Entry.h"
-#include "TweenObjects.h"
 
-class BrowserItem : public TweenDrawable {
+// Remove altivec bool
+#ifdef bool
+#undef bool
+#endif
+
+class BrowserItem
+        : public TweenDrawable
+{
 public:
-    BrowserItem(Drawable *parent, const Entry &entry, const SDL_Point &pos);
+    BrowserItem(Drawable* parent, const Entry& entry, const SDL_Point& pos);
+
     ~BrowserItem() override = default;
 
-    void draw(SDL_Renderer &renderer, TTF_Font &font) override;
+    void draw(SDL_Renderer& renderer, TTF_Font& font) override;
 
     bool isSelected();
+
     void setSelected(bool selected);
 
 private:

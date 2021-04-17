@@ -35,7 +35,7 @@ std::string NavigationHistory::getCurrentPathAsString()
 {
     std::string currentPath;
 
-    for (int i = 0; i < m_historyPosition; i++)
+    for (size_t i = 0; i < m_historyPosition; i++)
         currentPath.append(m_history.at(i)).append("/");
 
     return currentPath;
