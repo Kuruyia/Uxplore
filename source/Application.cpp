@@ -38,7 +38,7 @@ Application::Application()
     m_textFont = TTF_OpenFont("romfs:/res/fonts/opensans.ttf", 32);
     ImageCache::getInstance().setRenderer(m_sdlRendererTV);
 
-    m_overlayManager.pushOverlay<Browser>();
+    m_overlayManager.pushOverlay<Browser>(m_physicalDeviceManager);
 }
 
 Application::~Application()
@@ -61,9 +61,13 @@ void Application::render(const float &delta)
 {
     // Poll any event and dispatch it to the most recent overlay
     SDL_Event event;
-    if (SDL_PollEvent(&event)) {
+    if (SDL_PollEvent(&event))
+    {
         m_overlayManager.processEvent(event);
     }
+
+    // Update the physical device manager
+    m_physicalDeviceManager.update();
 
     // Update every overlay
     m_overlayManager.update(delta);

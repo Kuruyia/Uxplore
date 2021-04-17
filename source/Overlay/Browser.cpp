@@ -21,9 +21,9 @@
 #include "../Macros.h"
 #include "OverlayManager.hpp"
 
-Browser::Browser(OverlayManager &manager)
+Browser::Browser(OverlayManager& manager, PhysicalDeviceManager& physicalDeviceManager)
         : ManagedOverlay(manager)
-        , m_browseSession(m_physicalDeviceManager)
+        , m_browseSession(physicalDeviceManager)
 {
 
 }
@@ -31,9 +31,6 @@ Browser::Browser(OverlayManager &manager)
 void Browser::update(const float &delta)
 {
     m_tweenManager.update(delta);
-
-    if (m_physicalDeviceManager.update())
-        m_browseSession.notifyDevicesChanged();
 
     m_browseSession.update(delta);
 }

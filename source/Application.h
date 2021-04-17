@@ -22,6 +22,7 @@
 #include <memory>
 #include <vector>
 
+#include "Device/PhysicalDevice/PhyDeviceManager.h"
 #include "Overlay/OverlayManager.hpp"
 
 class Application {
@@ -43,6 +44,7 @@ private:
     std::vector<SDL_Joystick *> m_openedJoysticks;
 
     OverlayManager m_overlayManager;
+    PhysicalDeviceManager m_physicalDeviceManager;
 };
 
 #endif // APPLICATION_HPP

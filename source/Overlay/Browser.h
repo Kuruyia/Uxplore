@@ -27,7 +27,8 @@
 
 class Browser : public ManagedOverlay {
 public:
-    explicit Browser(OverlayManager &manager);
+    explicit Browser(OverlayManager& manager, PhysicalDeviceManager& physicalDeviceManager);
+
     ~Browser() override = default;
 
     void processEvent(const SDL_Event &event) override;
@@ -39,7 +40,6 @@ public:
 
 private:
     BrowseSession m_browseSession;
-    PhysicalDeviceManager m_physicalDeviceManager;
 
     TweenEngine::TweenManager m_tweenManager;
 };
