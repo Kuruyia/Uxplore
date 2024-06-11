@@ -1,9 +1,9 @@
 [submodule "external/libfat"]
 	path = external/libfat
-	url = git@github.com:Arc13/libfat.git
+	url = git@github.com:Kuruyia/libfat.git
 [submodule "external/libiosuhax"]
 	path = external/libiosuhax
-	url = git@github.com:Arc13/libiosuhax.git
+	url = git@github.com:Kuruyia/libiosuhax.git
 [submodule "external/universal-tween-engine"]
 	path = external/universal-tween-engine
-	url = git@github.com:Arc13/universal-tween-engine-cpp.git
+	url = git@github.com:Kuruyia/universal-tween-engine-cpp.git
